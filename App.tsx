@@ -1,20 +1,29 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator,CardStyleInterpolators } from '@react-navigation/stack';
+import HomeScreen from './src/screens/HomeScreen';
+import MotPasseOublier from './src/screens/PassWordScreen';
+import DashBoardScreen from './src/screens/DashBoardScreen';
+import BottomMenuScreen from './src/screens/BottomMenuScreen';
+const Stack = createStackNavigator();
 
-export default function App() {
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        headerTintColor: 'white', // Changez la couleur du texte de la barre de navigation ici
+        headerTitleStyle: {
+          fontWeight: 'bold', // Changez le style du texte de la barre de navigation ici
+        },
+      }}>
+        <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Dash" component={DashBoardScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="MotPasseOublier" component={MotPasseOublier} options={{ headerShown: false }} />
+        <Stack.Screen name="Menu" component={BottomMenuScreen} options={{ headerShown: false }} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
