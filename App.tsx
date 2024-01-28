@@ -5,6 +5,7 @@ import HomeScreen from './src/screens/HomeScreen';
 import MotPasseOublier from './src/screens/PassWordScreen';
 import DashBoardScreen from './src/screens/DashBoardScreen';
 import BottomMenuScreen from './src/screens/BottomMenuScreen';
+import RegistrationForm from './src/screens/RegistrationForm';
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -18,6 +19,7 @@ const App = () => {
         },
       }}>
         <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="RegisForme" component={RegistrationForm} options={{ headerShown: false }} />
         <Stack.Screen name="Dash" component={DashBoardScreen} options={{ headerShown: false }} />
         <Stack.Screen name="MotPasseOublier" component={MotPasseOublier} options={{ headerShown: false }} />
         <Stack.Screen name="Menu" component={BottomMenuScreen} options={{ headerShown: false }} />
@@ -25,5 +27,4 @@ const App = () => {
     </NavigationContainer>
   );
 };
-
 export default App;

@@ -17,9 +17,9 @@ const CustomTabIcon = ({ name, size, color, focused }) => {
             justifyContent: 'center',
             alignItems: 'center',
             // backgroundColor,
-            borderRadius: 20, // Rayon arrondi pour l'effet de pilule
+            borderRadius: 20, 
             paddingVertical: 6,
-            paddingHorizontal: 30,
+            paddingHorizontal: 27,
             backgroundColor: focused ? default_color.orange : 'transparent',
         }}>
             <Icon name={name} size={size} color={color} />
@@ -33,7 +33,6 @@ const BottomTabNavigator = () => {
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName;
-
                     if (route.name === 'Home') {
                         iconName = focused ? 'home' : 'home';
                     } else if (route.name === 'Settings') {
@@ -53,7 +52,7 @@ const BottomTabNavigator = () => {
                     bottom: 13,
                     left: 10,
                     right: 10,
-                    elevation: 0,
+                    elevation: 5,
                     backgroundColor: '#ffffff',
                     borderRadius: 30,
                     height: 47,
@@ -64,13 +63,12 @@ const BottomTabNavigator = () => {
                     },
                     shadowOpacity: 0.25,
                     shadowRadius: 3.5,
-                    elevation: 5
                 }
             })}
         >
             <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
             <Tab.Screen name="Pass" component={HistoriqueScreen} options={{ headerShown: false }} />
-            <Tab.Screen name="Profile" component={UserScreen} options={{ headerShown: false }} />
+            {/* <Tab.Screen name="Profile" component={UserScreen} options={{ headerShown: false }} /> */}
             <Tab.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
         </Tab.Navigator>
     );

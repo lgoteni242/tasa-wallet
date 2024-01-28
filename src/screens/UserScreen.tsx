@@ -1,14 +1,9 @@
-import React, { useState } from 'react';
-import { View, Image, StyleSheet, Text, StatusBar, TextInput, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
-import default_color from '../styles/color';
+import React from 'react';
+import { Image, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import default_color from '../styles/color';
 
 const UserScreen = ({ navigation }) => {
-
-    
-
-    
-
 
     return (
         <View style={styles.container}>
@@ -19,16 +14,15 @@ const UserScreen = ({ navigation }) => {
                         <Icon name='home' size={25} color='white' />
                     </TouchableOpacity>
                     <Text style={styles.welcomMessage}>Profile</Text>
-
                     <TouchableOpacity >
                         <Icon name='bell' size={25} color='white' />
                     </TouchableOpacity>
                 </View>
-                <View style={{ bottom: -80, flex: 1, justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
-                    <View style={{borderColor:'white', borderWidth:4, borderRadius:100}}>
+                <View style={{ bottom: -70, flex: 1, justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
+                    <View style={{ borderColor: 'white', borderWidth: 4, borderRadius: 100 }}>
                         <Image source={require('../../assets/images/user.png')} style={styles.image} />
                     </View>
-                        <Text style={{textAlign:'center', fontSize:20, marginTop:5, fontFamily:'Pacifico_400Regular'}}>Levi Goteni</Text>
+                    <Text style={{ textAlign: 'center', fontSize: 20, fontFamily: 'Pacifico_400Regular' }}>Levi Goteni</Text>
                 </View>
             </View>
             <View style={styles.buttonsContainer}>
@@ -71,7 +65,6 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         paddingTop: 30,
         width: '100%'
-
     },
     icon: {
         fontSize: 70,
@@ -82,21 +75,24 @@ const styles = StyleSheet.create({
     container_image: {
         position: 'relative',
         flex: 0.4,
+        // justifyContent: 'center',
         justifyContent: 'flex-start',
         backgroundColor: default_color.orange,
         // borderBottomLeftRadius: 60,
+        borderBottomLeftRadius: 20,
+        borderBottomRightRadius: 20,
         padding: 20,
-        marginBottom:70
+        // marginBottom:70
 
     },
     iconStyle: {
         paddingHorizontal: 10,
     },
     image: {
-        width: 120,
-        height: 120,
-        backgroundColor:'white',
-        borderRadius:100
+        width: 100,
+        height: 100,
+        backgroundColor: 'white',
+        borderRadius: 100
     },
     welcomMessage: {
         fontFamily: 'Pacifico_400Regular',
@@ -125,7 +121,7 @@ const styles = StyleSheet.create({
         flex: 1,
         marginHorizontal: 5,
         alignItems: 'flex-start',
-        justifyContent:'center'
+        justifyContent: 'center'
     },
     buttonText: {
         color: 'white',
@@ -133,7 +129,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         // textAlign:'left'
     },
-    
+
 });
 
 export default UserScreen;

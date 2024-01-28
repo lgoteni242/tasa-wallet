@@ -38,72 +38,72 @@ const HistoriqueScreen = ({ navigation }) => {
             </View>
             <ScrollView style={{ backgroundColor: '#ccc' }}>
                 <View style={styles.aujourdhui}>
-                    <Text style={{ fontFamily: 'PlayfairDisplay_400Regular', color: 'gray' }}>Aujourd'hui</Text>
+                    <Text style={{ color: 'gray', marginBottom: 5 }}>Aujourd'hui</Text>
                     <View style={styles.transcationListe}>
-                        <View style={{ display: 'flex', flexDirection: 'row', marginBottom:20 }}>
+                        <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 20 }}>
                             <TouchableOpacity style={styles.iconShowbarTransaction}>
                                 <Icon name='user' size={30} color='gray' />
                             </TouchableOpacity>
                             <View style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <Text style={{ fontFamily: 'PlayfairDisplay_400Regular' }}>Levi Goteni</Text>
-                                <Text style={{ color: 'gray', fontFamily: 'PlayfairDisplay_400Regular' }}>12:15 PM</Text>
+                                <Text>Levi Goteni</Text>
+                                <Text style={{ color: 'gray' }}>12:15 PM</Text>
                             </View>
                         </View>
-                        <Text style={{ fontFamily: 'PlayfairDisplay_400Regular' }}>1124 Fcfa</Text>
+                        <Text >1124 FCFA</Text>
                     </View>
                     <View style={styles.transcationListe}>
-                        <View style={{ display: 'flex', flexDirection: 'row', marginBottom:20 }}>
+                        <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 20 }}>
                             <TouchableOpacity style={styles.iconShowbarTransaction}>
                                 <Icon name='user' size={30} color='gray' />
                             </TouchableOpacity>
                             <View style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <Text style={{ fontFamily: 'PlayfairDisplay_400Regular' }}>Levi Goteni</Text>
-                                <Text style={{ color: 'gray', fontFamily: 'PlayfairDisplay_400Regular' }}>12:15 PM</Text>
+                                <Text >Levi Goteni</Text>
+                                <Text style={{ color: 'gray' }}>12:15 PM</Text>
                             </View>
                         </View>
-                        <Text style={{ fontFamily: 'PlayfairDisplay_400Regular' }}>1124 Fcfa</Text>
+                        <Text >1124 FCFA</Text>
                     </View>
                 </View>
                 <View style={styles.aujourdhui}>
-                    <Text style={{ fontFamily: 'PlayfairDisplay_400Regular', color: 'gray' }}>Hier</Text>
+                    <Text style={{ color: 'gray', marginBottom: 5 }}>Hier</Text>
                     <View style={styles.transcationListe}>
-                        <View style={{ display: 'flex', flexDirection: 'row', marginBottom:20 }}>
+                        <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 20 }}>
                             <TouchableOpacity style={styles.iconShowbarTransaction}>
                                 <Icon name='user' size={30} color='gray' />
                             </TouchableOpacity>
                             <View style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <Text style={{ fontFamily: 'PlayfairDisplay_400Regular' }}>Levi Goteni</Text>
-                                <Text style={{ color: 'gray', fontFamily: 'PlayfairDisplay_400Regular' }}>12:15 PM</Text>
+                                <Text >Levi Goteni</Text>
+                                <Text style={{ color: 'gray' }}>12:15 PM</Text>
                             </View>
                         </View>
-                        <Text style={{ fontFamily: 'PlayfairDisplay_400Regular' }}>1124 Fcfa</Text>
+                        <Text >1124 FCFA</Text>
                     </View>
                     <View style={styles.transcationListe}>
-                        <View style={{ display: 'flex', flexDirection: 'row', marginBottom:20 }}>
+                        <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 20 }}>
                             <TouchableOpacity style={styles.iconShowbarTransaction}>
                                 <Icon name='user' size={30} color='gray' />
                             </TouchableOpacity>
                             <View style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <Text style={{ fontFamily: 'PlayfairDisplay_400Regular' }}>Levi Goteni</Text>
-                                <Text style={{ color: 'gray', fontFamily: 'PlayfairDisplay_400Regular' }}>12:15 PM</Text>
+                                <Text >Levi Goteni</Text>
+                                <Text style={{ color: 'gray' }}>12:15 PM</Text>
                             </View>
                         </View>
-                        <Text style={{ fontFamily: 'PlayfairDisplay_400Regular' }}>1124 Fcfa</Text>
+                        <Text >1124 FCFA</Text>
                     </View>
                 </View>
                 <View style={styles.aujourdhui2}>
-                    <Text style={{ fontFamily: 'PlayfairDisplay_400Regular', color: 'gray' }}>Avant hier</Text>
+                    <Text style={{ color: 'gray', marginBottom: 5 }}>Avant hier</Text>
                     <View style={styles.transcationListe}>
                         <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 20 }}>
                             <TouchableOpacity style={styles.iconShowbarTransaction}>
                                 <Icon name='user' size={30} color='gray' />
                             </TouchableOpacity>
                             <View style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <Text style={{ fontFamily: 'PlayfairDisplay_400Regular' }}>Levi Goteni</Text>
-                                <Text style={{ color: 'gray', fontFamily: 'PlayfairDisplay_400Regular' }}>12:15 PM</Text>
+                                <Text >Levi Goteni</Text>
+                                <Text style={{ color: 'gray' }}>12:15 PM</Text>
                             </View>
                         </View>
-                        <Text style={{ fontFamily: 'PlayfairDisplay_400Regular' }}>1124 Fcfa</Text>
+                        <Text >1124 FCFA</Text>
                     </View>
                     <View style={styles.transcationListe}>
                         <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 20 }}>
@@ -111,11 +111,11 @@ const HistoriqueScreen = ({ navigation }) => {
                                 <Icon name='user' size={30} color='gray' />
                             </TouchableOpacity>
                             <View style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <Text style={{ fontFamily: 'PlayfairDisplay_400Regular' }}>Levi Goteni</Text>
-                                <Text style={{ color: 'gray', fontFamily: 'PlayfairDisplay_400Regular' }}>12:15 PM</Text>
+                                <Text >Levi Goteni</Text>
+                                <Text style={{ color: 'gray' }}>12:15 PM</Text>
                             </View>
                         </View>
-                        <Text style={{ fontFamily: 'PlayfairDisplay_400Regular' }}>1124 Fcfa</Text>
+                        <Text >1124 FCFA</Text>
                     </View>
                     <View style={styles.transcationListe}>
                         <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 20 }}>
@@ -123,11 +123,11 @@ const HistoriqueScreen = ({ navigation }) => {
                                 <Icon name='user' size={30} color='gray' />
                             </TouchableOpacity>
                             <View style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <Text style={{ fontFamily: 'PlayfairDisplay_400Regular' }}>Levi Goteni</Text>
-                                <Text style={{ color: 'gray', fontFamily: 'PlayfairDisplay_400Regular' }}>12:15 PM</Text>
+                                <Text >Levi Goteni</Text>
+                                <Text style={{ color: 'gray' }}>12:15 PM</Text>
                             </View>
                         </View>
-                        <Text style={{ fontFamily: 'PlayfairDisplay_400Regular' }}>1124 Fcfa</Text>
+                        <Text >1124 FCFA</Text>
                     </View>
                 </View>
             </ScrollView>
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'flex-start',
-        paddingTop: 30,
+        // paddingTop: 30,
         width: '100%'
 
     },
@@ -158,12 +158,14 @@ const styles = StyleSheet.create({
     },
 
     container_image: {
-        height:100,
+        // flex: 0.4,
+        height: 150,
         justifyContent: 'center',
         backgroundColor: default_color.orange,
-        borderBottomLeftRadius: 60,
+        // borderBottomLeftRadius: 20,
+        // borderBottomRightRadius: 20,
         padding: 20,
-        alignItems:'center'
+        alignItems: 'center'
 
     },
     iconStyle: {
@@ -194,7 +196,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
-    
+
     input: {
         flex: 1,
         height: 40,
@@ -215,11 +217,11 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 }, // 
         backgroundColor: 'white',
         padding: 20,
-        paddingBottom:40
+        paddingBottom: 40
     },
     transcationListe: {
-        marginTop: 10,
-        marginBottom: 10,
+        marginTop: 5,
+        marginBottom: 5,
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -237,7 +239,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         // padding: 10,
-        paddingHorizontal: 13,
+        paddingHorizontal: 12,
         // paddingVertical: 2,
         elevation: 2,
         shadowColor: '#000',
