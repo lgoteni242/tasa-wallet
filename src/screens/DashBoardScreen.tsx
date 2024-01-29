@@ -1,6 +1,6 @@
 import { Pacifico_400Regular } from "@expo-google-fonts/pacifico";
 import { PlayfairDisplay_400Regular } from "@expo-google-fonts/playfair-display";
-import { Roboto_700Bold } from "@expo-google-fonts/roboto";
+import { Roboto_700Bold, Roboto_100Thin, Roboto_400Regular } from "@expo-google-fonts/roboto";
 import CustomModalPicker from "../components/CustomModalPicker";
 import Toast from 'react-native-toast-message';
 import {
@@ -97,7 +97,8 @@ const DashBoardScreen = ({ navigation }) => {
         Pacifico_400Regular,
         RobotoSerif_400Regular,
         Roboto_700Bold,
-        PlayfairDisplay_400Regular,
+        Roboto_100Thin,
+        Roboto_400Regular
     });
 
     if (!fontsLoaded) {
@@ -164,7 +165,8 @@ const DashBoardScreen = ({ navigation }) => {
                         <View style={styles.hautBarShowBalance}>
                             <Text
                                 style={{
-                                    fontFamily: "Roboto_700Bold",
+                                    fontFamily: 'Roboto_400Regular',
+
                                     color: "gray",
                                     fontSize: 15,
                                 }}
@@ -207,7 +209,8 @@ const DashBoardScreen = ({ navigation }) => {
                         <View>
                             <Text
                                 style={{
-                                    // fontFamily: "PlayfairDisplay_400Regular",
+                                    fontFamily: 'Roboto_400Regular',
+
                                     color: "white",
                                 }}
                             >
@@ -215,7 +218,7 @@ const DashBoardScreen = ({ navigation }) => {
                             </Text>
                             <Text
                                 style={{
-                                    // fontFamily: "PlayfairDisplay_400Regular",
+                                    fontFamily: 'Roboto_400Regular',
                                     color: "white",
                                 }}
                             >
@@ -224,7 +227,8 @@ const DashBoardScreen = ({ navigation }) => {
                         </View>
                         <Text
                             style={{
-                                // fontFamily: "PlayfairDisplay_400Regular",
+                                fontFamily: 'Roboto_400Regular',
+
                                 color: "white",
                             }}
                         >
@@ -258,14 +262,15 @@ const DashBoardScreen = ({ navigation }) => {
             <View style={styles.transaction}>
                 <View style={styles.transcationTexte}>
                     <Text
-                        style={{ fontSize: 15 }}
+                        style={{ fontSize: 15, fontFamily: "Roboto_100Thin" }}
+
                     >
                         Transactions
                     </Text>
                     <View style={styles.transactionPillule}>
                         <Text
                             style={{
-                                // fontFamily: "PlayfairDisplay_400Regular",
+                                fontFamily: "Roboto_100Thin",
                                 color: "white",
                                 fontSize: 12,
                                 marginHorizontal: 15,
@@ -293,20 +298,30 @@ const DashBoardScreen = ({ navigation }) => {
                             <View
                                 style={{ display: "flex", justifyContent: "space-between" }}
                             >
-                                <Text >
+                                <Text
+                                    style={{
+                                        color: "gray",
+                                        fontFamily: "Roboto_400Regular",
+                                    }}
+                                >
                                     Levi Goteni
                                 </Text>
                                 <Text
                                     style={{
                                         color: "gray",
-                                        // fontFamily: "PlayfairDisplay_400Regular",
+                                        fontFamily: "Roboto_100Thin",
                                     }}
                                 >
                                     12:15 PM
                                 </Text>
                             </View>
                         </View>
-                        <Text >
+                        <Text
+                            style={{
+                                color: "gray",
+                                fontFamily: "Roboto_100Thin",
+                            }}
+                        >
                             1124 Fcfa
                         </Text>
                     </View>
@@ -324,20 +339,30 @@ const DashBoardScreen = ({ navigation }) => {
                             <View
                                 style={{ display: "flex", justifyContent: "space-between" }}
                             >
-                                <Text >
-                                    Levi Goteni
+                                <Text
+                                    style={{
+                                        color: "gray",
+                                        fontFamily: "Roboto_400Regular",
+                                    }}
+                                >
+                                    Paul Mboungou
                                 </Text>
                                 <Text
                                     style={{
                                         color: "gray",
-                                        // fontFamily: "PlayfairDisplay_400Regular",
+                                        fontFamily: "Roboto_100Thin",
                                     }}
                                 >
                                     12:15 PM
                                 </Text>
                             </View>
                         </View>
-                        <Text>
+                        <Text
+                            style={{
+                                color: "gray",
+                                fontFamily: "Roboto_100Thin",
+                            }}
+                        >
                             1124 Fcfa
                         </Text>
                     </View>
@@ -355,20 +380,30 @@ const DashBoardScreen = ({ navigation }) => {
                             <View
                                 style={{ display: "flex", justifyContent: "space-between" }}
                             >
-                                <Text >
-                                    Levi Goteni
+                                <Text
+                                    style={{
+                                        color: "gray",
+                                        fontFamily: "Roboto_400Regular",
+                                    }}
+                                >
+                                    Divin Mik
                                 </Text>
                                 <Text
                                     style={{
                                         color: "gray",
-                                        // fontFamily: "PlayfairDisplay_400Regular",
+                                        fontFamily: "Roboto_100Thin",
                                     }}
                                 >
                                     12:15 PM
                                 </Text>
                             </View>
                         </View>
-                        <Text >
+                        <Text
+                            style={{
+                                color: "gray",
+                                fontFamily: "Roboto_100Thin",
+                            }}
+                        >
                             1124 Fcfa
                         </Text>
                     </View>
@@ -386,20 +421,30 @@ const DashBoardScreen = ({ navigation }) => {
                             <View
                                 style={{ display: "flex", justifyContent: "space-between" }}
                             >
-                                <Text >
-                                    Levi Goteni
+                                <Text
+                                    style={{
+                                        color: "gray",
+                                        fontFamily: "Roboto_400Regular",
+                                    }}
+                                >
+                                    Christ N'gakosso
                                 </Text>
                                 <Text
                                     style={{
                                         color: "gray",
-                                        // fontFamily: "PlayfairDisplay_400Regular",
+                                        fontFamily: "Roboto_100Thin",
                                     }}
                                 >
                                     12:15 PM
                                 </Text>
                             </View>
                         </View>
-                        <Text >
+                        <Text
+                            style={{
+                                color: "gray",
+                                fontFamily: "Roboto_100Thin",
+                            }}
+                        >
                             1124 Fcfa
                         </Text>
                     </View>
@@ -413,7 +458,7 @@ const DashBoardScreen = ({ navigation }) => {
                 backdropOpacity={0.1}
             >
                 <View style={styles.modalContent}>
-                    <Text style={{ fontSize: 23, paddingBottom: 30, fontWeight: 'bold', color: 'gray', }}>Envoyer de l'argent</Text>
+                    <Text style={{ fontSize: 17, paddingBottom: 20, color: 'black', fontFamily: "Roboto_400Regular", }}>ENVOYER DE L'ARGENT</Text>
                     <View style={styles.inputContainer2}>
                         {selectedOption == "" ?
                             <Icon name="globe" size={15} color="grey" style={styles.iconStyle} />
@@ -423,7 +468,7 @@ const DashBoardScreen = ({ navigation }) => {
                                 <Text style={styles.iconStyle}>{flag('sn')}</Text>
                         }
                         <TouchableOpacity onPress={() => setModalVisible2(true)} style={{ width: "88%" }}>
-                            {selectedOption == "" ? (<Text style={{ color: 'grey' }}>Pays de residence</Text>) : <Text>{selectedOption}</Text>}
+                            {selectedOption == "" ? (<Text style={{ color: 'grey', fontFamily: 'Roboto_400Regular' }}>Pays de residence</Text>) : <Text>{selectedOption}</Text>}
                         </TouchableOpacity>
                         <CustomModalPicker
                             options={options}
@@ -473,13 +518,13 @@ const DashBoardScreen = ({ navigation }) => {
             >
                 <View style={styles.modalContainerSend}>
                     <View style={{ backgroundColor: default_color.orange, borderTopEndRadius: 10, borderTopStartRadius: 10, paddingTop: 5 }}>
-                        <Text style={{ textAlign: 'center', fontSize: 20, paddingBottom: 10, fontWeight: 'bold', color: 'white' }}>Resumer de l'operation</Text>
+                        <Text style={{ textAlign: 'center', fontSize: 20, paddingBottom: 10, fontWeight: 'bold', color: 'white', fontFamily: "Roboto_400Regular" }}>Resumer de l'operation</Text>
                     </View>
                     <View style={styles.modalContentSend}>
-                        <Text style={{ fontSize: 19, color: 'rgba(16,17,17,0.84)', fontWeight: 'bold' }}>Pays: {selectedOption}</Text>
-                        <Text style={{ fontSize: 19, color: 'grargba(16,17,17,0.84)', fontWeight: 'bold' }}>Beneficiare : GOTENI</Text>
-                        <Text style={{ fontSize: 19, color: 'grargba(16,17,17,0.84)', fontWeight: 'bold' }}>Numero : {numero}</Text>
-                        <Text style={{ marginBottom: 19, fontSize: 20, color: 'rgba(16,17,17,0.84)', fontWeight: 'bold' }}>Montant : {montant}</Text>
+                        <Text style={{ fontSize: 19, color: 'rgba(16,17,17,0.84)', fontFamily: "Roboto_400Regular" }}>Pays: {selectedOption}</Text>
+                        <Text style={{ fontSize: 19, color: 'rgba(16,17,17,0.84)', fontFamily: "Roboto_400Regular" }}>Beneficiare : GOTENI</Text>
+                        <Text style={{ fontSize: 19, color: 'rgba(16,17,17,0.84)', fontFamily: "Roboto_400Regular" }}>Numero : {numero}</Text>
+                        <Text style={{ marginBottom: 19, fontSize: 20, color: 'rgba(16,17,17,0.84)', fontFamily: "Roboto_400Regular" }}>Montant : {montant}</Text>
                         <View style={{
                             display: "flex", flexDirection: "row", justifyContent: "space-between", borderTopWidth: 1, borderTopColor: 'gray'
                             , paddingTop: 10
@@ -510,14 +555,14 @@ const DashBoardScreen = ({ navigation }) => {
             {/* =================================Verifie modal============================== */}
             <Modal isVisible={sendMoney} coverScreen={true} backdropOpacity={0.4} onBackdropPress={() => setSendMoney(false)}>
                 <LinearGradient
-                    colors={['rgba(6,119,52,1)', 'transparent']}
+                    colors={[default_color.success, 'transparent']}
                     start={{ x: 0.5, y: 0 }}
                     end={{ x: 0.5, y: 0.9 }}
                     style={styles.modalContainer}
                 >
                     <View style={styles.checkmarkContainer}>
                         <View style={styles.checkmark}>
-                            <Icon name="check-circle" size={100} color='rgba(255,255,255,0.84)' />
+                            <Icon name="check-circle" size={100} color='white' />
                         </View>
                     </View>
                     <Text style={styles.modalText2}>
@@ -553,7 +598,7 @@ const DashBoardScreen = ({ navigation }) => {
                 statusBarTranslucent={false}
             >
                 <View style={styles.modalContent}>
-                    <Text style={{ fontSize: 23, paddingBottom: 30, fontWeight: 'bold', color: 'gray' }}>Retirer de l'argent</Text>
+                    <Text style={{ fontSize: 17, paddingBottom: 20, color: 'black', fontFamily: "Roboto_400Regular", }}>RETIRER DE L'ARGENT</Text>
                     {verifPass ?
 
                         <>
@@ -618,7 +663,7 @@ const DashBoardScreen = ({ navigation }) => {
                     {
                         choixpayement == "" ?
                             <>
-                                <Text style={{ fontSize: 17, paddingBottom: 20, fontWeight: 'bold', color: 'gray', textAlign: 'center' }}>Choissez votre moyen de paiement</Text>
+                                <Text style={{ fontSize: 13, paddingBottom: 20, color: 'black', fontFamily: "Roboto_400Regular", }}>CHOISISSEZ VOTRE MOYEN DE PAYEMENT</Text>
                                 <View style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', width: '100%' }}>
                                     <TouchableOpacity onPress={() => setChoixPayement("mtn")}>
                                         <Image
@@ -635,11 +680,11 @@ const DashBoardScreen = ({ navigation }) => {
                             :
                             choixpayement == "mtn" ?
                                 <>
-                                    <Text style={{ fontSize: 17, paddingBottom: 20, fontWeight: 'bold', color: 'gray', textAlign: 'center' }}>Effectuez un depot</Text>
+                                    <Text style={{ fontSize: 17, paddingBottom: 10, color: 'black', fontFamily: "Roboto_400Regular", }}>EFFECTUEZ UN DEPOT</Text>
                                     <Text style={{ fontSize: 13, paddingBottom: 20, fontWeight: 'bold', color: 'gray', textAlign: 'center' }}>
                                         Assurez-vous d'avoir un compte au préalable avec le même numéro de téléphone ou la transaction sera impossible.
                                     </Text>
-                                    <View style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', width: '100%' }}>
+                                    <View style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', width: '100%', fontFamily: "Roboto_400Regular" }}>
                                         <View style={styles.inputContainer}>
                                             <Icon name="money" size={15} color="grey" style={styles.iconStyle} />
                                             <TextInput
@@ -691,7 +736,7 @@ const styles = StyleSheet.create({
         width: "100%",
     },
     welcomMessage: {
-        // fontFamily: "PlayfairDisplay_400Regular",
+        fontFamily: "Roboto_400Regular",
         color: "white",
         fontSize: 15,
     },
@@ -787,7 +832,7 @@ const styles = StyleSheet.create({
     textShowbar: {
         color: "white",
         fontSize: 15,
-        // fontFamily: "PlayfairDisplay_400Regular",
+        fontFamily: "Roboto_100Thin",
     },
     option: {
         display: "flex",
@@ -806,9 +851,9 @@ const styles = StyleSheet.create({
     transactionPillule: {
         justifyContent: "center",
         display: "flex",
-        // padding:1,
         backgroundColor: "gray",
         borderRadius: 20,
+        alignItems: 'center'
     },
     transcationListe: {
         marginTop: 10,
@@ -858,7 +903,7 @@ const styles = StyleSheet.create({
         flex: 1,
         height: 55,
         // paddingHorizontal: 10,
-        // fontFamily: 'Pacifico_400Regular',
+        fontFamily: 'Roboto_400Regular',
     },
     button: {
         backgroundColor: default_color.orange,
@@ -897,6 +942,8 @@ const styles = StyleSheet.create({
         borderRadius: 7,
         width: "30%",
         borderWidth: 0.5,
+        fontFamily: 'Roboto_400Regular',
+
     },
     buttonTextAnnul: {
         color: 'gray',
@@ -904,25 +951,26 @@ const styles = StyleSheet.create({
         paddingVertical: 4,
         width: "100%",
         textAlign: 'center',
-        // fontFamily: 'Pacifico_400Regular',
+        fontFamily: 'Roboto_400Regular',
     },
     buttonText: {
         color: default_color.white,
         fontSize: 15,
         paddingVertical: 4,
         width: "100%",
-        textAlign: 'center'
-        // fontFamily: 'Pacifico_400Regular',
+        textAlign: 'center',
+        fontFamily: 'Roboto_400Regular',
     },
 
     modalContentSend: {
         backgroundColor: 'white',
         padding: 23,
-        borderRadius: 10,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
     },
 
     modalContainerSend: {
-        backgroundColor: 'white',
+        backgroundColor: 'white.orange',
         borderRadius: 10,
         // padding: 20,
     },

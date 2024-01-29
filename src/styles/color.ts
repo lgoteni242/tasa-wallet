@@ -13,7 +13,8 @@ const default_color = {
     // orange: '#B79D94',
     orange2: '#EE9322',
     red: '#ff6666',
-    green: '#00b33c'
+    green: '#00b33c',
+    success: 'rgba(24,206,63,0.93)'
 
 };
 

@@ -3,7 +3,7 @@ import { View, Image, StyleSheet, Text, StatusBar, TextInput, TouchableOpacity, 
 import default_color from '../styles/color';
 import { Pacifico_400Regular, useFonts } from '@expo-google-fonts/pacifico';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Roboto_700Bold } from "@expo-google-fonts/roboto";
+import { Roboto_700Bold, Roboto_100Thin } from "@expo-google-fonts/roboto";
 
 const SettingsScreens = ({ navigation }) => {
 
@@ -12,6 +12,7 @@ const SettingsScreens = ({ navigation }) => {
     let [fontsLoaded] = useFonts({
         Pacifico_400Regular,
         Roboto_700Bold,
+        Roboto_100Thin,
     });
 
     if (!fontsLoaded) {
@@ -28,13 +29,13 @@ const SettingsScreens = ({ navigation }) => {
 
             <View style={styles.container_image}>
                 <View style={styles.container_logo}>
-                    <Text style={styles.welcomMessage}>Configuration</Text>
+                    <Text style={styles.welcomMessage}>Profil</Text>
                 </View>
 
                 <Text style={{ color: 'white', fontSize: 20, fontFamily: 'Roboto_700Bold' }}>Levi christ Goteni</Text>
             </View>
 
-            <ScrollView style={{ backgroundColor: '#ccc' }}>
+            <ScrollView style={{ backgroundColor: '#E7E7E7' }}>
                 <View style={styles.aujourdhui}>
                     <Text style={{ marginBottom: 5, color: default_color.orange, fontSize: 15 }}>Compte</Text>
                     <View style={styles.transcationListe}>
@@ -65,6 +66,8 @@ const SettingsScreens = ({ navigation }) => {
                 <View style={styles.aujourdhui}>
                     <Text style={{ marginBottom: 15, color: default_color.orange, fontSize: 15 }}>Mettre a jour le mot de passe</Text>
                     {/* <View style={styles.transcationListe}> */}
+                    <Text style={{ color: 'gray', fontSize: 10, marginBottom: 10, textAlign: 'justify' }}>Assurez-vous que votre compte utilise un mot de passe long et aléatoire pour rester sécurisé.</Text>
+
                     <View style={styles.inputContainer}>
                         <TextInput
                             style={styles.input}
@@ -94,7 +97,7 @@ const SettingsScreens = ({ navigation }) => {
 
                 <View style={styles.aujourdhui}>
                     <Text style={{ marginBottom: 5, color: default_color.orange, fontSize: 15 }}>Authentification en deux étapes</Text>
-                    <Text style={{ color: 'gray', fontSize: 10, marginBottom: 10 }}>Lorsque l’authentification à deux facteurs est activée, un jeton aléatoire sécurisé vous sera demandé pendant l’authentification. Vous pouvez récupérer ce jeton à partir de l’application Google Authenticator de votre téléphone.</Text>
+                    <Text style={{ color: 'gray', fontSize: 10, marginBottom: 10, textAlign: 'justify' }}>Lorsque l’authentification à deux facteurs est activée, un jeton aléatoire sécurisé vous sera demandé pendant l’authentification. Vous pouvez récupérer ce jeton à partir de l’application Google Authenticator de votre téléphone.</Text>
                     <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Menu')}>
                         <Text style={styles.buttonText}>Activer</Text>
                     </TouchableOpacity>
@@ -103,14 +106,14 @@ const SettingsScreens = ({ navigation }) => {
 
                 <View style={styles.aujourdhui}>
                     <Text style={{ marginBottom: 5, color: default_color.orange, fontSize: 15 }}>Sessions de navigateur</Text>
-                    <Text style={{ color: 'gray', fontSize: 10, marginBottom: 10 }}>Si nécessaire, vous pouvez vous déconnecter de toutes vos autres sessions de navigateur sur tous vos appareils. Certaines de vos sessions récentes sont énumérées ci-dessous; cependant, cette liste peut ne pas être exhaustive. Si vous pensez que votre compte a été compromis, vous devez également mettre à jour votre mot de passe.</Text>
+                    <Text style={{ color: 'gray', fontSize: 10, marginBottom: 10, textAlign: 'justify' }}>Si nécessaire, vous pouvez vous déconnecter de toutes vos autres sessions de navigateur sur tous vos appareils. Certaines de vos sessions récentes sont énumérées ci-dessous; cependant, cette liste peut ne pas être exhaustive. Si vous pensez que votre compte a été compromis, vous devez également mettre à jour votre mot de passe.</Text>
                     <TouchableOpacity style={styles.buttonEnd} onPress={() => navigation.navigate('Menu')}>
                         <Text style={styles.buttonTextEnd}>Se deconnecter des autres sessions du navigateur</Text>
                     </TouchableOpacity>
 
                 </View>
-                <View style={{ marginBottom: 80 }}>
-                    <Text style={{ textAlign: 'center', color: 'white' }}>
+                <View style={{ marginBottom: 60 }}>
+                    <Text style={{ textAlign: 'center', color: 'rgba(151,34,13,1)' }}>
                         Tasa wallet pour android by Tasa
                     </Text>
                 </View>
@@ -187,7 +190,7 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: default_color.orange,
-        paddingVertical: 13,
+        paddingVertical: 10,
         alignItems: 'center',
         borderRadius: 3,
         marginBottom: 10,
@@ -202,11 +205,10 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         width: '100%',
 
-
     },
     buttonText: {
         color: default_color.white,
-        fontSize: 15,
+        fontSize: 13,
         // fontFamily: 'Pacifico_400Regular',
     },
     buttonTextEnd: {
@@ -235,7 +237,7 @@ const styles = StyleSheet.create({
         borderRadius: 100
     },
     welcomMessage: {
-        fontFamily: 'Pacifico_400Regular',
+        fontFamily: 'Roboto_700Bold',
         color: 'white',
         fontSize: 15
     },

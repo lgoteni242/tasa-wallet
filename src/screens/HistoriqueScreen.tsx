@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
     },
     welcomMessage: {
-        fontFamily: 'Pacifico_400Regular',
+        fontFamily: 'Roboto_700Bold',
         color: 'white',
         fontSize: 15
     },
