@@ -1,7 +1,8 @@
+import Icon from 'react-native-vector-icons/FontAwesome';
 import React, { useState } from 'react';
 import { View, Image, StyleSheet, Text, StatusBar, TextInput, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import default_color from '../styles/color';
-import Icon from 'react-native-vector-icons/FontAwesome';
+    
 
 const HistoriqueScreen = ({ navigation }) => {
 
@@ -13,7 +14,6 @@ const HistoriqueScreen = ({ navigation }) => {
     };
 
     const handleFilter = () => {
-        // Logique de filtrage ici
         console.log('Filtrage');
     };
 
@@ -36,99 +36,386 @@ const HistoriqueScreen = ({ navigation }) => {
                     <Icon name="search" size={20} color="gray" />
                 </TouchableOpacity>
             </View>
-            <ScrollView style={{ backgroundColor: '#ccc' }}>
+            <ScrollView style={{ backgroundColor: '#E7E7E7' }}>
                 <View style={styles.aujourdhui}>
-                    <Text style={{ color: 'gray', marginBottom: 5 }}>Aujourd'hui</Text>
+                    <View style={styles.transcationTexte}>
+                        <Text
+                            style={{ fontSize: 12, fontFamily: "RobotoSerif_100Thin" }}
+
+                        >
+                            Transactions
+                        </Text>
+                        <View style={styles.transactionPillule}>
+                            <Text
+                                style={{
+                                    fontFamily: "RobotoSerif_100Thin",
+                                    color: "white",
+                                    fontSize: 12,
+                                    marginHorizontal: 15,
+                                }}
+                            >
+                                Aujourd'hui
+                            </Text>
+                        </View>
+                    </View>
+
                     <View style={styles.transcationListe}>
-                        <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 20 }}>
+                        <View
+                            style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                marginBottom: 13,
+                            }}
+                        >
                             <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                <Icon name='user' size={30} color='gray' />
+                                <Icon name="user" size={30} color="gray" />
                             </TouchableOpacity>
-                            <View style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <Text>Levi Goteni</Text>
-                                <Text style={{ color: 'gray' }}>12:15 PM</Text>
+                            <View
+                                style={{ display: "flex", justifyContent: "space-between" }}
+                            >
+                                <Text
+                                    style={{
+                                        color: "gray",
+                                        fontFamily: "RobotoSerif_400Regular",
+                                    }}
+                                >
+                                    Divin Mik
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: "gray",
+                                        fontFamily: "RobotoSerif_100Thin",
+
+                                    }}
+                                >
+                                    12:15 PM
+                                </Text>
                             </View>
                         </View>
-                        <Text >1124 FCFA</Text>
+                        <Text
+                            style={{
+                                color: "gray",
+                                fontFamily: "RobotoSerif_100Thin",
+
+                            }}
+                        >
+                            1124 Fcfa
+                        </Text>
                     </View>
+
                     <View style={styles.transcationListe}>
-                        <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 20 }}>
+                        <View
+                            style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                marginBottom: 13,
+                            }}
+                        >
                             <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                <Icon name='user' size={30} color='gray' />
+                                <Icon name="user" size={30} color="gray" />
                             </TouchableOpacity>
-                            <View style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <Text >Levi Goteni</Text>
-                                <Text style={{ color: 'gray' }}>12:15 PM</Text>
+                            <View
+                                style={{ display: "flex", justifyContent: "space-between" }}
+                            >
+                                <Text
+                                    style={{
+                                        color: "gray",
+                                        fontFamily: "RobotoSerif_400Regular",
+                                    }}
+                                >
+                                    Divin Mik
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: "gray",
+                                        fontFamily: "RobotoSerif_100Thin",
+
+                                    }}
+                                >
+                                    12:15 PM
+                                </Text>
                             </View>
                         </View>
-                        <Text >1124 FCFA</Text>
+                        <Text
+                            style={{
+                                color: "gray",
+                                fontFamily: "RobotoSerif_100Thin",
+
+                            }}
+                        >
+                            1124 Fcfa
+                        </Text>
                     </View>
+
                 </View>
                 <View style={styles.aujourdhui}>
-                    <Text style={{ color: 'gray', marginBottom: 5 }}>Hier</Text>
-                    <View style={styles.transcationListe}>
-                        <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 20 }}>
-                            <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                <Icon name='user' size={30} color='gray' />
-                            </TouchableOpacity>
-                            <View style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <Text >Levi Goteni</Text>
-                                <Text style={{ color: 'gray' }}>12:15 PM</Text>
-                            </View>
+
+                    <View style={styles.transcationTexte}>
+                        <Text
+                            style={{ fontSize: 12, fontFamily: "RobotoSerif_100Thin" }}
+
+                        >
+                            Transactions
+                        </Text>
+                        <View style={styles.transactionPillule}>
+                            <Text
+                                style={{
+                                    fontFamily: "RobotoSerif_100Thin",
+                                    color: "white",
+                                    fontSize: 12,
+                                    marginHorizontal: 15,
+                                }}
+                            >
+                                hier
+                            </Text>
                         </View>
-                        <Text >1124 FCFA</Text>
                     </View>
                     <View style={styles.transcationListe}>
-                        <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 20 }}>
+                        <View
+                            style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                marginBottom: 13,
+                            }}
+                        >
                             <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                <Icon name='user' size={30} color='gray' />
+                                <Icon name="user" size={30} color="gray" />
                             </TouchableOpacity>
-                            <View style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <Text >Levi Goteni</Text>
-                                <Text style={{ color: 'gray' }}>12:15 PM</Text>
+                            <View
+                                style={{ display: "flex", justifyContent: "space-between" }}
+                            >
+                                <Text
+                                    style={{
+                                        color: "gray",
+                                        fontFamily: "RobotoSerif_400Regular",
+                                    }}
+                                >
+                                    Divin Mik
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: "gray",
+                                        fontFamily: "RobotoSerif_100Thin",
+
+                                    }}
+                                >
+                                    12:15 PM
+                                </Text>
                             </View>
                         </View>
-                        <Text >1124 FCFA</Text>
+                        <Text
+                            style={{
+                                color: "gray",
+                                fontFamily: "RobotoSerif_100Thin",
+
+                            }}
+                        >
+                            1124 Fcfa
+                        </Text>
                     </View>
+
+                    <View style={styles.transcationListe}>
+                        <View
+                            style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                marginBottom: 13,
+                            }}
+                        >
+                            <TouchableOpacity style={styles.iconShowbarTransaction}>
+                                <Icon name="user" size={30} color="gray" />
+                            </TouchableOpacity>
+                            <View
+                                style={{ display: "flex", justifyContent: "space-between" }}
+                            >
+                                <Text
+                                    style={{
+                                        color: "gray",
+                                        fontFamily: "RobotoSerif_400Regular",
+                                    }}
+                                >
+                                    Divin Mik
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: "gray",
+                                        fontFamily: "RobotoSerif_100Thin",
+
+                                    }}
+                                >
+                                    12:15 PM
+                                </Text>
+                            </View>
+                        </View>
+                        <Text
+                            style={{
+                                color: "gray",
+                                fontFamily: "RobotoSerif_100Thin",
+
+                            }}
+                        >
+                            1124 Fcfa
+                        </Text>
+                    </View>
+
+                    <View style={styles.transcationListe}>
+                        <View
+                            style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                marginBottom: 10,
+                            }}
+                        >
+                            <TouchableOpacity style={styles.iconShowbarTransaction}>
+                                <Icon name="user" size={30} color="gray" />
+                            </TouchableOpacity>
+                            <View
+                                style={{ display: "flex", justifyContent: "space-between" }}
+                            >
+                                <Text
+                                    style={{
+                                        color: "gray",
+                                        fontFamily: "RobotoSerif_400Regular",
+                                    }}
+                                >
+                                    Divin Mik
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: "gray",
+                                        fontFamily: "RobotoSerif_100Thin",
+
+                                    }}
+                                >
+                                    12:15 PM
+                                </Text>
+                            </View>
+                        </View>
+                        <Text
+                            style={{
+                                color: "gray",
+                                fontFamily: "RobotoSerif_100Thin",
+
+                            }}
+                        >
+                            1124 Fcfa
+                        </Text>
+                    </View>
+
                 </View>
                 <View style={styles.aujourdhui2}>
-                    <Text style={{ color: 'gray', marginBottom: 5 }}>Avant hier</Text>
+
+                    <View style={styles.transcationTexte}>
+                        <Text
+                            style={{ fontSize: 12, fontFamily: "RobotoSerif_100Thin" }}
+
+                        >
+                            Transactions
+                        </Text>
+                        <View style={styles.transactionPillule}>
+                            <Text
+                                style={{
+                                    fontFamily: "RobotoSerif_100Thin",
+                                    color: "white",
+                                    fontSize: 12,
+                                    marginHorizontal: 15,
+                                }}
+                            >
+                                Avant hier
+                            </Text>
+                        </View>
+                    </View>
+
+
+
                     <View style={styles.transcationListe}>
-                        <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 20 }}>
+                        <View
+                            style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                marginBottom: 13,
+                            }}
+                        >
                             <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                <Icon name='user' size={30} color='gray' />
+                                <Icon name="user" size={30} color="gray" />
                             </TouchableOpacity>
-                            <View style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <Text >Levi Goteni</Text>
-                                <Text style={{ color: 'gray' }}>12:15 PM</Text>
+                            <View
+                                style={{ display: "flex", justifyContent: "space-between" }}
+                            >
+                                <Text
+                                    style={{
+                                        color: "gray",
+                                        fontFamily: "RobotoSerif_400Regular",
+                                    }}
+                                >
+                                    Divin Mik
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: "gray",
+                                        fontFamily: "RobotoSerif_100Thin",
+
+                                    }}
+                                >
+                                    12:15 PM
+                                </Text>
                             </View>
                         </View>
-                        <Text >1124 FCFA</Text>
+                        <Text
+                            style={{
+                                color: "gray",
+                                fontFamily: "RobotoSerif_100Thin",
+
+                            }}
+                        >
+                            1124 Fcfa
+                        </Text>
                     </View>
+
                     <View style={styles.transcationListe}>
-                        <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 20 }}>
+                        <View
+                            style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                marginBottom: 23,
+                            }}
+                        >
                             <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                <Icon name='user' size={30} color='gray' />
+                                <Icon name="user" size={30} color="gray" />
                             </TouchableOpacity>
-                            <View style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <Text >Levi Goteni</Text>
-                                <Text style={{ color: 'gray' }}>12:15 PM</Text>
+                            <View
+                                style={{ display: "flex", justifyContent: "space-between" }}
+                            >
+                                <Text
+                                    style={{
+                                        color: "gray",
+                                        fontFamily: "RobotoSerif_400Regular",
+                                    }}
+                                >
+                                    Divin Mik
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: "gray",
+                                        fontFamily: "RobotoSerif_100Thin",
+
+                                    }}
+                                >
+                                    12:15 PM
+                                </Text>
                             </View>
                         </View>
-                        <Text >1124 FCFA</Text>
+                        <Text
+                            style={{
+                                color: "gray",
+                                fontFamily: "RobotoSerif_100Thin",
+
+                            }}
+                        >
+                            1124 Fcfa
+                        </Text>
                     </View>
-                    <View style={styles.transcationListe}>
-                        <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 20 }}>
-                            <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                <Icon name='user' size={30} color='gray' />
-                            </TouchableOpacity>
-                            <View style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <Text >Levi Goteni</Text>
-                                <Text style={{ color: 'gray' }}>12:15 PM</Text>
-                            </View>
-                        </View>
-                        <Text >1124 FCFA</Text>
-                    </View>
+
                 </View>
             </ScrollView>
         </View>
@@ -149,6 +436,12 @@ const styles = StyleSheet.create({
         // paddingTop: 30,
         width: '100%'
 
+    },
+    transcationTexte: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        // alignItems: "center",
     },
     icon: {
         fontSize: 70,
@@ -172,7 +465,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
     },
     welcomMessage: {
-        fontFamily: 'Roboto_700Bold',
+        fontFamily: 'RobotoSerif_400Regular',
         color: 'white',
         fontSize: 15
     },
@@ -200,7 +493,7 @@ const styles = StyleSheet.create({
     input: {
         flex: 1,
         height: 40,
-
+        fontFamily: "RobotoSerif_400Regular",
     },
     aujourdhui: {
         marginBottom: 3,
@@ -244,6 +537,15 @@ const styles = StyleSheet.create({
         elevation: 2,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
+    },
+    transactionPillule: {
+        justifyContent: "center",
+        display: "flex",
+        backgroundColor: "gray",
+        borderRadius: 20,
+        alignItems: 'center',
+        marginBottom: 10,
+        // width: "40%"
     },
 
 });

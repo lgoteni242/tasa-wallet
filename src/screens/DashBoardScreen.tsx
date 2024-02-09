@@ -1,10 +1,12 @@
 import { Pacifico_400Regular } from "@expo-google-fonts/pacifico";
-import { PlayfairDisplay_400Regular } from "@expo-google-fonts/playfair-display";
 import { Roboto_700Bold, Roboto_100Thin, Roboto_400Regular } from "@expo-google-fonts/roboto";
 import CustomModalPicker from "../components/CustomModalPicker";
 import Toast from 'react-native-toast-message';
 import {
     RobotoSerif_400Regular,
+    RobotoSerif_700Bold,
+    RobotoSerif_300Light,
+    RobotoSerif_100Thin,
     useFonts,
 } from "@expo-google-fonts/roboto-serif";
 import { LinearGradient } from "expo-linear-gradient";
@@ -98,7 +100,11 @@ const DashBoardScreen = ({ navigation }) => {
         RobotoSerif_400Regular,
         Roboto_700Bold,
         Roboto_100Thin,
-        Roboto_400Regular
+        Roboto_400Regular,
+        RobotoSerif_700Bold,
+        RobotoSerif_300Light,
+        RobotoSerif_100Thin,
+
     });
 
     if (!fontsLoaded) {
@@ -165,7 +171,7 @@ const DashBoardScreen = ({ navigation }) => {
                         <View style={styles.hautBarShowBalance}>
                             <Text
                                 style={{
-                                    fontFamily: 'Roboto_400Regular',
+                                    fontFamily: 'RobotoSerif_400Regular',
 
                                     color: "gray",
                                     fontSize: 15,
@@ -209,7 +215,7 @@ const DashBoardScreen = ({ navigation }) => {
                         <View>
                             <Text
                                 style={{
-                                    fontFamily: 'Roboto_400Regular',
+                                    fontFamily: 'RobotoSerif_400Regular',
 
                                     color: "white",
                                 }}
@@ -218,7 +224,7 @@ const DashBoardScreen = ({ navigation }) => {
                             </Text>
                             <Text
                                 style={{
-                                    fontFamily: 'Roboto_400Regular',
+                                    fontFamily: 'RobotoSerif_400Regular',
                                     color: "white",
                                 }}
                             >
@@ -227,7 +233,7 @@ const DashBoardScreen = ({ navigation }) => {
                         </View>
                         <Text
                             style={{
-                                fontFamily: 'Roboto_400Regular',
+                                fontFamily: 'RobotoSerif_400Regular',
 
                                 color: "white",
                             }}
@@ -262,7 +268,7 @@ const DashBoardScreen = ({ navigation }) => {
             <View style={styles.transaction}>
                 <View style={styles.transcationTexte}>
                     <Text
-                        style={{ fontSize: 15, fontFamily: "Roboto_100Thin" }}
+                        style={{ fontSize: 12, fontFamily: "RobotoSerif_100Thin" }}
 
                     >
                         Transactions
@@ -270,7 +276,7 @@ const DashBoardScreen = ({ navigation }) => {
                     <View style={styles.transactionPillule}>
                         <Text
                             style={{
-                                fontFamily: "Roboto_100Thin",
+                                fontFamily: "RobotoSerif_100Thin",
                                 color: "white",
                                 fontSize: 12,
                                 marginHorizontal: 15,
@@ -289,7 +295,7 @@ const DashBoardScreen = ({ navigation }) => {
                             style={{
                                 display: "flex",
                                 flexDirection: "row",
-                                marginBottom: 10,
+                                marginBottom: 20,
                             }}
                         >
                             <TouchableOpacity style={styles.iconShowbarTransaction}>
@@ -301,89 +307,7 @@ const DashBoardScreen = ({ navigation }) => {
                                 <Text
                                     style={{
                                         color: "gray",
-                                        fontFamily: "Roboto_400Regular",
-                                    }}
-                                >
-                                    Levi Goteni
-                                </Text>
-                                <Text
-                                    style={{
-                                        color: "gray",
-                                        fontFamily: "Roboto_100Thin",
-                                    }}
-                                >
-                                    12:15 PM
-                                </Text>
-                            </View>
-                        </View>
-                        <Text
-                            style={{
-                                color: "gray",
-                                fontFamily: "Roboto_100Thin",
-                            }}
-                        >
-                            1124 Fcfa
-                        </Text>
-                    </View>
-                    <View style={styles.transcationListe}>
-                        <View
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                marginBottom: 10,
-                            }}
-                        >
-                            <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                <Icon name="user" size={30} color="gray" />
-                            </TouchableOpacity>
-                            <View
-                                style={{ display: "flex", justifyContent: "space-between" }}
-                            >
-                                <Text
-                                    style={{
-                                        color: "gray",
-                                        fontFamily: "Roboto_400Regular",
-                                    }}
-                                >
-                                    Paul Mboungou
-                                </Text>
-                                <Text
-                                    style={{
-                                        color: "gray",
-                                        fontFamily: "Roboto_100Thin",
-                                    }}
-                                >
-                                    12:15 PM
-                                </Text>
-                            </View>
-                        </View>
-                        <Text
-                            style={{
-                                color: "gray",
-                                fontFamily: "Roboto_100Thin",
-                            }}
-                        >
-                            1124 Fcfa
-                        </Text>
-                    </View>
-                    <View style={styles.transcationListe}>
-                        <View
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                marginBottom: 10,
-                            }}
-                        >
-                            <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                <Icon name="user" size={30} color="gray" />
-                            </TouchableOpacity>
-                            <View
-                                style={{ display: "flex", justifyContent: "space-between" }}
-                            >
-                                <Text
-                                    style={{
-                                        color: "gray",
-                                        fontFamily: "Roboto_400Regular",
+                                        fontFamily: "RobotoSerif_400Regular",
                                     }}
                                 >
                                     Divin Mik
@@ -391,7 +315,8 @@ const DashBoardScreen = ({ navigation }) => {
                                 <Text
                                     style={{
                                         color: "gray",
-                                        fontFamily: "Roboto_100Thin",
+                                        fontFamily: "RobotoSerif_100Thin",
+
                                     }}
                                 >
                                     12:15 PM
@@ -401,7 +326,8 @@ const DashBoardScreen = ({ navigation }) => {
                         <Text
                             style={{
                                 color: "gray",
-                                fontFamily: "Roboto_100Thin",
+                                fontFamily: "RobotoSerif_100Thin",
+
                             }}
                         >
                             1124 Fcfa
@@ -412,7 +338,7 @@ const DashBoardScreen = ({ navigation }) => {
                             style={{
                                 display: "flex",
                                 flexDirection: "row",
-                                marginBottom: 10,
+                                marginBottom: 13,
                             }}
                         >
                             <TouchableOpacity style={styles.iconShowbarTransaction}>
@@ -424,15 +350,16 @@ const DashBoardScreen = ({ navigation }) => {
                                 <Text
                                     style={{
                                         color: "gray",
-                                        fontFamily: "Roboto_400Regular",
+                                        fontFamily: "RobotoSerif_400Regular",
                                     }}
                                 >
-                                    Christ N'gakosso
+                                    Divin Mik
                                 </Text>
                                 <Text
                                     style={{
                                         color: "gray",
-                                        fontFamily: "Roboto_100Thin",
+                                        fontFamily: "RobotoSerif_100Thin",
+
                                     }}
                                 >
                                     12:15 PM
@@ -442,12 +369,102 @@ const DashBoardScreen = ({ navigation }) => {
                         <Text
                             style={{
                                 color: "gray",
-                                fontFamily: "Roboto_100Thin",
+                                fontFamily: "RobotoSerif_100Thin",
+
                             }}
                         >
                             1124 Fcfa
                         </Text>
                     </View>
+                    <View style={styles.transcationListe}>
+                        <View
+                            style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                marginBottom: 13,
+                            }}
+                        >
+                            <TouchableOpacity style={styles.iconShowbarTransaction}>
+                                <Icon name="user" size={30} color="gray" />
+                            </TouchableOpacity>
+                            <View
+                                style={{ display: "flex", justifyContent: "space-between" }}
+                            >
+                                <Text
+                                    style={{
+                                        color: "gray",
+                                        fontFamily: "RobotoSerif_400Regular",
+                                    }}
+                                >
+                                    Levi goteni
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: "gray",
+                                        fontFamily: "RobotoSerif_100Thin",
+
+                                    }}
+                                >
+                                    12:15 PM
+                                </Text>
+                            </View>
+                        </View>
+                        <Text
+                            style={{
+                                color: "gray",
+                                fontFamily: "RobotoSerif_100Thin",
+
+                            }}
+                        >
+                            1124 Fcfa
+                        </Text>
+                    </View>
+                    <View style={styles.transcationListe}>
+                        <View
+                            style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                marginBottom: 13,
+                            }}
+                        >
+                            <TouchableOpacity style={styles.iconShowbarTransaction}>
+                                <Icon name="user" size={30} color="gray" />
+                            </TouchableOpacity>
+                            <View
+                                style={{ display: "flex", justifyContent: "space-between" }}
+                            >
+                                <Text
+                                    style={{
+                                        color: "gray",
+                                        fontFamily: "RobotoSerif_400Regular",
+                                    }}
+                                >
+                                    Gomez Itoua
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: "gray",
+                                        fontFamily: "RobotoSerif_100Thin",
+
+                                    }}
+                                >
+                                    12:15 PM
+                                </Text>
+                            </View>
+                        </View>
+                        <Text
+                            style={{
+                                color: "gray",
+                                fontFamily: "RobotoSerif_100Thin",
+
+                            }}
+                        >
+                            1124 Fcfa
+                        </Text>
+                    </View>
+
+
+
                 </ScrollView>
             </View>
             <Modal
@@ -736,7 +753,7 @@ const styles = StyleSheet.create({
         width: "100%",
     },
     welcomMessage: {
-        fontFamily: "Roboto_400Regular",
+        fontFamily: "RobotoSerif_400Regular",
         color: "white",
         fontSize: 15,
     },
@@ -752,13 +769,15 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 70,
     },
     container_image: {
-        flex: 0.6,
+        // flex: 0.6,
+        height: '55%',
         justifyContent: "flex-start",
         alignItems: "center",
         padding: 20,
         backgroundColor: default_color.orange,
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
+        // paddingBottom: 90
         // elevation: 10, // pour Android
         // shadowColor: '#000', // pour iOS
         // shadowOffset: { width: 0, height: 2 }, // pour iOS
@@ -774,6 +793,7 @@ const styles = StyleSheet.create({
         shadowColor: "#000", // pour iOS
         shadowOffset: { width: 0, height: 2 }, // pour iOS
         display: "flex",
+        // paddingBottom: 230
     },
     basBarShow: {
         flex: 0.3,
@@ -801,6 +821,7 @@ const styles = StyleSheet.create({
     optionContainer: {
         width: "100%",
         marginTop: 40,
+        // flex: 0.5,
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
@@ -809,7 +830,7 @@ const styles = StyleSheet.create({
     iconShowbar: {
         backgroundColor: "white",
         borderRadius: 100,
-        padding: 25,
+        padding: 22,
         elevation: 10,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
@@ -832,14 +853,15 @@ const styles = StyleSheet.create({
     textShowbar: {
         color: "white",
         fontSize: 15,
-        fontFamily: "Roboto_100Thin",
+        fontFamily: "RobotoSerif_100Thin",
     },
     option: {
         display: "flex",
         alignItems: "center",
     },
     transaction: {
-        flex: 0.4,
+        // flex: 0.5,
+        height: '45%',
         paddingTop: 20,
         paddingHorizontal: 20,
     },
@@ -857,7 +879,7 @@ const styles = StyleSheet.create({
     },
     transcationListe: {
         marginTop: 10,
-        marginBottom: 10,
+        marginBottom: 5,
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
