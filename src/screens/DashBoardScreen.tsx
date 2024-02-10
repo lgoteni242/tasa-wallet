@@ -10,12 +10,12 @@ import {
     useFonts,
 } from "@expo-google-fonts/roboto-serif";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useState, useCallback, useMemo, useRef  } from "react";
+import React, { useState, useCallback, useMemo, useRef } from "react";
 import {
     BottomSheetModal,
     BottomSheetModalProvider,
     BottomSheetScrollView
-  } from '@gorhom/bottom-sheet';
+} from '@gorhom/bottom-sheet';
 import {
     ActivityIndicator,
     ScrollView,
@@ -37,7 +37,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 const DashBoardScreen = ({ navigation }) => {
 
     // Send Money 
-        // ref
+    // ref
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
     // variables
     const snapPoints = useMemo(() => ['28%', '60%'], []);
@@ -311,20 +311,20 @@ const DashBoardScreen = ({ navigation }) => {
                     <View style={styles.optionContainer}>
                         <View style={styles.option}>
                             <TouchableOpacity style={styles.iconShowbar} onPress={handlePresentModalPress}>
-                                <Icon name="send" size={30} color="gray" />
+                                <Icon name="send" size={25} color="gray" />
                             </TouchableOpacity>
                             <Text style={styles.textShowbar}>Envoyer</Text>
                         </View>
                         <View style={styles.option}>
                             <TouchableOpacity style={styles.iconShowbar} onPress={handlePresentModalPressRetirer}>
-                                <Icon name="money" size={30} color="gray" />
+                                <Icon name="money" size={25} color="gray" />
                             </TouchableOpacity>
                             <Text style={styles.textShowbar}>Retirer</Text>
                         </View>
                         <View style={styles.option}>
                             <TouchableOpacity style={styles.iconShowbar} onPress={handlePresentModalPressCrediter}>
                                 <View style={{ paddingHorizontal: 2.4 }}>
-                                    <Icon name="plus" size={30} color="gray" />
+                                    <Icon name="plus" size={25} color="gray" />
                                 </View>
                             </TouchableOpacity>
                             <Text style={styles.textShowbar}>Crediter</Text>
@@ -335,7 +335,6 @@ const DashBoardScreen = ({ navigation }) => {
                     <View style={styles.transcationTexte}>
                         <Text
                             style={{ fontSize: 12, fontFamily: "RobotoSerif_100Thin" }}
-
                         >
                             Transactions
                         </Text>
@@ -611,13 +610,13 @@ const DashBoardScreen = ({ navigation }) => {
                 </Modal>
             </View>
             <BottomSheetModal
-            ref={bottomSheetModalRef}
-            index={1}
-            snapPoints={snapPoints}
-            onChange={handleSheetChanges}
+                ref={bottomSheetModalRef}
+                index={1}
+                snapPoints={snapPoints}
+                onChange={handleSheetChanges}
             >
                 <BottomSheetScrollView >
-                <View style={styles.modalContent}>
+                    <View style={styles.modalContent}>
                         <Text style={{ fontSize: 17, paddingBottom: 20, color: 'black', fontFamily: "Roboto_400Regular", }}>ENVOYER DE L'ARGENT</Text>
                         <View style={styles.inputContainer2}>
                             {selectedOption == "" ?
@@ -677,133 +676,131 @@ const DashBoardScreen = ({ navigation }) => {
 
             {/* ==========================Retirer l'argent=========================================== */}
             <BottomSheetModal
-            ref={bottomSheetModalRefRetirer}
-            index={1}
-            snapPoints={snapPointsRetirer}
-            onChange={handleSheetChangesRetirer}
+                ref={bottomSheetModalRefRetirer}
+                index={1}
+                snapPoints={snapPointsRetirer}
+                onChange={handleSheetChangesRetirer}
             >
                 <View style={styles.modalContent}>
-                        <Text style={{ fontSize: 17, paddingBottom: 20, color: 'black', fontFamily: "Roboto_400Regular", }}>RETIRER DE L'ARGENT</Text>
-                        {verifPass ?
+                    <Text style={{ fontSize: 17, paddingBottom: 20, color: 'black', fontFamily: "Roboto_400Regular", }}>RETIRER DE L'ARGENT</Text>
+                    {verifPass ?
 
-                            <>
-                                <View style={styles.inputContainer}>
-                                    <Icon name="money" size={15} color="grey" style={styles.iconStyle} />
-                                    <TextInput
-                                        style={styles.input}
-                                        placeholder="Saisir le montant"
-                                        keyboardType="numeric"
-                                        autoCapitalize="none"
-                                        value={montantRetrait}
-                                        onChangeText={setMontantRetrait}
-                                    />
-                                </View>
-                                <TouchableOpacity style={styles.button} onPress={() => setVeerifPass(false)} >
-                                    <Text style={styles.buttonText}>Valider</Text>
+                        <>
+                            <View style={styles.inputContainer}>
+                                <Icon name="money" size={15} color="grey" style={styles.iconStyle} />
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Saisir le montant"
+                                    keyboardType="numeric"
+                                    autoCapitalize="none"
+                                    value={montantRetrait}
+                                    onChangeText={setMontantRetrait}
+                                />
+                            </View>
+                            <TouchableOpacity style={styles.button} onPress={() => setVeerifPass(false)} >
+                                <Text style={styles.buttonText}>Valider</Text>
+                            </TouchableOpacity>
+                        </>
+
+                        :
+                        <>
+                            <View style={styles.inputContainer}>
+                                <Icon name="lock" size={20} color="grey" style={styles.iconStyle} />
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Mot de passe"
+                                    secureTextEntry={!passwordVisible}
+                                />
+                                <TouchableOpacity
+                                    style={styles.eyeIcon}
+                                    onPress={() => setPasswordVisible(!passwordVisible)}
+                                >
+                                    <Icon name={passwordVisible ? 'eye' : 'eye-slash'} size={20} color="gray" />
                                 </TouchableOpacity>
-                            </>
+                            </View>
+                            <View style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
+                                <TouchableOpacity style={styles.buttonAnnul} onPress={() => setVeerifPass(true)} >
+                                    <Text style={styles.buttonTextAnnul}>Retour</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.buttonRetirer} onPress={() => setVeerifPass(false)} >
+                                    <Text style={styles.buttonText}>Retirer</Text>
+                                </TouchableOpacity>
+                            </View>
 
-                            :
-                            <>
-                                <View style={styles.inputContainer}>
-                                    <Icon name="lock" size={20} color="grey" style={styles.iconStyle} />
-                                    <TextInput
-                                        style={styles.input}
-                                        placeholder="Mot de passe"
-                                        secureTextEntry={!passwordVisible}
-                                    />
-                                    <TouchableOpacity
-                                        style={styles.eyeIcon}
-                                        onPress={() => setPasswordVisible(!passwordVisible)}
-                                    >
-                                        <Icon name={passwordVisible ? 'eye' : 'eye-slash'} size={20} color="gray" />
-                                    </TouchableOpacity>
-                                </View>
-                                <View style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-                                    <TouchableOpacity style={styles.buttonAnnul} onPress={() => setVeerifPass(true)} >
-                                        <Text style={styles.buttonTextAnnul}>Retour</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={styles.buttonRetirer} onPress={() => setVeerifPass(false)} >
-                                        <Text style={styles.buttonText}>Retirer</Text>
-                                    </TouchableOpacity>
-                                </View>
+                        </>
 
-                            </>
-
-                        }
+                    }
 
 
-                    </View>
+                </View>
             </BottomSheetModal>
             {/* ==========================Fin Retirer l'argent=========================================== */}
             {/* ==========================Crediter  l'argent=========================================== */}
 
             <BottomSheetModal
-            ref={bottomSheetModalRefCrediter}
-            index={1}
-            snapPoints={snapPointsCrediter}
-            onChange={handleSheetChangesCrediter}
+                ref={bottomSheetModalRefCrediter}
+                index={1}
+                snapPoints={snapPointsCrediter}
+                onChange={handleSheetChangesCrediter}
             >
-               <View style={styles.modalContent}>
+                <View style={styles.modalContent}>
 
-{
-    choixpayement == "" ?
-        <>
-            <Text style={{ fontSize: 13, paddingBottom: 20, color: 'black', fontFamily: "Roboto_400Regular", }}>CHOISISSEZ VOTRE MOYEN DE PAYEMENT</Text>
-            <View style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', width: '100%' }}>
-                <TouchableOpacity onPress={() => setChoixPayement("mtn")}>
-                    <Image
-                        source={require("../../assets/images/mtn.png")}
-                        style={{ width: 100, height: 70, borderRadius: 10 }} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={showMessage} >
-                    <Image
-                        source={require("../../assets/images/airtel.png")}
-                        style={{ width: 100, height: 70, borderRadius: 10 }} />
-                </TouchableOpacity>
-            </View>
-        </>
-        :
-        choixpayement == "mtn" ?
-            <>
-                <Text style={{ fontSize: 17, paddingBottom: 10, color: 'black', fontFamily: "Roboto_400Regular", }}>EFFECTUEZ UN DEPOT</Text>
-                <Text style={{ fontSize: 13, paddingBottom: 20, fontWeight: 'bold', color: 'gray', textAlign: 'center' }}>
-                    Assurez-vous d'avoir un compte au préalable avec le même numéro de téléphone ou la transaction sera impossible.
-                </Text>
-                <View style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', width: '100%', fontFamily: "Roboto_400Regular" }}>
-                    <View style={styles.inputContainer}>
-                        <Icon name="money" size={15} color="grey" style={styles.iconStyle} />
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Saisir le montant"
-                            keyboardType="numeric"
-                            autoCapitalize="none"
-                            value={montantCrediter}
-                            onChangeText={setMontantCrediter}
-                        />
+                    {
+                        choixpayement == "" ?
+                            <>
+                                <Text style={{ fontSize: 13, paddingBottom: 20, color: 'black', fontFamily: "Roboto_400Regular", }}>CHOISISSEZ VOTRE MOYEN DE PAYEMENT</Text>
+                                <View style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', width: '100%' }}>
+                                    <TouchableOpacity onPress={() => setChoixPayement("mtn")}>
+                                        <Image
+                                            source={require("../../assets/images/mtn.png")}
+                                            style={{ width: 100, height: 70, borderRadius: 10 }} />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={showMessage} >
+                                        <Image
+                                            source={require("../../assets/images/airtel.png")}
+                                            style={{ width: 100, height: 70, borderRadius: 10 }} />
+                                    </TouchableOpacity>
+                                </View>
+                            </>
+                            :
+                            choixpayement == "mtn" ?
+                                <>
+                                    <Text style={{ fontSize: 17, paddingBottom: 10, color: 'black', fontFamily: "Roboto_400Regular", }}>EFFECTUEZ UN DEPOT</Text>
+                                    <Text style={{ fontSize: 13, paddingBottom: 20, fontWeight: 'bold', color: 'gray', textAlign: 'center' }}>
+                                        Assurez-vous d'avoir un compte au préalable avec le même numéro de téléphone ou la transaction sera impossible.
+                                    </Text>
+                                    <View style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', width: '100%', fontFamily: "Roboto_400Regular" }}>
+                                        <View style={styles.inputContainer}>
+                                            <Icon name="money" size={15} color="grey" style={styles.iconStyle} />
+                                            <TextInput
+                                                style={styles.input}
+                                                placeholder="Saisir le montant"
+                                                keyboardType="numeric"
+                                                autoCapitalize="none"
+                                                value={montantCrediter}
+                                                onChangeText={setMontantCrediter}
+                                            />
+                                        </View>
+
+                                    </View>
+                                    <View style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
+                                        <TouchableOpacity style={styles.buttonAnnul} onPress={() => setChoixPayement("")} >
+                                            <Text style={styles.buttonTextAnnul}>Retour</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={styles.buttonRetirer} onPress={() => setVeerifPass(false)} >
+                                            <Text style={styles.buttonText}>Valider</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </>
+                                :
+                                <>
+
+                                </>
+                    }
+                    <View>
+
                     </View>
-
                 </View>
-                <View style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-                    <TouchableOpacity style={styles.buttonAnnul} onPress={() => setChoixPayement("")} >
-                        <Text style={styles.buttonTextAnnul}>Retour</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonRetirer} onPress={() => setVeerifPass(false)} >
-                        <Text style={styles.buttonText}>Valider</Text>
-                    </TouchableOpacity>
-                </View>
-            </>
-            :
-            <>
-
-            </>
-}
-
-
-<View>
-
-</View>
-</View>
             </BottomSheetModal>
             {/* ==========================fin Crediter  l'argent=========================================== */}
 
@@ -843,17 +840,13 @@ const styles = StyleSheet.create({
     },
     container_image: {
         // flex: 0.6,
-        height: '55%',
+        height: '53%',
         justifyContent: "flex-start",
         alignItems: "center",
         padding: 20,
-        backgroundColor: default_color.orange,
+        // backgroundColor: default_color.orange,
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
-        // paddingBottom: 90
-        // elevation: 10, // pour Android
-        // shadowColor: '#000', // pour iOS
-        // shadowOffset: { width: 0, height: 2 }, // pour iOS
     },
     barShow: {
         height: 170,
@@ -893,8 +886,8 @@ const styles = StyleSheet.create({
     },
     optionContainer: {
         width: "100%",
-        marginTop: 40,
-        // flex: 0.5,
+        marginTop: 20,
+        flex: 1,
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
@@ -934,8 +927,8 @@ const styles = StyleSheet.create({
     },
     transaction: {
         // flex: 0.5,
-        height: '45%',
-        paddingTop: 20,
+        height: '49%',
+        paddingTop: 10,
         paddingHorizontal: 20,
     },
     transcationTexte: {
@@ -968,8 +961,8 @@ const styles = StyleSheet.create({
     modalContent: {
         backgroundColor: 'white',
         padding: 20,
-        paddingBottom:20,
-        marginBottom:20,
+        paddingBottom: 20,
+        marginBottom: 20,
         alignItems: 'center',
         borderRadius: 4,
         borderColor: 'rgba(0, 0, 0, 0.1)',
@@ -1139,7 +1132,7 @@ const styles = StyleSheet.create({
     contentContainer: {
         flex: 1,
         alignItems: 'center',
-      },
+    },
 
 });
 

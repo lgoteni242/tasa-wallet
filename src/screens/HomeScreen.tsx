@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 import { View, Button, StyleSheet, Text, StatusBar, TextInput, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import default_color from '../styles/color';
-import { Pacifico_400Regular, useFonts } from '@expo-google-fonts/pacifico';
+import {
+    RobotoSerif_400Regular,
+    RobotoSerif_700Bold,
+    RobotoSerif_300Light,
+    RobotoSerif_100Thin,
+    useFonts,
+} from "@expo-google-fonts/roboto-serif";
+
 import Icon from 'react-native-vector-icons/FontAwesome';
 import CustomModalPicker from '../components/CustomModalPicker';
 
@@ -33,6 +40,12 @@ const HomeScreen = ({ navigation }) => {
         flag: 'sn'
     }];
 
+    let [fontsLoaded] = useFonts({
+        RobotoSerif_400Regular,
+        RobotoSerif_100Thin,
+
+    });
+
     const handleSelect = (option: React.SetStateAction<string>) => {
         setSelectedOption(option);
     };
@@ -41,12 +54,16 @@ const HomeScreen = ({ navigation }) => {
         // Logique de connexion ici
     };
 
+    if (!fontsLoaded) {
+        return <ActivityIndicator size="large" />;
+    }
+
     return (
         <View style={styles.container}>
             <StatusBar translucent backgroundColor="transparent" />
             <View style={styles.container_image}>
                 <View style={styles.container_logo}>
-                    <Text style={styles.icon}>T'wallet</Text>
+                    <Text style={styles.icon}>Tasa wallet</Text>
 
                     {verifInscription ?
                         <Text style={styles.connexion}>Connexion au compte tasa wallet</Text> :
@@ -93,7 +110,7 @@ const HomeScreen = ({ navigation }) => {
                             Vous n'avez pas de compte ? Inscrivez-vous
                         </Text>
                         <View>
-                            <Text style={styles.slogan}>"Tasa, the power of your money is in your hands"</Text>
+                            <Text style={styles.slogan}>Tasa, the power of your money is in your hands</Text>
                         </View>
                     </ScrollView>
                     :
@@ -206,7 +223,7 @@ const HomeScreen = ({ navigation }) => {
                             Avez-vous deja un compte ? Si oui, veillez-vous connecter.
                         </Text>
                         <View>
-                            <Text style={styles.slogan}>"Tasa, the power of your money is in your hands"</Text>
+                            <Text style={styles.slogan}>Tasa, the power of your money is in your hands</Text>
                         </View>
                     </ScrollView>
             }
@@ -227,9 +244,12 @@ const styles = StyleSheet.create({
         paddingTop: 20
     },
     icon: {
-        fontSize: 70,
+        fontSize: 50,
         fontWeight: 'bold',
-        color: 'white'
+        color: 'white',
+        fontFamily: 'RobotoSerif_400Regular',
+        marginBottom: 10
+
     },
     image: {
         height: '100%',
@@ -238,7 +258,8 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 70,
     },
     container_image: {
-        flex: 0.4,
+        // flex: "",
+        height: "20%",
         justifyContent: 'flex-start',
         backgroundColor: default_color.orange,
         borderBottomLeftRadius: 70,
@@ -247,9 +268,9 @@ const styles = StyleSheet.create({
     },
     connexion: {
         textAlign: 'center',
-        marginVertical: 20,
-        fontSize: 17,
-        // fontFamily: 'Pacifico_400Regular',
+        marginVertical: 0,
+        fontSize: 12,
+        fontFamily: 'RobotoSerif_400Regular',
         color: 'white'
     },
     container_form: {
@@ -303,7 +324,8 @@ const styles = StyleSheet.create({
         flex: 1,
         height: 55,
         paddingHorizontal: 10,
-        // fontFamily: 'Pacifico_400Regular',
+        fontFamily: 'RobotoSerif_400Regular',
+
     },
     passwordContainer: {
         flexDirection: 'row',
@@ -312,13 +334,16 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginBottom: 20,
         borderRadius: 7,
-        // fontFamily: 'Pacifico_400Regular',
+        fontFamily: 'RobotoSerif_400Regular',
+
     },
     passwordInput: {
         flex: 1,
         height: 55,
         paddingHorizontal: 10,
-        // fontFamily: 'Pacifico_400Regular',
+        fontFamily: 'RobotoSerif_400Regular',
+
+
     },
     eyeIcon: {
         padding: 10,
@@ -328,33 +353,39 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         alignItems: 'center',
         borderRadius: 3,
+        fontFamily: 'RobotoSerif_400Regular',
+
+
     },
     buttonText: {
         color: default_color.white,
         fontSize: 15,
-        paddingVertical: 4
-        // fontFamily: 'Pacifico_400Regular',
+        paddingVertical: 4,
+        fontFamily: 'RobotoSerif_400Regular',
+
     },
     mdp: {
         color: 'gray',
         fontSize: 10,
-        // fontStyle:'italic',
         marginVertical: 10,
         textAlign: 'right',
-        // fontFamily: 'Pacifico_400Regular',
+        fontFamily: 'RobotoSerif_400Regular',
     },
     signupText: {
         marginTop: 20,
         textAlign: 'center',
         color: default_color.orange,
         fontSize: 12,
-        // fontFamily: 'Pacifico_400Regular',
+        fontFamily: 'RobotoSerif_400Regular',
+
     },
     slogan: {
         textAlign: 'center',
         marginTop: 15,
-        fontSize: 13,
-        // fontFamily: 'Pacifico_400Regular',
+        fontSize: 10,
+        fontFamily: 'RobotoSerif_100Thin',
+        color: 'gray'
+
 
     }
 });

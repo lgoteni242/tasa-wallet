@@ -24,11 +24,11 @@ const PassWordScreen = ({ navigation }) => {
             <View style={styles.container_image}>
                 <View style={styles.container_logo}>
                     <TouchableOpacity
-                    onPress={() => navigation.navigate('Home')}
-                    style={styles.iconStyleRetour}
-                    
+                        onPress={() => navigation.navigate('Home')}
+                        style={styles.iconStyleRetour}
+
                     >
-                        <Icon name="arrow-left" size={20} color="white"  />
+                        <Icon name="arrow-left" size={20} color="white" />
                     </TouchableOpacity>
                     {/* <Text style={styles.icon}>T'wallet</Text> */}
                     <Text style={styles.connexion}>Mot de passe oublier</Text>
@@ -49,10 +49,6 @@ const PassWordScreen = ({ navigation }) => {
                 <TouchableOpacity style={styles.button} onPress={handleSignIn}>
                     <Text style={styles.buttonText}>Envoyer</Text>
                 </TouchableOpacity>
-
-                <View>
-                    <Text style={styles.slogan}>"Tasa, the power of your money is in your hands"</Text>
-                </View>
             </ScrollView>
 
         </View >
@@ -67,7 +63,7 @@ const styles = StyleSheet.create({
     iconStyleRetour: {
         position: "absolute",
         left: 20,
-        zIndex:2,
+        zIndex: 2,
         // padding:10
     },
     container_logo: {
@@ -85,7 +81,8 @@ const styles = StyleSheet.create({
     },
 
     container_image: {
-        flex: 0.4,
+        // flex: 0.4,
+        height: "20%",
         justifyContent: 'flex-start',
         backgroundColor: default_color.orange,
     },
@@ -98,9 +95,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         borderColor: 'gray',
-        borderWidth: 1,
+        borderWidth: 0.6,
         marginBottom: 20,
-        borderRadius: 7,
+        borderRadius: 3,
     },
     inputContainer2: {
         flexDirection: 'row',
@@ -116,31 +113,38 @@ const styles = StyleSheet.create({
         flex: 1,
         height: 55,
         paddingHorizontal: 10,
-        fontFamily: 'Pacifico_400Regular',
+        fontFamily: 'RobotoSerif_400Regular',
+        fontSize: 12,
+
+
     },
     button: {
         backgroundColor: default_color.orange,
         paddingVertical: 10,
         alignItems: 'center',
-        borderRadius: 7,
+        borderRadius: 3,
+        fontFamily: 'RobotoSerif_400Regular',
     },
     buttonText: {
         color: default_color.white,
-        fontSize: 15,
-        fontFamily: 'Pacifico_400Regular',
+        fontSize: 17,
+        fontFamily: 'RobotoSerif_400Regular',
+
     },
     slogan: {
         textAlign: 'center',
-        marginTop: 15,
-        fontSize: 13,
-        fontFamily: 'Pacifico_400Regular',
+        marginTop: 13,
+        fontSize: 10,
+        fontFamily: 'RobotoSerif_400Regular',
+
 
     },
     connexion: {
         textAlign: 'center',
         marginVertical: 20,
         fontSize: 17,
-        fontFamily: 'Pacifico_400Regular',
+        fontFamily: 'RobotoSerif_400Regular',
+
         color: 'white'
     },
 });

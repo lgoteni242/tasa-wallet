@@ -1,9 +1,9 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator,CardStyleInterpolators } from '@react-navigation/stack';
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import HomeScreen from './src/screens/HomeScreen';
 import MotPasseOublier from './src/screens/PassWordScreen';
-import DashBoardScreen from './src/screens/DashBoardScreen';
+import DashBoardScreen from "./src/screens/DashBoardScreen";
 import BottomMenuScreen from './src/screens/BottomMenuScreen';
 import RegistrationForm from './src/screens/RegistrationForm';
 const Stack = createStackNavigator();

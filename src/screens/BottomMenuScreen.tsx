@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import HomeScreen from './DashBoardScreen';
+import HomeScreen from "./DashBoardScreen";
 import SettingsScreen from './SettingsScreens';
 import HistoriqueScreen from './HistoriqueScreen';
 import UserScreen from './UserScreen';
@@ -17,7 +17,7 @@ const CustomTabIcon = ({ name, size, color, focused }) => {
             justifyContent: 'center',
             alignItems: 'center',
             // backgroundColor,
-            borderRadius: 20, 
+            borderRadius: 20,
             paddingVertical: 6,
             paddingHorizontal: 27,
             backgroundColor: focused ? default_color.orange : 'transparent',
@@ -39,7 +39,7 @@ const BottomTabNavigator = () => {
                         iconName = focused ? 'cog' : 'cog';
                     } else if (route.name === 'Profile') {
                         iconName = focused ? 'user' : 'user';
-                    }else if(route.name === 'Pass'){
+                    } else if (route.name === 'Pass') {
                         iconName = focused ? 'exchange' : 'exchange';
                     }
                     return <CustomTabIcon name={iconName} size={size} color={color} focused={focused} />;
