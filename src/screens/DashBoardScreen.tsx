@@ -10,7 +10,12 @@ import {
     useFonts,
 } from "@expo-google-fonts/roboto-serif";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useState } from "react";
+import React, { useState, useCallback, useMemo, useRef  } from "react";
+import {
+    BottomSheetModal,
+    BottomSheetModalProvider,
+    BottomSheetScrollView
+  } from '@gorhom/bottom-sheet';
 import {
     ActivityIndicator,
     ScrollView,
@@ -30,6 +35,66 @@ import Icon from "react-native-vector-icons/FontAwesome";
 
 
 const DashBoardScreen = ({ navigation }) => {
+
+    // Send Money 
+        // ref
+    const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+    // variables
+    const snapPoints = useMemo(() => ['28%', '60%'], []);
+    // callbacks
+    const handlePresentModalPress = useCallback(() => {
+        // handleCloseModalPressRetirer()
+        // handleCloseModalPressCrediter()
+        bottomSheetModalRef.current?.present();
+    }, []);
+
+    const handleSheetChanges = useCallback((index: number) => {
+        console.log('handleSheetChanges', index);
+    }, []);
+
+    const handleCloseModalPress = useCallback(() => {
+        bottomSheetModalRef.current?.close();
+    }, []);
+    // ====================Retirer de l'argent ====================//
+
+    // ref
+    const bottomSheetModalRefRetirer = useRef<BottomSheetModal>(null);
+    // variables
+    const snapPointsRetirer = useMemo(() => ['28%', '60%'], []);
+    // callbacks
+    const handlePresentModalPressRetirer = useCallback(() => {
+        // handleCloseModalPress()
+        // handleCloseModalPressCrediter()
+        bottomSheetModalRefRetirer.current?.present();
+    }, []);
+
+    const handleSheetChangesRetirer = useCallback((index: number) => {
+        console.log('handleSheetChanges', index);
+    }, []);
+
+    const handleCloseModalPressRetirer = useCallback(() => {
+        bottomSheetModalRefRetirer.current?.close();
+    }, []);
+    // ====================Crediter de l'argent ====================//
+
+    // ref
+    const bottomSheetModalRefCrediter = useRef<BottomSheetModal>(null);
+    // variables
+    const snapPointsCrediter = useMemo(() => ['28%', '60%'], []);
+    // callbacks
+    const handlePresentModalPressCrediter = useCallback(() => {
+        // handleCloseModalPressRetirer()
+        // handleCloseModalPress()
+        bottomSheetModalRefCrediter.current?.present();
+    }, []);
+
+    const handleSheetChangesCrediter = useCallback((index: number) => {
+        console.log('handleSheetChanges', index);
+    }, []);
+
+    const handleCloseModalPressCrediter = useCallback(() => {
+        bottomSheetModalRefCrediter.current?.close();
+    }, []);
     // =================Chargement============================
     const [isLoading, setIsLoading] = useState(false);
     const [apiResponse, setApiResponse] = useState('');
@@ -121,12 +186,12 @@ const DashBoardScreen = ({ navigation }) => {
             if (randomTrueOrFalse()) {
                 setSendResumeModal(false)
                 setIsLoading(false);
-                toggleModal()
+                handleCloseModalPress()
                 setSendMoney(true)
             } else {
                 setSendResumeModal(false)
                 setIsLoading(false);
-                toggleModal()
+                handleCloseModalPress()
                 setNotSendMoney(true)
             }
         }, 2000); // Temps de délai simulé pour la réponse de l'API (2 secondes)
@@ -149,370 +214,563 @@ const DashBoardScreen = ({ navigation }) => {
     };
 
     return (
-        <View style={styles.container}>
-            <StatusBar translucent backgroundColor="transparent" />
-            <LinearGradient
-                colors={[default_color.orange, "gray"]}
-                start={{ x: 0, y: 0.3 }}
-                end={{ x: 0, y: 0.5 }}
-                style={styles.container_image}
-            >
-                <View style={styles.container_logo}>
-                    <TouchableOpacity>
-                        <Icon name="user" size={25} color="white" />
-                    </TouchableOpacity>
-                    <Text style={styles.welcomMessage}>Bienvenue sur Tasa wallet</Text>
-                    <TouchableOpacity>
-                        <Icon name="bell" size={25} color="white" />
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.barShow}>
-                    <View style={styles.hautBarShow}>
-                        <View style={styles.hautBarShowBalance}>
-                            <Text
-                                style={{
-                                    fontFamily: 'RobotoSerif_400Regular',
-
-                                    color: "gray",
-                                    fontSize: 15,
-                                }}
-                            >
-                                Balance compte
-                            </Text>
-                        </View>
-                        <View style={styles.hautBarShowBalance}>
-                            {soldeVisible ? (
-                                <Text
-                                    style={{
-                                        fontFamily: "Roboto_700Bold",
-                                        color: "gray",
-                                        fontSize: 30,
-                                    }}
-                                >
-                                    $ {solde}
-                                </Text>
-                            ) : (
-                                <Text
-                                    style={{
-                                        fontFamily: "Roboto_700Bold",
-                                        color: "gray",
-                                        fontSize: 30,
-                                    }}
-                                >
-                                    $ XXXXXXX
-                                </Text>
-                            )}
-                            <TouchableOpacity onPress={() => setSoldeVisible(!soldeVisible)}>
-                                <Icon
-                                    name={soldeVisible ? "eye" : "eye-slash"}
-                                    size={40}
-                                    color="gray"
-                                />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <View style={styles.basBarShow}>
-                        <View>
-                            <Text
-                                style={{
-                                    fontFamily: 'RobotoSerif_400Regular',
-
-                                    color: "white",
-                                }}
-                            >
-                                18/2023
-                            </Text>
-                            <Text
-                                style={{
-                                    fontFamily: 'RobotoSerif_400Regular',
-                                    color: "white",
-                                }}
-                            >
-                                Levi Goteni
-                            </Text>
-                        </View>
-                        <Text
-                            style={{
-                                fontFamily: 'RobotoSerif_400Regular',
-
-                                color: "white",
-                            }}
-                        >
-                            Congo
-                        </Text>
-                    </View>
-                </View>
-                <View style={styles.optionContainer}>
-                    <View style={styles.option}>
-                        <TouchableOpacity style={styles.iconShowbar} onPress={toggleModal}>
-                            <Icon name="send" size={30} color="gray" />
-                        </TouchableOpacity>
-                        <Text style={styles.textShowbar}>Envoyer</Text>
-                    </View>
-                    <View style={styles.option}>
-                        <TouchableOpacity style={styles.iconShowbar} onPress={toggleCrediterModal}>
-                            <Icon name="money" size={30} color="gray" />
-                        </TouchableOpacity>
-                        <Text style={styles.textShowbar}>Retirer</Text>
-                    </View>
-                    <View style={styles.option}>
-                        <TouchableOpacity style={styles.iconShowbar} onPress={toggleRetraitModal}>
-                            <View style={{ paddingHorizontal: 2.4 }}>
-                                <Icon name="plus" size={30} color="gray" />
-                            </View>
-                        </TouchableOpacity>
-                        <Text style={styles.textShowbar}>Crediter</Text>
-                    </View>
-                </View>
-            </LinearGradient>
-            <View style={styles.transaction}>
-                <View style={styles.transcationTexte}>
-                    <Text
-                        style={{ fontSize: 12, fontFamily: "RobotoSerif_100Thin" }}
-
-                    >
-                        Transactions
-                    </Text>
-                    <View style={styles.transactionPillule}>
-                        <Text
-                            style={{
-                                fontFamily: "RobotoSerif_100Thin",
-                                color: "white",
-                                fontSize: 12,
-                                marginHorizontal: 15,
-                            }}
-                        >
-                            Aujourd'hui
-                        </Text>
-                    </View>
-                </View>
-                <ScrollView
-                    style={{ marginBottom: 60 }}
-                    showsVerticalScrollIndicator={false}
+        <BottomSheetModalProvider>
+            <View style={styles.container}>
+                <StatusBar translucent backgroundColor="transparent" />
+                <LinearGradient
+                    colors={[default_color.orange, "gray"]}
+                    start={{ x: 0, y: 0.3 }}
+                    end={{ x: 0, y: 0.5 }}
+                    style={styles.container_image}
                 >
-                    <View style={styles.transcationListe}>
-                        <View
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                marginBottom: 20,
-                            }}
-                        >
-                            <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                <Icon name="user" size={30} color="gray" />
-                            </TouchableOpacity>
-                            <View
-                                style={{ display: "flex", justifyContent: "space-between" }}
-                            >
+                    <View style={styles.container_logo}>
+                        <TouchableOpacity>
+                            <Icon name="user" size={25} color="white" />
+                        </TouchableOpacity>
+                        <Text style={styles.welcomMessage}>Bienvenue sur Tasa wallet</Text>
+                        <TouchableOpacity>
+                            <Icon name="bell" size={25} color="white" />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.barShow}>
+                        <View style={styles.hautBarShow}>
+                            <View style={styles.hautBarShowBalance}>
                                 <Text
                                     style={{
-                                        color: "gray",
-                                        fontFamily: "RobotoSerif_400Regular",
-                                    }}
-                                >
-                                    Divin Mik
-                                </Text>
-                                <Text
-                                    style={{
-                                        color: "gray",
-                                        fontFamily: "RobotoSerif_100Thin",
+                                        fontFamily: 'RobotoSerif_400Regular',
 
+                                        color: "gray",
+                                        fontSize: 15,
                                     }}
                                 >
-                                    12:15 PM
+                                    Balance compte
                                 </Text>
                             </View>
-                        </View>
-                        <Text
-                            style={{
-                                color: "gray",
-                                fontFamily: "RobotoSerif_100Thin",
-
-                            }}
-                        >
-                            1124 Fcfa
-                        </Text>
-                    </View>
-                    <View style={styles.transcationListe}>
-                        <View
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                marginBottom: 13,
-                            }}
-                        >
-                            <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                <Icon name="user" size={30} color="gray" />
-                            </TouchableOpacity>
-                            <View
-                                style={{ display: "flex", justifyContent: "space-between" }}
-                            >
-                                <Text
-                                    style={{
-                                        color: "gray",
-                                        fontFamily: "RobotoSerif_400Regular",
-                                    }}
-                                >
-                                    Divin Mik
-                                </Text>
-                                <Text
-                                    style={{
-                                        color: "gray",
-                                        fontFamily: "RobotoSerif_100Thin",
-
-                                    }}
-                                >
-                                    12:15 PM
-                                </Text>
+                            <View style={styles.hautBarShowBalance}>
+                                {soldeVisible ? (
+                                    <Text
+                                        style={{
+                                            fontFamily: "Roboto_700Bold",
+                                            color: "gray",
+                                            fontSize: 30,
+                                        }}
+                                    >
+                                        $ {solde}
+                                    </Text>
+                                ) : (
+                                    <Text
+                                        style={{
+                                            fontFamily: "Roboto_700Bold",
+                                            color: "gray",
+                                            fontSize: 30,
+                                        }}
+                                    >
+                                        $ XXXXXXX
+                                    </Text>
+                                )}
+                                <TouchableOpacity onPress={() => setSoldeVisible(!soldeVisible)}>
+                                    <Icon
+                                        name={soldeVisible ? "eye" : "eye-slash"}
+                                        size={40}
+                                        color="gray"
+                                    />
+                                </TouchableOpacity>
                             </View>
                         </View>
-                        <Text
-                            style={{
-                                color: "gray",
-                                fontFamily: "RobotoSerif_100Thin",
-
-                            }}
-                        >
-                            1124 Fcfa
-                        </Text>
-                    </View>
-                    <View style={styles.transcationListe}>
-                        <View
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                marginBottom: 13,
-                            }}
-                        >
-                            <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                <Icon name="user" size={30} color="gray" />
-                            </TouchableOpacity>
-                            <View
-                                style={{ display: "flex", justifyContent: "space-between" }}
-                            >
+                        <View style={styles.basBarShow}>
+                            <View>
                                 <Text
                                     style={{
-                                        color: "gray",
-                                        fontFamily: "RobotoSerif_400Regular",
+                                        fontFamily: 'RobotoSerif_400Regular',
+
+                                        color: "white",
                                     }}
                                 >
-                                    Levi goteni
+                                    18/2023
                                 </Text>
                                 <Text
                                     style={{
-                                        color: "gray",
-                                        fontFamily: "RobotoSerif_100Thin",
-
+                                        fontFamily: 'RobotoSerif_400Regular',
+                                        color: "white",
                                     }}
                                 >
-                                    12:15 PM
+                                    Levi Goteni
                                 </Text>
                             </View>
-                        </View>
-                        <Text
-                            style={{
-                                color: "gray",
-                                fontFamily: "RobotoSerif_100Thin",
+                            <Text
+                                style={{
+                                    fontFamily: 'RobotoSerif_400Regular',
 
-                            }}
-                        >
-                            1124 Fcfa
-                        </Text>
-                    </View>
-                    <View style={styles.transcationListe}>
-                        <View
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                marginBottom: 13,
-                            }}
-                        >
-                            <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                <Icon name="user" size={30} color="gray" />
-                            </TouchableOpacity>
-                            <View
-                                style={{ display: "flex", justifyContent: "space-between" }}
+                                    color: "white",
+                                }}
                             >
-                                <Text
-                                    style={{
-                                        color: "gray",
-                                        fontFamily: "RobotoSerif_400Regular",
-                                    }}
-                                >
-                                    Gomez Itoua
-                                </Text>
-                                <Text
-                                    style={{
-                                        color: "gray",
-                                        fontFamily: "RobotoSerif_100Thin",
+                                Congo
+                            </Text>
+                        </View>
+                    </View>
+                    <View style={styles.optionContainer}>
+                        <View style={styles.option}>
+                            <TouchableOpacity style={styles.iconShowbar} onPress={handlePresentModalPress}>
+                                <Icon name="send" size={30} color="gray" />
+                            </TouchableOpacity>
+                            <Text style={styles.textShowbar}>Envoyer</Text>
+                        </View>
+                        <View style={styles.option}>
+                            <TouchableOpacity style={styles.iconShowbar} onPress={handlePresentModalPressRetirer}>
+                                <Icon name="money" size={30} color="gray" />
+                            </TouchableOpacity>
+                            <Text style={styles.textShowbar}>Retirer</Text>
+                        </View>
+                        <View style={styles.option}>
+                            <TouchableOpacity style={styles.iconShowbar} onPress={handlePresentModalPressCrediter}>
+                                <View style={{ paddingHorizontal: 2.4 }}>
+                                    <Icon name="plus" size={30} color="gray" />
+                                </View>
+                            </TouchableOpacity>
+                            <Text style={styles.textShowbar}>Crediter</Text>
+                        </View>
+                    </View>
+                </LinearGradient>
+                <View style={styles.transaction}>
+                    <View style={styles.transcationTexte}>
+                        <Text
+                            style={{ fontSize: 12, fontFamily: "RobotoSerif_100Thin" }}
 
-                                    }}
+                        >
+                            Transactions
+                        </Text>
+                        <View style={styles.transactionPillule}>
+                            <Text
+                                style={{
+                                    fontFamily: "RobotoSerif_100Thin",
+                                    color: "white",
+                                    fontSize: 12,
+                                    marginHorizontal: 15,
+                                }}
+                            >
+                                Aujourd'hui
+                            </Text>
+                        </View>
+                    </View>
+                    <ScrollView
+                        style={{ marginBottom: 60 }}
+                        showsVerticalScrollIndicator={false}
+                    >
+                        <View style={styles.transcationListe}>
+                            <View
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    marginBottom: 20,
+                                }}
+                            >
+                                <TouchableOpacity style={styles.iconShowbarTransaction}>
+                                    <Icon name="user" size={30} color="gray" />
+                                </TouchableOpacity>
+                                <View
+                                    style={{ display: "flex", justifyContent: "space-between" }}
                                 >
-                                    12:15 PM
-                                </Text>
+                                    <Text
+                                        style={{
+                                            color: "gray",
+                                            fontFamily: "RobotoSerif_400Regular",
+                                        }}
+                                    >
+                                        Divin Mik
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            color: "gray",
+                                            fontFamily: "RobotoSerif_100Thin",
+
+                                        }}
+                                    >
+                                        12:15 PM
+                                    </Text>
+                                </View>
+                            </View>
+                            <Text
+                                style={{
+                                    color: "gray",
+                                    fontFamily: "RobotoSerif_100Thin",
+
+                                }}
+                            >
+                                1124 Fcfa
+                            </Text>
+                        </View>
+                        <View style={styles.transcationListe}>
+                            <View
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    marginBottom: 13,
+                                }}
+                            >
+                                <TouchableOpacity style={styles.iconShowbarTransaction}>
+                                    <Icon name="user" size={30} color="gray" />
+                                </TouchableOpacity>
+                                <View
+                                    style={{ display: "flex", justifyContent: "space-between" }}
+                                >
+                                    <Text
+                                        style={{
+                                            color: "gray",
+                                            fontFamily: "RobotoSerif_400Regular",
+                                        }}
+                                    >
+                                        Divin Mik
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            color: "gray",
+                                            fontFamily: "RobotoSerif_100Thin",
+
+                                        }}
+                                    >
+                                        12:15 PM
+                                    </Text>
+                                </View>
+                            </View>
+                            <Text
+                                style={{
+                                    color: "gray",
+                                    fontFamily: "RobotoSerif_100Thin",
+
+                                }}
+                            >
+                                1124 Fcfa
+                            </Text>
+                        </View>
+                        <View style={styles.transcationListe}>
+                            <View
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    marginBottom: 13,
+                                }}
+                            >
+                                <TouchableOpacity style={styles.iconShowbarTransaction}>
+                                    <Icon name="user" size={30} color="gray" />
+                                </TouchableOpacity>
+                                <View
+                                    style={{ display: "flex", justifyContent: "space-between" }}
+                                >
+                                    <Text
+                                        style={{
+                                            color: "gray",
+                                            fontFamily: "RobotoSerif_400Regular",
+                                        }}
+                                    >
+                                        Levi goteni
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            color: "gray",
+                                            fontFamily: "RobotoSerif_100Thin",
+
+                                        }}
+                                    >
+                                        12:15 PM
+                                    </Text>
+                                </View>
+                            </View>
+                            <Text
+                                style={{
+                                    color: "gray",
+                                    fontFamily: "RobotoSerif_100Thin",
+
+                                }}
+                            >
+                                1124 Fcfa
+                            </Text>
+                        </View>
+                        <View style={styles.transcationListe}>
+                            <View
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    marginBottom: 13,
+                                }}
+                            >
+                                <TouchableOpacity style={styles.iconShowbarTransaction}>
+                                    <Icon name="user" size={30} color="gray" />
+                                </TouchableOpacity>
+                                <View
+                                    style={{ display: "flex", justifyContent: "space-between" }}
+                                >
+                                    <Text
+                                        style={{
+                                            color: "gray",
+                                            fontFamily: "RobotoSerif_400Regular",
+                                        }}
+                                    >
+                                        Gomez Itoua
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            color: "gray",
+                                            fontFamily: "RobotoSerif_100Thin",
+
+                                        }}
+                                    >
+                                        12:15 PM
+                                    </Text>
+                                </View>
+                            </View>
+                            <Text
+                                style={{
+                                    color: "gray",
+                                    fontFamily: "RobotoSerif_100Thin",
+
+                                }}
+                            >
+                                1124 Fcfa
+                            </Text>
+                        </View>
+
+
+
+                    </ScrollView>
+                </View>
+                {/* ====================================Reumse modale============================================= */}
+                <Modal
+                    coverScreen={true} backdropOpacity={0.3} isVisible={sendResumeModal}
+                >
+                    <View style={styles.modalContainerSend}>
+                        <View style={{ backgroundColor: default_color.orange, borderTopEndRadius: 10, borderTopStartRadius: 10, paddingTop: 5 }}>
+                            <Text style={{ textAlign: 'center', fontSize: 20, paddingBottom: 10, fontWeight: 'bold', color: 'white', fontFamily: "Roboto_400Regular" }}>Resumer de l'operation</Text>
+                        </View>
+                        <View style={styles.modalContentSend}>
+                            <Text style={{ fontSize: 19, color: 'rgba(16,17,17,0.84)', fontFamily: "Roboto_400Regular" }}>Pays: {selectedOption}</Text>
+                            <Text style={{ fontSize: 19, color: 'rgba(16,17,17,0.84)', fontFamily: "Roboto_400Regular" }}>Beneficiare : GOTENI</Text>
+                            <Text style={{ fontSize: 19, color: 'rgba(16,17,17,0.84)', fontFamily: "Roboto_400Regular" }}>Numero : {numero}</Text>
+                            <Text style={{ marginBottom: 19, fontSize: 20, color: 'rgba(16,17,17,0.84)', fontFamily: "Roboto_400Regular" }}>Montant : {montant}</Text>
+                            <View style={{
+                                display: "flex", flexDirection: "row", justifyContent: "space-between", borderTopWidth: 1, borderTopColor: 'gray'
+                                , paddingTop: 10
+                            }}>
+                                <TouchableOpacity style={styles.buttonRetour} onPress={() => setSendResumeModal(false)} >
+                                    <Text style={styles.buttonTextAnnul}>Retour</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.buttonEnvoie} onPress={handlePress} disabled={isLoading} >
+                                    <Text style={styles.buttonText}>Envoyer</Text>
+                                </TouchableOpacity>
                             </View>
                         </View>
-                        <Text
-                            style={{
-                                color: "gray",
-                                fontFamily: "RobotoSerif_100Thin",
-
-                            }}
-                        >
-                            1124 Fcfa
-                        </Text>
                     </View>
+                </Modal>
+                {/* =================================Chargement modal============================== */}
+                <Modal
+                    coverScreen={true} backdropOpacity={0.3} isVisible={isLoading}
+                >
+                    <View style={styles.modalContainerChargement}>
+                        <View style={styles.modalContentChargement}>
+                            {/* <Image
+                                source={require("../../assets/images/charger.gif")}
+                                style={{ width: 200, height: 200 }} /> */}
+                            <ActivityIndicator size={100} color={default_color.orange} animating={isLoading} />
+                        </View>
+                    </View>
+                </Modal>
+                {/* =================================Verifie modal============================== */}
+                <Modal isVisible={sendMoney} coverScreen={true} backdropOpacity={0.4} onBackdropPress={() => setSendMoney(false)}>
+                    <LinearGradient
+                        colors={['white', 'gray']}
+                        start={{ x: 0.8, y: 0 }}
+                        end={{ x: 0.8, y: 9 }}
+                        style={styles.modalContainer}
+                    >
+                        <View style={styles.checkmarkContainer}>
+                            <View style={styles.checkmark}>
+                                <Icon name="check-circle" size={100} color='#00b33c' />
+                            </View>
+                        </View>
+                        <Text style={styles.modalText2}>
+                            Transfert effectue avec success
+                        </Text>
+                    </LinearGradient>
+                </Modal>
 
-
-
-                </ScrollView>
+                <Modal isVisible={notSendMoney} coverScreen={true} backdropOpacity={0.4} onBackdropPress={() => setNotSendMoney(false)}>
+                    <LinearGradient
+                        colors={['white', 'gray']}
+                        start={{ x: 0.8, y: 0 }}
+                        end={{ x: 0.8, y: 9 }}
+                        style={styles.modalContainer}
+                    >
+                        <View style={styles.checkmarkContainer}>
+                            <View style={styles.checkmark}>
+                                <Icon name="exclamation-circle" size={100} color='#bf1717' />
+                            </View>
+                        </View>
+                        <Text style={styles.modalText3}>
+                            Oups une erreur est arrivee, veillez recommencer
+                        </Text>
+                    </LinearGradient>
+                </Modal>
             </View>
-            <Modal
-                isVisible={isModalVisible}
-                onBackdropPress={toggleModal} // Cela fermera le modal lorsqu'on touche à l'extérieur
-                swipeDirection="down" // Permet de fermer le modal en swipant vers le bas
-                style={styles.modal}
-                backdropOpacity={0.1}
+            <BottomSheetModal
+            ref={bottomSheetModalRef}
+            index={1}
+            snapPoints={snapPoints}
+            onChange={handleSheetChanges}
+            >
+                <BottomSheetScrollView >
+                <View style={styles.modalContent}>
+                        <Text style={{ fontSize: 17, paddingBottom: 20, color: 'black', fontFamily: "Roboto_400Regular", }}>ENVOYER DE L'ARGENT</Text>
+                        <View style={styles.inputContainer2}>
+                            {selectedOption == "" ?
+                                <Icon name="globe" size={15} color="grey" style={styles.iconStyle} />
+                                :
+                                selectedOption == "Republique du Congo" ?
+                                    <Text style={styles.iconStyle}>{flag('cg')}</Text> :
+                                    <Text style={styles.iconStyle}>{flag('sn')}</Text>
+                            }
+                            <TouchableOpacity onPress={() => setModalVisible2(true)} style={{ width: "88%" }}>
+                                {selectedOption == "" ? (<Text style={{ color: 'grey', fontFamily: 'Roboto_400Regular' }}>Pays de residence</Text>) : <Text>{selectedOption}</Text>}
+                            </TouchableOpacity>
+                            <CustomModalPicker
+                                options={options}
+                                onSelect={handleSelect}
+                                visible={modalVisible}
+                                onClose={() => setModalVisible2(false)}
+                                titre="Choisir le pays de destination"
+
+                            />
+                        </View>
+                        <View style={styles.inputContainer}>
+                            {selectedOption == "Republique du Congo" ?
+                                <Text style={styles.iconStyle}>+242 |</Text>
+                                :
+                                selectedOption == "Senegal" ?
+                                    <Text style={styles.iconStyle}>+221 |</Text> :
+                                    <Icon name="phone" size={15} color="grey" style={styles.iconStyle} />
+                            }
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Telephone du destinateur"
+                                keyboardType="phone-pad"
+                                autoCapitalize="none"
+                                value={numero}
+                                onChangeText={setNumero}
+                            />
+                        </View>
+                        <View style={styles.inputContainer}>
+                            <Icon name="money" size={15} color="grey" style={styles.iconStyle} />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Saisir le montant"
+                                keyboardType="numeric"
+                                autoCapitalize="none"
+                                value={montant}
+                                onChangeText={setMontant}
+                            />
+                        </View>
+                        <TouchableOpacity style={styles.button} onPress={() => setSendResumeModal(true)} >
+                            <Text style={styles.buttonText}>Envoyer</Text>
+                        </TouchableOpacity>
+                    </View>
+                </BottomSheetScrollView>
+            </BottomSheetModal>
+            {/* ==========================Fin Envoie l'argent=========================================== */}
+
+            {/* ==========================Retirer l'argent=========================================== */}
+            <BottomSheetModal
+            ref={bottomSheetModalRefRetirer}
+            index={1}
+            snapPoints={snapPointsRetirer}
+            onChange={handleSheetChangesRetirer}
             >
                 <View style={styles.modalContent}>
-                    <Text style={{ fontSize: 17, paddingBottom: 20, color: 'black', fontFamily: "Roboto_400Regular", }}>ENVOYER DE L'ARGENT</Text>
-                    <View style={styles.inputContainer2}>
-                        {selectedOption == "" ?
-                            <Icon name="globe" size={15} color="grey" style={styles.iconStyle} />
-                            :
-                            selectedOption == "Republique du Congo" ?
-                                <Text style={styles.iconStyle}>{flag('cg')}</Text> :
-                                <Text style={styles.iconStyle}>{flag('sn')}</Text>
-                        }
-                        <TouchableOpacity onPress={() => setModalVisible2(true)} style={{ width: "88%" }}>
-                            {selectedOption == "" ? (<Text style={{ color: 'grey', fontFamily: 'Roboto_400Regular' }}>Pays de residence</Text>) : <Text>{selectedOption}</Text>}
-                        </TouchableOpacity>
-                        <CustomModalPicker
-                            options={options}
-                            onSelect={handleSelect}
-                            visible={modalVisible}
-                            onClose={() => setModalVisible2(false)}
-                            titre="Choisir le pays de destination"
+                        <Text style={{ fontSize: 17, paddingBottom: 20, color: 'black', fontFamily: "Roboto_400Regular", }}>RETIRER DE L'ARGENT</Text>
+                        {verifPass ?
 
-                        />
-                    </View>
-                    <View style={styles.inputContainer}>
-                        {selectedOption == "Republique du Congo" ?
-                            <Text style={styles.iconStyle}>+242 |</Text>
+                            <>
+                                <View style={styles.inputContainer}>
+                                    <Icon name="money" size={15} color="grey" style={styles.iconStyle} />
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder="Saisir le montant"
+                                        keyboardType="numeric"
+                                        autoCapitalize="none"
+                                        value={montantRetrait}
+                                        onChangeText={setMontantRetrait}
+                                    />
+                                </View>
+                                <TouchableOpacity style={styles.button} onPress={() => setVeerifPass(false)} >
+                                    <Text style={styles.buttonText}>Valider</Text>
+                                </TouchableOpacity>
+                            </>
+
                             :
-                            selectedOption == "Senegal" ?
-                                <Text style={styles.iconStyle}>+221 |</Text> :
-                                <Icon name="phone" size={15} color="grey" style={styles.iconStyle} />
+                            <>
+                                <View style={styles.inputContainer}>
+                                    <Icon name="lock" size={20} color="grey" style={styles.iconStyle} />
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder="Mot de passe"
+                                        secureTextEntry={!passwordVisible}
+                                    />
+                                    <TouchableOpacity
+                                        style={styles.eyeIcon}
+                                        onPress={() => setPasswordVisible(!passwordVisible)}
+                                    >
+                                        <Icon name={passwordVisible ? 'eye' : 'eye-slash'} size={20} color="gray" />
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
+                                    <TouchableOpacity style={styles.buttonAnnul} onPress={() => setVeerifPass(true)} >
+                                        <Text style={styles.buttonTextAnnul}>Retour</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.buttonRetirer} onPress={() => setVeerifPass(false)} >
+                                        <Text style={styles.buttonText}>Retirer</Text>
+                                    </TouchableOpacity>
+                                </View>
+
+                            </>
+
                         }
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Telephone du destinateur"
-                            keyboardType="phone-pad"
-                            autoCapitalize="none"
-                            value={numero}
-                            onChangeText={setNumero}
-                        />
+
+
                     </View>
+            </BottomSheetModal>
+            {/* ==========================Fin Retirer l'argent=========================================== */}
+            {/* ==========================Crediter  l'argent=========================================== */}
+
+            <BottomSheetModal
+            ref={bottomSheetModalRefCrediter}
+            index={1}
+            snapPoints={snapPointsCrediter}
+            onChange={handleSheetChangesCrediter}
+            >
+               <View style={styles.modalContent}>
+
+{
+    choixpayement == "" ?
+        <>
+            <Text style={{ fontSize: 13, paddingBottom: 20, color: 'black', fontFamily: "Roboto_400Regular", }}>CHOISISSEZ VOTRE MOYEN DE PAYEMENT</Text>
+            <View style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', width: '100%' }}>
+                <TouchableOpacity onPress={() => setChoixPayement("mtn")}>
+                    <Image
+                        source={require("../../assets/images/mtn.png")}
+                        style={{ width: 100, height: 70, borderRadius: 10 }} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={showMessage} >
+                    <Image
+                        source={require("../../assets/images/airtel.png")}
+                        style={{ width: 100, height: 70, borderRadius: 10 }} />
+                </TouchableOpacity>
+            </View>
+        </>
+        :
+        choixpayement == "mtn" ?
+            <>
+                <Text style={{ fontSize: 17, paddingBottom: 10, color: 'black', fontFamily: "Roboto_400Regular", }}>EFFECTUEZ UN DEPOT</Text>
+                <Text style={{ fontSize: 13, paddingBottom: 20, fontWeight: 'bold', color: 'gray', textAlign: 'center' }}>
+                    Assurez-vous d'avoir un compte au préalable avec le même numéro de téléphone ou la transaction sera impossible.
+                </Text>
+                <View style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', width: '100%', fontFamily: "Roboto_400Regular" }}>
                     <View style={styles.inputContainer}>
                         <Icon name="money" size={15} color="grey" style={styles.iconStyle} />
                         <TextInput
@@ -520,223 +778,38 @@ const DashBoardScreen = ({ navigation }) => {
                             placeholder="Saisir le montant"
                             keyboardType="numeric"
                             autoCapitalize="none"
-                            value={montant}
-                            onChangeText={setMontant}
+                            value={montantCrediter}
+                            onChangeText={setMontantCrediter}
                         />
                     </View>
-                    <TouchableOpacity style={styles.button} onPress={() => setSendResumeModal(true)} >
-                        <Text style={styles.buttonText}>Envoyer</Text>
+
+                </View>
+                <View style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
+                    <TouchableOpacity style={styles.buttonAnnul} onPress={() => setChoixPayement("")} >
+                        <Text style={styles.buttonTextAnnul}>Retour</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.buttonRetirer} onPress={() => setVeerifPass(false)} >
+                        <Text style={styles.buttonText}>Valider</Text>
                     </TouchableOpacity>
                 </View>
-            </Modal>
-            {/* ====================================Reumse modale============================================= */}
-            <Modal
-                coverScreen={true} backdropOpacity={0.3} isVisible={sendResumeModal}
-            >
-                <View style={styles.modalContainerSend}>
-                    <View style={{ backgroundColor: default_color.orange, borderTopEndRadius: 10, borderTopStartRadius: 10, paddingTop: 5 }}>
-                        <Text style={{ textAlign: 'center', fontSize: 20, paddingBottom: 10, fontWeight: 'bold', color: 'white', fontFamily: "Roboto_400Regular" }}>Resumer de l'operation</Text>
-                    </View>
-                    <View style={styles.modalContentSend}>
-                        <Text style={{ fontSize: 19, color: 'rgba(16,17,17,0.84)', fontFamily: "Roboto_400Regular" }}>Pays: {selectedOption}</Text>
-                        <Text style={{ fontSize: 19, color: 'rgba(16,17,17,0.84)', fontFamily: "Roboto_400Regular" }}>Beneficiare : GOTENI</Text>
-                        <Text style={{ fontSize: 19, color: 'rgba(16,17,17,0.84)', fontFamily: "Roboto_400Regular" }}>Numero : {numero}</Text>
-                        <Text style={{ marginBottom: 19, fontSize: 20, color: 'rgba(16,17,17,0.84)', fontFamily: "Roboto_400Regular" }}>Montant : {montant}</Text>
-                        <View style={{
-                            display: "flex", flexDirection: "row", justifyContent: "space-between", borderTopWidth: 1, borderTopColor: 'gray'
-                            , paddingTop: 10
-                        }}>
-                            <TouchableOpacity style={styles.buttonRetour} onPress={() => setSendResumeModal(false)} >
-                                <Text style={styles.buttonTextAnnul}>Retour</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.buttonEnvoie} onPress={handlePress} disabled={isLoading} >
-                                <Text style={styles.buttonText}>Envoyer</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
-            </Modal>
-            {/* =================================Chargement modal============================== */}
-            <Modal
-                coverScreen={true} backdropOpacity={0.3} isVisible={isLoading}
-            >
-                <View style={styles.modalContainerChargement}>
-                    <View style={styles.modalContentChargement}>
-                        {/* <Image
-                            source={require("../../assets/images/charger.gif")}
-                            style={{ width: 200, height: 200 }} /> */}
-                        <ActivityIndicator size={100} color={default_color.orange} animating={isLoading} />
-                    </View>
-                </View>
-            </Modal>
-            {/* =================================Verifie modal============================== */}
-            <Modal isVisible={sendMoney} coverScreen={true} backdropOpacity={0.4} onBackdropPress={() => setSendMoney(false)}>
-                <LinearGradient
-                    colors={[default_color.success, 'transparent']}
-                    start={{ x: 0.5, y: 0 }}
-                    end={{ x: 0.5, y: 0.9 }}
-                    style={styles.modalContainer}
-                >
-                    <View style={styles.checkmarkContainer}>
-                        <View style={styles.checkmark}>
-                            <Icon name="check-circle" size={100} color='white' />
-                        </View>
-                    </View>
-                    <Text style={styles.modalText2}>
-                        Transfert effectue avec success
-                    </Text>
-                </LinearGradient>
-            </Modal>
+            </>
+            :
+            <>
 
-            <Modal isVisible={notSendMoney} coverScreen={true} backdropOpacity={0.4} onBackdropPress={() => setNotSendMoney(false)}>
-                <LinearGradient
-                    colors={[default_color.red, 'transparent']}
-                    start={{ x: 0.5, y: 0 }}
-                    end={{ x: 0.5, y: 0.9 }}
-                    style={styles.modalContainer}
-                >
-                    <View style={styles.checkmarkContainer}>
-                        <View style={styles.checkmark}>
-                            <Icon name="exclamation-circle" size={100} color='rgba(255,255,255,0.84)' />
-                        </View>
-                    </View>
-                    <Text style={styles.modalText3}>
-                        Oups une erreur est arrivee, veillez recommencer
-                    </Text>
-                </LinearGradient>
-            </Modal>
-            {/* =======================Crediter modal===================================== */}
-            <Modal
-                isVisible={crediterModal}
-                onBackdropPress={toggleCrediterModal} // Cela fermera le modal lorsqu'on touche à l'extérieur
-                swipeDirection="down" // Permet de fermer le modal en swipant vers le bas
-                style={styles.modal}
-                backdropOpacity={0.1}
-                statusBarTranslucent={false}
-            >
-                <View style={styles.modalContent}>
-                    <Text style={{ fontSize: 17, paddingBottom: 20, color: 'black', fontFamily: "Roboto_400Regular", }}>RETIRER DE L'ARGENT</Text>
-                    {verifPass ?
-
-                        <>
-                            <View style={styles.inputContainer}>
-                                <Icon name="money" size={15} color="grey" style={styles.iconStyle} />
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder="Saisir le montant"
-                                    keyboardType="numeric"
-                                    autoCapitalize="none"
-                                    value={montantRetrait}
-                                    onChangeText={setMontantRetrait}
-                                />
-                            </View>
-                            <TouchableOpacity style={styles.button} onPress={() => setVeerifPass(false)} >
-                                <Text style={styles.buttonText}>Valider</Text>
-                            </TouchableOpacity>
-                        </>
-
-                        :
-                        <>
-                            <View style={styles.inputContainer}>
-                                <Icon name="lock" size={20} color="grey" style={styles.iconStyle} />
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder="Mot de passe"
-                                    secureTextEntry={!passwordVisible}
-                                />
-                                <TouchableOpacity
-                                    style={styles.eyeIcon}
-                                    onPress={() => setPasswordVisible(!passwordVisible)}
-                                >
-                                    <Icon name={passwordVisible ? 'eye' : 'eye-slash'} size={20} color="gray" />
-                                </TouchableOpacity>
-                            </View>
-                            <View style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-                                <TouchableOpacity style={styles.buttonAnnul} onPress={() => setVeerifPass(true)} >
-                                    <Text style={styles.buttonTextAnnul}>Retour</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.buttonRetirer} onPress={() => setVeerifPass(false)} >
-                                    <Text style={styles.buttonText}>Retirer</Text>
-                                </TouchableOpacity>
-                            </View>
-
-                        </>
-
-                    }
+            </>
+}
 
 
-                </View>
-            </Modal>
-            <Modal
-                isVisible={retraitModal}
-                onBackdropPress={toggleRetraitModal} // Cela fermera le modal lorsqu'on touche à l'extérieur
-                swipeDirection="down" // Permet de fermer le modal en swipant vers le bas
-                style={styles.modal}
-                backdropOpacity={0.1}
-                statusBarTranslucent={false}
-            >
-                <View style={styles.modalContent}>
+<View>
 
-                    {
-                        choixpayement == "" ?
-                            <>
-                                <Text style={{ fontSize: 13, paddingBottom: 20, color: 'black', fontFamily: "Roboto_400Regular", }}>CHOISISSEZ VOTRE MOYEN DE PAYEMENT</Text>
-                                <View style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', width: '100%' }}>
-                                    <TouchableOpacity onPress={() => setChoixPayement("mtn")}>
-                                        <Image
-                                            source={require("../../assets/images/mtn.png")}
-                                            style={{ width: 100, height: 70, borderRadius: 10 }} />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity onPress={showMessage} >
-                                        <Image
-                                            source={require("../../assets/images/airtel.png")}
-                                            style={{ width: 100, height: 70, borderRadius: 10 }} />
-                                    </TouchableOpacity>
-                                </View>
-                            </>
-                            :
-                            choixpayement == "mtn" ?
-                                <>
-                                    <Text style={{ fontSize: 17, paddingBottom: 10, color: 'black', fontFamily: "Roboto_400Regular", }}>EFFECTUEZ UN DEPOT</Text>
-                                    <Text style={{ fontSize: 13, paddingBottom: 20, fontWeight: 'bold', color: 'gray', textAlign: 'center' }}>
-                                        Assurez-vous d'avoir un compte au préalable avec le même numéro de téléphone ou la transaction sera impossible.
-                                    </Text>
-                                    <View style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', width: '100%', fontFamily: "Roboto_400Regular" }}>
-                                        <View style={styles.inputContainer}>
-                                            <Icon name="money" size={15} color="grey" style={styles.iconStyle} />
-                                            <TextInput
-                                                style={styles.input}
-                                                placeholder="Saisir le montant"
-                                                keyboardType="numeric"
-                                                autoCapitalize="none"
-                                                value={montantCrediter}
-                                                onChangeText={setMontantCrediter}
-                                            />
-                                        </View>
-
-                                    </View>
-                                    <View style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-                                        <TouchableOpacity style={styles.buttonAnnul} onPress={() => setChoixPayement("")} >
-                                            <Text style={styles.buttonTextAnnul}>Retour</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={styles.buttonRetirer} onPress={() => setVeerifPass(false)} >
-                                            <Text style={styles.buttonText}>Valider</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </>
-                                :
-                                <>
-
-                                </>
-                    }
+</View>
+</View>
+            </BottomSheetModal>
+            {/* ==========================fin Crediter  l'argent=========================================== */}
 
 
-                    <View>
+        </BottomSheetModalProvider>
 
-                    </View>
-                </View>
-            </Modal>
-        </View>
     );
 };
 
@@ -895,6 +968,8 @@ const styles = StyleSheet.create({
     modalContent: {
         backgroundColor: 'white',
         padding: 20,
+        paddingBottom:20,
+        marginBottom:20,
         alignItems: 'center',
         borderRadius: 4,
         borderColor: 'rgba(0, 0, 0, 0.1)',
@@ -1045,8 +1120,8 @@ const styles = StyleSheet.create({
         fontSize: 15,
         marginBottom: 1,
         textAlign: 'center',
-        // color: 'rgba(6,119,52,0.41)',
-        color: 'white',
+        color: '#00b33c',
+        // color: 'white',
         fontWeight: 'bold'
 
     },
@@ -1054,13 +1129,17 @@ const styles = StyleSheet.create({
         fontSize: 15,
         marginBottom: 1,
         textAlign: 'center',
-        color: 'white',
+        color: '#bf1717',
         // color: 'rgba(124,23,31,0.55)',
         fontWeight: 'bold'
     },
     eyeIcon: {
         padding: 10,
     },
+    contentContainer: {
+        flex: 1,
+        alignItems: 'center',
+      },
 
 });
 

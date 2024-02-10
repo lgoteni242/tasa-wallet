@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { View, Button, StyleSheet, Text, StatusBar, TextInput, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import default_color from '../styles/color';
 import { Pacifico_400Regular, useFonts } from '@expo-google-fonts/pacifico';
-import { Picker } from '@react-native-picker/picker';
-import RNPickerSelect from 'react-native-picker-select';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import CustomModalPicker from '../components/CustomModalPicker';
 

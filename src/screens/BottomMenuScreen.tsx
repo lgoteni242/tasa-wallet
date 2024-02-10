@@ -49,12 +49,12 @@ const BottomTabNavigator = () => {
                 tabBarLabel: () => null,
                 tabBarStyle: {
                     position: 'absolute',
-                    bottom: 13,
-                    left: 10,
-                    right: 10,
+                    // bottom: 13,
+                    // left: 10,
+                    // right: 10,
                     elevation: 5,
                     backgroundColor: '#ffffff',
-                    borderRadius: 30,
+                    // borderRadius: 30,
                     height: 47,
                     shadowColor: '#7F5DF0',
                     shadowOffset: {
