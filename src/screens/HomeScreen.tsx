@@ -3,8 +3,6 @@ import { View, Button, StyleSheet, Text, StatusBar, TextInput, TouchableOpacity,
 import default_color from '../styles/color';
 import {
     RobotoSerif_400Regular,
-    RobotoSerif_700Bold,
-    RobotoSerif_300Light,
     RobotoSerif_100Thin,
     useFonts,
 } from "@expo-google-fonts/roboto-serif";
@@ -17,9 +15,6 @@ import CustomModalPicker from '../components/CustomModalPicker';
 
 const HomeScreen = ({ navigation }) => {
 
-    // let [fontsLoaded] = useFonts({
-    //     Pacifico_400Regular
-    // });
 
     const flag = countryCode => String.fromCodePoint(...[...countryCode.toUpperCase()].map(c => 0x1F1A5 + c.charCodeAt()));
 

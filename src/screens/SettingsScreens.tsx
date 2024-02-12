@@ -2,7 +2,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import React, { useState } from 'react';
 import { View, Image, StyleSheet, Text, StatusBar, TextInput, TouchableOpacity, ImageBackground, ActivityIndicator, ScrollView } from 'react-native';
 import default_color from '../styles/color';
-import { Roboto_700Bold, Roboto_100Thin,Roboto_400Regular, useFonts } from "@expo-google-fonts/roboto";
+import { Roboto_700Bold, Roboto_100Thin, Roboto_400Regular, useFonts } from "@expo-google-fonts/roboto";
 import {
     RobotoSerif_400Regular,
     RobotoSerif_700Bold,
@@ -36,10 +36,12 @@ const SettingsScreens = ({ navigation }) => {
 
             <View style={styles.container_image}>
                 <View style={styles.container_logo}>
-                    <Text style={styles.welcomMessage}>Profil</Text>
+                    <View style={{ borderColor: 'white', borderWidth: 2, borderRadius: 100 }}>
+                        <Image source={require('../../assets/images/user.jpg')} style={styles.image} />
+                    </View>
                 </View>
 
-                <Text style={{ color: 'white', fontSize: 18, fontFamily: 'RobotoSerif_400Regular' }}>LEVI CHRIST GOTENI</Text>
+                <Text style={{ color: 'white', fontSize: 12, fontFamily: 'RobotoSerif_400Regular', marginBottom: 20 }}>LEVI CHRIST GOTENI</Text>
             </View>
 
             <ScrollView style={{ backgroundColor: '#E7E7E7' }}>
@@ -119,8 +121,8 @@ const SettingsScreens = ({ navigation }) => {
                         <Text style={styles.buttonTextEnd}>Se deconnecter des autres sessions du navigateur</Text>
                     </TouchableOpacity>
                 </View>
-                <View style={{ marginBottom: 60 }}>
-                    <Text style={{ textAlign: 'center', color: 'rgba(151,34,13,1)', fontFamily: "RobotoSerif_100Thin", fontSize: 10 }}>
+                <View style={{ marginBottom: 50 }}>
+                    <Text style={{ textAlign: 'center', color: 'gray', fontFamily: "RobotoSerif_100Thin", fontSize: 10 }}>
                         Tasa wallet v.1.0
                     </Text>
                 </View>
@@ -135,18 +137,12 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'white',
     },
-    iconStyleRetour: {
-        position: "absolute",
-        left: 20,
-        zIndex: 2,
-        // padding:10
-    },
     container_logo: {
         position: 'relative',
         display: 'flex',
         justifyContent: 'center',
         // alignItems: 'center',
-        paddingTop: 20,
+        paddingTop: 70,
         padding: 20
     },
     icon: {
@@ -165,11 +161,7 @@ const styles = StyleSheet.create({
         padding: 20,
         alignItems: 'center'
     },
-    container_form: {
-        flex: 0.6,
-        padding: 20,
-        // justifyContent:'center'
-    },
+
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -178,16 +170,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         borderRadius: 3,
     },
-    inputContainer2: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderColor: 'gray',
-        borderWidth: 1,
-        borderRadius: 7,
-    },
-    iconStyle: {
-        paddingHorizontal: 10,
-    },
+
     input: {
         flex: 1,
         height: 55,
@@ -224,12 +207,6 @@ const styles = StyleSheet.create({
         fontSize: 10,
         fontFamily: 'RobotoSerif_400Regular',
     },
-
-    welcomMessage: {
-        fontFamily: 'RobotoSerif_400Regular',
-        color: 'white',
-        fontSize: 15
-    },
     aujourdhui: {
         marginBottom: 10,
         elevation: 5, // pour Android
@@ -251,15 +228,11 @@ const styles = StyleSheet.create({
         borderColor: '#ccc'
 
     },
-    transcationListeEnd: {
-        marginTop: 5,
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        // borderBottomWidth: 0.3,
-        borderColor: '#ccc'
-
+    image: {
+        width: 70,
+        height: 70,
+        backgroundColor: 'white',
+        borderRadius: 100
     },
 
 

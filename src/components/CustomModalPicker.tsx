@@ -20,7 +20,8 @@ const CustomModalPicker = ({ options, onSelect, visible, onClose, titre }) => {
 
     return (
         <Modal
-            coverScreen={true} backdropOpacity={0.3} onBackdropPress={onClose} isVisible={visible}
+            coverScreen={true} backdropOpacity={0.3} onBackdropPress={onClose} isVisible={visible} animationIn="fadeIn"
+            animationOut="fadeOut"
         >
             <View style={styles.modalContainer}>
                 <View style={{ backgroundColor: default_color.orange, borderTopEndRadius: 10, borderTopStartRadius: 10, paddingTop: 5 }}>

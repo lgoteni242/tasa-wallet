@@ -1,7 +1,6 @@
 import { Pacifico_400Regular } from "@expo-google-fonts/pacifico";
 import { Roboto_700Bold, Roboto_100Thin, Roboto_400Regular } from "@expo-google-fonts/roboto";
 import CustomModalPicker from "../components/CustomModalPicker";
-import Toast from 'react-native-toast-message';
 import {
     RobotoSerif_400Regular,
     RobotoSerif_700Bold,
@@ -31,8 +30,51 @@ import default_color from "../styles/color";
 import Modal from 'react-native-modal';
 import Icon from "react-native-vector-icons/FontAwesome";
 
+const dataListe = [
+    {
+        id: 1,
+        name: "Levi Goteni",
+        heure: "13:15",
+        montant: '1200',
+        flag: 'cg'
+    },
+    {
+        id: 2,
+        name: "Chris N'gakosso",
+        heure: "17:55",
+        montant: '30000',
+        flag: 'sn'
 
-
+    },
+    {
+        id: 3,
+        name: "Mik Divin",
+        heure: "20:18",
+        montant: '400',
+        flag: 'cg'
+    },
+    {
+        id: 4,
+        name: "Paul Mboungou",
+        heure: "22:45",
+        montant: '5600',
+        flag: 'sn'
+    },
+    {
+        id: 5,
+        name: "Delice Kissangou",
+        heure: "00:05",
+        montant: '400',
+        flag: 'cg'
+    },
+    {
+        id: 6,
+        name: "Gomez Itoua",
+        heure: "12:19",
+        montant: '1300',
+        flag: 'sn'
+    }
+]
 
 const DashBoardScreen = ({ navigation }) => {
 
@@ -49,7 +91,6 @@ const DashBoardScreen = ({ navigation }) => {
     }, []);
 
     const handleSheetChanges = useCallback((index: number) => {
-        console.log('handleSheetChanges', index);
     }, []);
 
     const handleCloseModalPress = useCallback(() => {
@@ -69,7 +110,6 @@ const DashBoardScreen = ({ navigation }) => {
     }, []);
 
     const handleSheetChangesRetirer = useCallback((index: number) => {
-        console.log('handleSheetChanges', index);
     }, []);
 
     const handleCloseModalPressRetirer = useCallback(() => {
@@ -89,7 +129,6 @@ const DashBoardScreen = ({ navigation }) => {
     }, []);
 
     const handleSheetChangesCrediter = useCallback((index: number) => {
-        console.log('handleSheetChanges', index);
     }, []);
 
     const handleCloseModalPressCrediter = useCallback(() => {
@@ -97,34 +136,27 @@ const DashBoardScreen = ({ navigation }) => {
     }, []);
     // =================Chargement============================
     const [isLoading, setIsLoading] = useState(false);
-    const [apiResponse, setApiResponse] = useState('');
     // =======================================================
     // ================Verify send money======================
     const [sendMoney, setSendMoney] = useState(false);
     const [notSendMoney, setNotSendMoney] = useState(false);
     // ======================================================
     const [soldeVisible, setSoldeVisible] = useState(false);
-    const [isModalVisible, setModalVisible] = useState(false);
     const [selectedOption, setSelectedOption] = useState('');
     const [modalVisible, setModalVisible2] = useState(false);
     const [sendResumeModal, setSendResumeModal] = useState(false)
-    const [crediterModal, setCrediterModal] = useState(false);
-    const [retraitModal, setRetraitModal] = useState(false);
     // ==================Send money===================================
     const [solde, setSolde] = useState('1245192');
     const [numero, setNumero] = useState('');
     const [montant, setMontant] = useState('500');
     const [montantRetrait, setMontantRetrait] = useState('500');
     const [montantCrediter, setMontantCrediter] = useState('500');
-    const [retrait, setRetrait] = useState(false);
-    const [crediter, setCrediter] = useState(false);
     const [choixpayement, setChoixPayement] = useState("");
     // ================================================================
 
     const [verifPass, setVeerifPass] = useState(true)
     const [passwordVisible, setPasswordVisible] = useState(false);
 
-    // const flag = countryCode => String.fromCodePoint(...[...countryCode.toUpperCase()].map(c => 0x1F1A5 + c.charCodeAt()));
 
     const options = [{
         label: 'Republique du Congo',
@@ -136,19 +168,6 @@ const DashBoardScreen = ({ navigation }) => {
         value: 221,
         flag: 'sn'
     }];
-
-
-    const toggleModal = () => {
-        setModalVisible(!isModalVisible);
-    };
-
-    const toggleCrediterModal = () => {
-        setCrediterModal(!crediterModal);
-    };
-
-    const toggleRetraitModal = () => {
-        setRetraitModal(!retraitModal);
-    };
 
     function randomTrueOrFalse() {
         return Math.random() < 0.5;
@@ -182,7 +201,6 @@ const DashBoardScreen = ({ navigation }) => {
         setTimeout(() => {
             // Après un certain délai, obtenir la réponse de l'API (simulée ici)
             const response = 'Réponse de l\'API';
-            setApiResponse(response);
             if (randomTrueOrFalse()) {
                 setSendResumeModal(false)
                 setIsLoading(false);
@@ -196,22 +214,7 @@ const DashBoardScreen = ({ navigation }) => {
             }
         }, 2000); // Temps de délai simulé pour la réponse de l'API (2 secondes)
     };
-    const customStyles = {
-        top: 0, // Positionner le toast en haut de l'écran
-        left: 0, // Ajuster la position horizontale si nécessaire
-        right: 0, // Ajuster la position horizontale si nécessaire
-        // Ajoutez d'autres styles personnalisés au besoin
-    };
 
-    const showMessage = () => {
-        Toast.show({
-            type: 'success',
-            position: 'top',
-            text1: 'Cette fonctionnalité est en cours de développement:',
-            // bottomOffset: -1,
-            topOffset: -1
-        });
-    };
 
     return (
         <BottomSheetModalProvider>
@@ -225,11 +228,11 @@ const DashBoardScreen = ({ navigation }) => {
                 >
                     <View style={styles.container_logo}>
                         <TouchableOpacity>
-                            <Icon name="user" size={25} color="white" />
+                            <Icon name="user" size={20} color="white" />
                         </TouchableOpacity>
                         <Text style={styles.welcomMessage}>Bienvenue sur Tasa wallet</Text>
                         <TouchableOpacity>
-                            <Icon name="bell" size={25} color="white" />
+                            <Icon name="sign-out" size={20} color="white" />
                         </TouchableOpacity>
                     </View>
                     <View style={styles.barShow}>
@@ -355,186 +358,67 @@ const DashBoardScreen = ({ navigation }) => {
                         style={{ marginBottom: 60 }}
                         showsVerticalScrollIndicator={false}
                     >
-                        <View style={styles.transcationListe}>
-                            <View
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "row",
-                                    marginBottom: 20,
-                                }}
-                            >
-                                <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                    <Icon name="user" size={30} color="gray" />
-                                </TouchableOpacity>
-                                <View
-                                    style={{ display: "flex", justifyContent: "space-between" }}
-                                >
-                                    <Text
-                                        style={{
-                                            color: "gray",
-                                            fontFamily: "RobotoSerif_400Regular",
-                                        }}
-                                    >
-                                        Divin Mik
-                                    </Text>
-                                    <Text
-                                        style={{
-                                            color: "gray",
-                                            fontFamily: "RobotoSerif_100Thin",
+                        {
+                            dataListe.map((item) => (
 
+                                <View style={styles.transcationListe} key={item.id}>
+                                    <View
+                                        style={{
+                                            display: "flex",
+                                            flexDirection: "row",
+                                            marginBottom: 10,
                                         }}
                                     >
-                                        12:15 PM
-                                    </Text>
+                                        <TouchableOpacity style={styles.iconShowbarTransaction}>
+                                            <Icon name="user-circle" size={40} color="gray" />
+                                        </TouchableOpacity>
+                                        <View
+                                            style={{ display: "flex", justifyContent: "space-between" }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    color: "gray",
+                                                    fontFamily: "RobotoSerif_400Regular",
+                                                }}
+                                            >
+                                                {item.name}
+                                            </Text>
+                                            <Text
+                                                style={{
+                                                    color: "gray",
+                                                    fontFamily: "RobotoSerif_100Thin",
+
+                                                }}
+                                            >
+                                                {item.heure} PM
+                                            </Text>
+                                        </View>
+                                    </View>
+                                    <View>
+                                        <Text style={{ textAlign: 'right' }}>
+                                            {flag(item.flag)}
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                color: "gray",
+                                                fontFamily: "RobotoSerif_100Thin",
+
+                                            }}
+                                        >
+                                            {item.montant} Fcfa
+                                        </Text>
+                                    </View>
                                 </View>
-                            </View>
-                            <Text
-                                style={{
-                                    color: "gray",
-                                    fontFamily: "RobotoSerif_100Thin",
 
-                                }}
-                            >
-                                1124 Fcfa
-                            </Text>
-                        </View>
-                        <View style={styles.transcationListe}>
-                            <View
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "row",
-                                    marginBottom: 13,
-                                }}
-                            >
-                                <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                    <Icon name="user" size={30} color="gray" />
-                                </TouchableOpacity>
-                                <View
-                                    style={{ display: "flex", justifyContent: "space-between" }}
-                                >
-                                    <Text
-                                        style={{
-                                            color: "gray",
-                                            fontFamily: "RobotoSerif_400Regular",
-                                        }}
-                                    >
-                                        Divin Mik
-                                    </Text>
-                                    <Text
-                                        style={{
-                                            color: "gray",
-                                            fontFamily: "RobotoSerif_100Thin",
-
-                                        }}
-                                    >
-                                        12:15 PM
-                                    </Text>
-                                </View>
-                            </View>
-                            <Text
-                                style={{
-                                    color: "gray",
-                                    fontFamily: "RobotoSerif_100Thin",
-
-                                }}
-                            >
-                                1124 Fcfa
-                            </Text>
-                        </View>
-                        <View style={styles.transcationListe}>
-                            <View
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "row",
-                                    marginBottom: 13,
-                                }}
-                            >
-                                <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                    <Icon name="user" size={30} color="gray" />
-                                </TouchableOpacity>
-                                <View
-                                    style={{ display: "flex", justifyContent: "space-between" }}
-                                >
-                                    <Text
-                                        style={{
-                                            color: "gray",
-                                            fontFamily: "RobotoSerif_400Regular",
-                                        }}
-                                    >
-                                        Levi goteni
-                                    </Text>
-                                    <Text
-                                        style={{
-                                            color: "gray",
-                                            fontFamily: "RobotoSerif_100Thin",
-
-                                        }}
-                                    >
-                                        12:15 PM
-                                    </Text>
-                                </View>
-                            </View>
-                            <Text
-                                style={{
-                                    color: "gray",
-                                    fontFamily: "RobotoSerif_100Thin",
-
-                                }}
-                            >
-                                1124 Fcfa
-                            </Text>
-                        </View>
-                        <View style={styles.transcationListe}>
-                            <View
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "row",
-                                    marginBottom: 13,
-                                }}
-                            >
-                                <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                    <Icon name="user" size={30} color="gray" />
-                                </TouchableOpacity>
-                                <View
-                                    style={{ display: "flex", justifyContent: "space-between" }}
-                                >
-                                    <Text
-                                        style={{
-                                            color: "gray",
-                                            fontFamily: "RobotoSerif_400Regular",
-                                        }}
-                                    >
-                                        Gomez Itoua
-                                    </Text>
-                                    <Text
-                                        style={{
-                                            color: "gray",
-                                            fontFamily: "RobotoSerif_100Thin",
-
-                                        }}
-                                    >
-                                        12:15 PM
-                                    </Text>
-                                </View>
-                            </View>
-                            <Text
-                                style={{
-                                    color: "gray",
-                                    fontFamily: "RobotoSerif_100Thin",
-
-                                }}
-                            >
-                                1124 Fcfa
-                            </Text>
-                        </View>
-
-
+                            ))
+                        }
 
                     </ScrollView>
                 </View>
                 {/* ====================================Reumse modale============================================= */}
                 <Modal
-                    coverScreen={true} backdropOpacity={0.3} isVisible={sendResumeModal}
+                    coverScreen={true} backdropOpacity={0.3} isVisible={sendResumeModal} animationIn="fadeIn" // Animation d'entrée du haut
+                    animationOut="fadeOut"
                 >
                     <View style={styles.modalContainerSend}>
                         <View style={{ backgroundColor: default_color.orange, borderTopEndRadius: 10, borderTopStartRadius: 10, paddingTop: 5 }}>
@@ -561,7 +445,8 @@ const DashBoardScreen = ({ navigation }) => {
                 </Modal>
                 {/* =================================Chargement modal============================== */}
                 <Modal
-                    coverScreen={true} backdropOpacity={0.3} isVisible={isLoading}
+                    coverScreen={true} backdropOpacity={0.3} isVisible={isLoading} animationIn="fadeIn" // Animation d'entrée du haut
+                    animationOut="fadeOut"
                 >
                     <View style={styles.modalContainerChargement}>
                         <View style={styles.modalContentChargement}>
@@ -573,7 +458,13 @@ const DashBoardScreen = ({ navigation }) => {
                     </View>
                 </Modal>
                 {/* =================================Verifie modal============================== */}
-                <Modal isVisible={sendMoney} coverScreen={true} backdropOpacity={0.4} onBackdropPress={() => setSendMoney(false)}>
+                <Modal isVisible={sendMoney}
+                    coverScreen={true}
+                    backdropOpacity={0.4}
+                    onBackdropPress={() => setSendMoney(false)}
+                    animationIn="fadeIn" // Animation d'entrée du haut
+                    animationOut="fadeOut"
+                >
                     <LinearGradient
                         colors={['white', 'gray']}
                         start={{ x: 0.8, y: 0 }}
@@ -591,7 +482,13 @@ const DashBoardScreen = ({ navigation }) => {
                     </LinearGradient>
                 </Modal>
 
-                <Modal isVisible={notSendMoney} coverScreen={true} backdropOpacity={0.4} onBackdropPress={() => setNotSendMoney(false)}>
+                <Modal isVisible={notSendMoney}
+                    coverScreen={true}
+                    backdropOpacity={0.4}
+                    onBackdropPress={() => setNotSendMoney(false)}
+                    animationIn="fadeIn" // Animation d'entrée du haut
+                    animationOut="fadeOut"
+                >
                     <LinearGradient
                         colors={['white', 'gray']}
                         start={{ x: 0.8, y: 0 }}
@@ -755,7 +652,7 @@ const DashBoardScreen = ({ navigation }) => {
                                             source={require("../../assets/images/mtn.png")}
                                             style={{ width: 100, height: 70, borderRadius: 10 }} />
                                     </TouchableOpacity>
-                                    <TouchableOpacity onPress={showMessage} >
+                                    <TouchableOpacity  >
                                         <Image
                                             source={require("../../assets/images/airtel.png")}
                                             style={{ width: 100, height: 70, borderRadius: 10 }} />
@@ -766,10 +663,10 @@ const DashBoardScreen = ({ navigation }) => {
                             choixpayement == "mtn" ?
                                 <>
                                     <Text style={{ fontSize: 17, paddingBottom: 10, color: 'black', fontFamily: "Roboto_400Regular", }}>EFFECTUEZ UN DEPOT</Text>
-                                    <Text style={{ fontSize: 13, paddingBottom: 20, fontWeight: 'bold', color: 'gray', textAlign: 'center' }}>
+                                    <Text style={{ fontSize: 16, paddingBottom: 20, fontWeight: 'bold', color: 'black', textAlign: 'center', fontFamily: "Roboto_400Regular" }}>
                                         Assurez-vous d'avoir un compte au préalable avec le même numéro de téléphone ou la transaction sera impossible.
                                     </Text>
-                                    <View style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', width: '100%', fontFamily: "Roboto_400Regular" }}>
+                                    <View style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', width: '100%' }}>
                                         <View style={styles.inputContainer}>
                                             <Icon name="money" size={15} color="grey" style={styles.iconStyle} />
                                             <TextInput
@@ -818,14 +715,14 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
-        alignItems: "flex-start",
+        alignItems: "center",
         paddingTop: 30,
         width: "100%",
     },
     welcomMessage: {
         fontFamily: "RobotoSerif_400Regular",
         color: "white",
-        fontSize: 15,
+        fontSize: 13,
     },
     icon: {
         fontSize: 70,
@@ -902,19 +799,11 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
     },
     iconShowbarTransaction: {
-        marginRight: 10,
-        backgroundColor: "white",
-        borderRadius: 100,
+        marginRight: 20,
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        // padding: 10,
-        paddingHorizontal: 13,
-        // paddingVertical: 2,
-        elevation: 2,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
     },
     textShowbar: {
         color: "white",
@@ -929,12 +818,14 @@ const styles = StyleSheet.create({
         // flex: 0.5,
         height: '49%',
         paddingTop: 10,
-        paddingHorizontal: 20,
+        // paddingHorizontal: 20,
     },
     transcationTexte: {
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
+        paddingHorizontal: 20,
+
     },
     transactionPillule: {
         justifyContent: "center",
@@ -945,13 +836,15 @@ const styles = StyleSheet.create({
     },
     transcationListe: {
         marginTop: 10,
-        marginBottom: 5,
+        // marginBottom: 5,
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
         borderBottomWidth: 0.3,
         borderColor: "#ccc",
+        marginHorizontal: 20,
+
     },
     modal: {
         justifyContent: 'flex-end',
@@ -1051,7 +944,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontFamily: 'Roboto_400Regular',
     },
-
     modalContentSend: {
         backgroundColor: 'white',
         padding: 23,
@@ -1064,7 +956,6 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         // padding: 20,
     },
-
     modalContainerChargement: {
         backgroundColor: 'transparent',
         // borderRadius: 10,
@@ -1073,7 +964,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-
     modalContentChargement: {
         backgroundColor: 'transparent',
         // padding: 23,

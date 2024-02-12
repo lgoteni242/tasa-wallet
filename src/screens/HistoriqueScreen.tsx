@@ -1,21 +1,74 @@
 import Icon from 'react-native-vector-icons/FontAwesome';
 import React, { useState } from 'react';
-import { View, Image, StyleSheet, Text, StatusBar, TextInput, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, StatusBar, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import default_color from '../styles/color';
-    
+
+const dataListe = [
+    {
+        id: 1,
+        name: "Levi Goteni",
+        heure: "13:15",
+        montant: '1200',
+        flag: 'cg'
+    },
+    {
+        id: 2,
+        name: "Chris N'gakosso",
+        heure: "17:55",
+        montant: '30000',
+        flag: 'sn'
+
+    },
+    {
+        id: 3,
+        name: "Mik Divin",
+        heure: "20:18",
+        montant: '400',
+        flag: 'cg'
+    },
+    {
+        id: 4,
+        name: "Paul Mboungou",
+        heure: "22:45",
+        montant: '5600',
+        flag: 'sn'
+    },
+    {
+        id: 5,
+        name: "Delice Kissangou",
+        heure: "00:05",
+        montant: '400',
+        flag: 'cg'
+    },
+    {
+        id: 6,
+        name: "Gomez Itoua",
+        heure: "12:19",
+        montant: '1300',
+        flag: 'sn'
+    }
+]
 
 const HistoriqueScreen = ({ navigation }) => {
 
+    const filterData = (data: any[], searchText: string) => {
+        return data.filter(item =>
+            item.name.toLowerCase().includes(searchText.toLowerCase())
+        );
+
+    };
     const [searchText, setSearchText] = useState('');
 
     const handleSearch = () => {
-        // Logique de recherche ici
-        console.log('Recherche :', searchText);
+        // Appel de la fonction pour filtrer les données
+        const filteredData = filterData(dataListe, searchText);
+        // Affichage des données filtrées
+        console.log('Données filtrées :', filteredData);
     };
+    const filteredData = filterData(dataListe, searchText);
 
-    const handleFilter = () => {
-        console.log('Filtrage');
-    };
+    const flag = (countryCode: string) => String.fromCodePoint(...[...countryCode.toUpperCase()].map(c => 0x1F1A5 + c.charCodeAt()));
+
 
     return (
         <View style={styles.container}>
@@ -24,18 +77,16 @@ const HistoriqueScreen = ({ navigation }) => {
                 <View style={styles.container_logo}>
                     <Text style={styles.welcomMessage}>Historique</Text>
                 </View>
+                <View style={styles.container2}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Recherchez par nom, date ou numero téléphone ..."
+                        value={searchText}
+                        onChangeText={(text) => setSearchText(text)}
+                    />
+                </View>
             </View>
-            <View style={styles.container2}>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Rechercher par date ou email..."
-                    value={searchText}
-                    onChangeText={(text) => setSearchText(text)}
-                />
-                <TouchableOpacity onPress={handleSearch} style={styles.icon}>
-                    <Icon name="search" size={20} color="gray" />
-                </TouchableOpacity>
-            </View>
+
             <ScrollView style={{ backgroundColor: '#E7E7E7' }}>
                 <View style={styles.aujourdhui}>
                     <View style={styles.transcationTexte}>
@@ -59,93 +110,60 @@ const HistoriqueScreen = ({ navigation }) => {
                         </View>
                     </View>
 
-                    <View style={styles.transcationListe}>
-                        <View
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                marginBottom: 13,
-                            }}
-                        >
-                            <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                <Icon name="user" size={30} color="gray" />
-                            </TouchableOpacity>
-                            <View
-                                style={{ display: "flex", justifyContent: "space-between" }}
-                            >
-                                <Text
-                                    style={{
-                                        color: "gray",
-                                        fontFamily: "RobotoSerif_400Regular",
-                                    }}
-                                >
-                                    Divin Mik
-                                </Text>
-                                <Text
-                                    style={{
-                                        color: "gray",
-                                        fontFamily: "RobotoSerif_100Thin",
+                    {
+                        filteredData.map((item) => (
 
+                            <View style={styles.transcationListe} key={item.id}>
+                                <View
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        marginBottom: 10,
                                     }}
                                 >
-                                    12:15 PM
-                                </Text>
+                                    <TouchableOpacity style={styles.iconShowbarTransaction}>
+                                        <Icon name="user-circle" size={40} color="gray" />
+                                    </TouchableOpacity>
+                                    <View
+                                        style={{ display: "flex", justifyContent: "space-between" }}
+                                    >
+                                        <Text
+                                            style={{
+                                                color: "gray",
+                                                fontFamily: "RobotoSerif_400Regular",
+                                            }}
+                                        >
+                                            {item.name}
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                color: "gray",
+                                                fontFamily: "RobotoSerif_100Thin",
+
+                                            }}
+                                        >
+                                            {item.heure} PM
+                                        </Text>
+                                    </View>
+                                </View>
+                                <View>
+                                    <Text style={{ textAlign: 'right' }}>
+                                        {flag(item.flag)}
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            color: "gray",
+                                            fontFamily: "RobotoSerif_100Thin",
+
+                                        }}
+                                    >
+                                        {item.montant} Fcfa
+                                    </Text>
+                                </View>
                             </View>
-                        </View>
-                        <Text
-                            style={{
-                                color: "gray",
-                                fontFamily: "RobotoSerif_100Thin",
 
-                            }}
-                        >
-                            1124 Fcfa
-                        </Text>
-                    </View>
-
-                    <View style={styles.transcationListe}>
-                        <View
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                marginBottom: 13,
-                            }}
-                        >
-                            <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                <Icon name="user" size={30} color="gray" />
-                            </TouchableOpacity>
-                            <View
-                                style={{ display: "flex", justifyContent: "space-between" }}
-                            >
-                                <Text
-                                    style={{
-                                        color: "gray",
-                                        fontFamily: "RobotoSerif_400Regular",
-                                    }}
-                                >
-                                    Divin Mik
-                                </Text>
-                                <Text
-                                    style={{
-                                        color: "gray",
-                                        fontFamily: "RobotoSerif_100Thin",
-
-                                    }}
-                                >
-                                    12:15 PM
-                                </Text>
-                            </View>
-                        </View>
-                        <Text
-                            style={{
-                                color: "gray",
-                                fontFamily: "RobotoSerif_100Thin",
-
-                            }}
-                        >
-                            1124 Fcfa
-                        </Text>
-                    </View>
+                        ))
+                    }
 
                 </View>
                 <View style={styles.aujourdhui}>
@@ -170,137 +188,60 @@ const HistoriqueScreen = ({ navigation }) => {
                             </Text>
                         </View>
                     </View>
-                    <View style={styles.transcationListe}>
-                        <View
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                marginBottom: 13,
-                            }}
-                        >
-                            <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                <Icon name="user" size={30} color="gray" />
-                            </TouchableOpacity>
-                            <View
-                                style={{ display: "flex", justifyContent: "space-between" }}
-                            >
-                                <Text
-                                    style={{
-                                        color: "gray",
-                                        fontFamily: "RobotoSerif_400Regular",
-                                    }}
-                                >
-                                    Divin Mik
-                                </Text>
-                                <Text
-                                    style={{
-                                        color: "gray",
-                                        fontFamily: "RobotoSerif_100Thin",
+                    {
+                        filteredData.map((item) => (
 
+                            <View style={styles.transcationListe} key={item.id}>
+                                <View
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        marginBottom: 10,
                                     }}
                                 >
-                                    12:15 PM
-                                </Text>
+                                    <TouchableOpacity style={styles.iconShowbarTransaction}>
+                                        <Icon name="user-circle" size={40} color="gray" />
+                                    </TouchableOpacity>
+                                    <View
+                                        style={{ display: "flex", justifyContent: "space-between" }}
+                                    >
+                                        <Text
+                                            style={{
+                                                color: "gray",
+                                                fontFamily: "RobotoSerif_400Regular",
+                                            }}
+                                        >
+                                            {item.name}
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                color: "gray",
+                                                fontFamily: "RobotoSerif_100Thin",
+
+                                            }}
+                                        >
+                                            {item.heure} PM
+                                        </Text>
+                                    </View>
+                                </View>
+                                <View>
+                                    <Text style={{ textAlign: 'right' }}>
+                                        {flag(item.flag)}
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            color: "gray",
+                                            fontFamily: "RobotoSerif_100Thin",
+
+                                        }}
+                                    >
+                                        {item.montant} Fcfa
+                                    </Text>
+                                </View>
                             </View>
-                        </View>
-                        <Text
-                            style={{
-                                color: "gray",
-                                fontFamily: "RobotoSerif_100Thin",
 
-                            }}
-                        >
-                            1124 Fcfa
-                        </Text>
-                    </View>
-
-                    <View style={styles.transcationListe}>
-                        <View
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                marginBottom: 13,
-                            }}
-                        >
-                            <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                <Icon name="user" size={30} color="gray" />
-                            </TouchableOpacity>
-                            <View
-                                style={{ display: "flex", justifyContent: "space-between" }}
-                            >
-                                <Text
-                                    style={{
-                                        color: "gray",
-                                        fontFamily: "RobotoSerif_400Regular",
-                                    }}
-                                >
-                                    Divin Mik
-                                </Text>
-                                <Text
-                                    style={{
-                                        color: "gray",
-                                        fontFamily: "RobotoSerif_100Thin",
-
-                                    }}
-                                >
-                                    12:15 PM
-                                </Text>
-                            </View>
-                        </View>
-                        <Text
-                            style={{
-                                color: "gray",
-                                fontFamily: "RobotoSerif_100Thin",
-
-                            }}
-                        >
-                            1124 Fcfa
-                        </Text>
-                    </View>
-
-                    <View style={styles.transcationListe}>
-                        <View
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                marginBottom: 10,
-                            }}
-                        >
-                            <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                <Icon name="user" size={30} color="gray" />
-                            </TouchableOpacity>
-                            <View
-                                style={{ display: "flex", justifyContent: "space-between" }}
-                            >
-                                <Text
-                                    style={{
-                                        color: "gray",
-                                        fontFamily: "RobotoSerif_400Regular",
-                                    }}
-                                >
-                                    Divin Mik
-                                </Text>
-                                <Text
-                                    style={{
-                                        color: "gray",
-                                        fontFamily: "RobotoSerif_100Thin",
-
-                                    }}
-                                >
-                                    12:15 PM
-                                </Text>
-                            </View>
-                        </View>
-                        <Text
-                            style={{
-                                color: "gray",
-                                fontFamily: "RobotoSerif_100Thin",
-
-                            }}
-                        >
-                            1124 Fcfa
-                        </Text>
-                    </View>
+                        ))
+                    }
 
                 </View>
                 <View style={styles.aujourdhui2}>
@@ -328,93 +269,60 @@ const HistoriqueScreen = ({ navigation }) => {
 
 
 
-                    <View style={styles.transcationListe}>
-                        <View
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                marginBottom: 13,
-                            }}
-                        >
-                            <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                <Icon name="user" size={30} color="gray" />
-                            </TouchableOpacity>
-                            <View
-                                style={{ display: "flex", justifyContent: "space-between" }}
-                            >
-                                <Text
-                                    style={{
-                                        color: "gray",
-                                        fontFamily: "RobotoSerif_400Regular",
-                                    }}
-                                >
-                                    Divin Mik
-                                </Text>
-                                <Text
-                                    style={{
-                                        color: "gray",
-                                        fontFamily: "RobotoSerif_100Thin",
+                    {
+                        filteredData.map((item) => (
 
+                            <View style={styles.transcationListe} key={item.id}>
+                                <View
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        marginBottom: 10,
                                     }}
                                 >
-                                    12:15 PM
-                                </Text>
+                                    <TouchableOpacity style={styles.iconShowbarTransaction}>
+                                        <Icon name="user-circle" size={40} color="gray" />
+                                    </TouchableOpacity>
+                                    <View
+                                        style={{ display: "flex", justifyContent: "space-between" }}
+                                    >
+                                        <Text
+                                            style={{
+                                                color: "gray",
+                                                fontFamily: "RobotoSerif_400Regular",
+                                            }}
+                                        >
+                                            {item.name}
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                color: "gray",
+                                                fontFamily: "RobotoSerif_100Thin",
+
+                                            }}
+                                        >
+                                            {item.heure} PM
+                                        </Text>
+                                    </View>
+                                </View>
+                                <View>
+                                    <Text style={{ textAlign: 'right' }}>
+                                        {flag(item.flag)}
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            color: "gray",
+                                            fontFamily: "RobotoSerif_100Thin",
+
+                                        }}
+                                    >
+                                        {item.montant} Fcfa
+                                    </Text>
+                                </View>
                             </View>
-                        </View>
-                        <Text
-                            style={{
-                                color: "gray",
-                                fontFamily: "RobotoSerif_100Thin",
 
-                            }}
-                        >
-                            1124 Fcfa
-                        </Text>
-                    </View>
-
-                    <View style={styles.transcationListe}>
-                        <View
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                marginBottom: 23,
-                            }}
-                        >
-                            <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                <Icon name="user" size={30} color="gray" />
-                            </TouchableOpacity>
-                            <View
-                                style={{ display: "flex", justifyContent: "space-between" }}
-                            >
-                                <Text
-                                    style={{
-                                        color: "gray",
-                                        fontFamily: "RobotoSerif_400Regular",
-                                    }}
-                                >
-                                    Divin Mik
-                                </Text>
-                                <Text
-                                    style={{
-                                        color: "gray",
-                                        fontFamily: "RobotoSerif_100Thin",
-
-                                    }}
-                                >
-                                    12:15 PM
-                                </Text>
-                            </View>
-                        </View>
-                        <Text
-                            style={{
-                                color: "gray",
-                                fontFamily: "RobotoSerif_100Thin",
-
-                            }}
-                        >
-                            1124 Fcfa
-                        </Text>
-                    </View>
+                        ))
+                    }
 
                 </View>
             </ScrollView>
@@ -434,7 +342,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'flex-start',
         // paddingTop: 30,
-        width: '100%'
+        width: '100%',
+        // marginBottom: 30
 
     },
     transcationTexte: {
@@ -447,53 +356,39 @@ const styles = StyleSheet.create({
         fontSize: 70,
         fontWeight: 'bold',
         color: 'white',
-        marginRight: 10,
     },
 
     container_image: {
-        // flex: 0.4,
         height: 150,
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
         backgroundColor: default_color.orange,
-        // borderBottomLeftRadius: 20,
-        // borderBottomRightRadius: 20,
-        padding: 20,
-        alignItems: 'center'
-
-    },
-    iconStyle: {
-        paddingHorizontal: 10,
+        paddingHorizontal: 20,
+        alignItems: 'center',
+        paddingBottom: 10,
     },
     welcomMessage: {
         fontFamily: 'RobotoSerif_400Regular',
         color: 'white',
-        fontSize: 15
-    },
-
-    buttonsContainer: {
-        marginTop: 20,
-        paddingHorizontal: 20,
+        fontSize: 15,
+        marginBottom: 25
     },
     container2: {
         flexDirection: 'row',
         alignItems: 'center',
-        borderColor: '#ccc',
-        borderWidth: 1,
-        borderRadius: 5,
-        paddingLeft: 10,
-        paddingRight: 10,
-        margin: 20
+        borderRadius: 2,
+        paddingLeft: 7,
+        paddingRight: 7,
+        backgroundColor: 'white',
+
+
+
 
     },
-    searchContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-
     input: {
         flex: 1,
-        height: 40,
+        height: 45,
         fontFamily: "RobotoSerif_400Regular",
+        fontSize: 10,
     },
     aujourdhui: {
         marginBottom: 3,
@@ -513,7 +408,7 @@ const styles = StyleSheet.create({
         paddingBottom: 40
     },
     transcationListe: {
-        marginTop: 5,
+        // marginTop: 5,
         marginBottom: 5,
         display: 'flex',
         flexDirection: 'row',
@@ -524,19 +419,11 @@ const styles = StyleSheet.create({
 
     },
     iconShowbarTransaction: {
-        marginRight: 10,
-        backgroundColor: 'white',
-        borderRadius: 100,
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        // padding: 10,
-        paddingHorizontal: 12,
-        // paddingVertical: 2,
-        elevation: 2,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
+        marginRight: 20,
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
     },
     transactionPillule: {
         justifyContent: "center",
