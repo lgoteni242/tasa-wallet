@@ -1,5 +1,5 @@
 import Icon from 'react-native-vector-icons/FontAwesome';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, StatusBar, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import default_color from '../styles/color';
 
@@ -51,6 +51,7 @@ const dataListe = [
 
 const HistoriqueScreen = ({ navigation }) => {
 
+
     const filterData = (data: any[], searchText: string) => {
         return data.filter(item =>
             item.name.toLowerCase().includes(searchText.toLowerCase())
@@ -73,21 +74,24 @@ const HistoriqueScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <StatusBar translucent backgroundColor="transparent" />
+            <StatusBar barStyle="light-content" />
+
             <View style={styles.container_image}>
                 <View style={styles.container_logo}>
                     <Text style={styles.welcomMessage}>Historique</Text>
                 </View>
-                <View style={styles.container2}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Recherchez par nom, date ou numero téléphone ..."
-                        value={searchText}
-                        onChangeText={(text) => setSearchText(text)}
-                    />
-                </View>
-            </View>
 
+            </View>
+            <View style={styles.container2}>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Recherchez par nom, date ou numero téléphone ..."
+                    value={searchText}
+                    onChangeText={(text) => setSearchText(text)}
+                />
+            </View>
             <ScrollView style={{ backgroundColor: '#E7E7E7' }}>
+
                 <View style={styles.aujourdhui}>
                     <View style={styles.transcationTexte}>
                         <Text
@@ -376,17 +380,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         borderRadius: 2,
-        paddingLeft: 7,
-        paddingRight: 7,
-        backgroundColor: 'white',
-
-
+        paddingHorizontal: 20,
+        backgroundColor: '#ecece9b0',
+        borderBottomWidth: 1,
+        // borderColor: 'red'
 
 
     },
     input: {
         flex: 1,
-        height: 45,
+        height: 50,
         fontFamily: "RobotoSerif_400Regular",
         fontSize: 10,
     },

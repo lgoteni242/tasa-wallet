@@ -9,7 +9,7 @@ import {
     useFonts,
 } from "@expo-google-fonts/roboto-serif";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useState, useCallback, useMemo, useRef } from "react";
+import React, { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import {
     BottomSheetModal,
     BottomSheetModalProvider,
@@ -76,13 +76,13 @@ const dataListe = [
     }
 ]
 
-const DashBoardScreen = ({ navigation }) => {
+const DashBoardScreen = () => {
 
     // Send Money 
     // ref
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
     // variables
-    const snapPoints = useMemo(() => ['28%', '60%'], []);
+    const snapPoints = useMemo(() => ['17%', '60%'], []);
     // callbacks
     const handlePresentModalPress = useCallback(() => {
         // handleCloseModalPressRetirer()
@@ -101,7 +101,7 @@ const DashBoardScreen = ({ navigation }) => {
     // ref
     const bottomSheetModalRefRetirer = useRef<BottomSheetModal>(null);
     // variables
-    const snapPointsRetirer = useMemo(() => ['28%', '60%'], []);
+    const snapPointsRetirer = useMemo(() => ['17%', '60%'], []);
     // callbacks
     const handlePresentModalPressRetirer = useCallback(() => {
         // handleCloseModalPress()
@@ -120,7 +120,7 @@ const DashBoardScreen = ({ navigation }) => {
     // ref
     const bottomSheetModalRefCrediter = useRef<BottomSheetModal>(null);
     // variables
-    const snapPointsCrediter = useMemo(() => ['28%', '60%'], []);
+    const snapPointsCrediter = useMemo(() => ['17%', '60%'], []);
     // callbacks
     const handlePresentModalPressCrediter = useCallback(() => {
         // handleCloseModalPressRetirer()
@@ -173,7 +173,9 @@ const DashBoardScreen = ({ navigation }) => {
         return Math.random() < 0.5;
     }
 
-    const flag = (countryCode: string) => String.fromCodePoint(...[...countryCode.toUpperCase()].map(c => 0x1F1A5 + c.charCodeAt()));
+    const flag = (countryCode: string) => String.fromCodePoint(...[...countryCode.toUpperCase()].map(c => {
+        return 0x1F1A5 + c.charCodeAt();
+    }));
 
     const handleSelect = (option: React.SetStateAction<string>) => {
         setSelectedOption(option);
@@ -217,9 +219,11 @@ const DashBoardScreen = ({ navigation }) => {
 
 
     return (
-        <BottomSheetModalProvider>
+        <BottomSheetModalProvider >
             <View style={styles.container}>
                 <StatusBar translucent backgroundColor="transparent" />
+                <StatusBar barStyle="light-content" />
+
                 <LinearGradient
                     colors={[default_color.orange, "gray"]}
                     start={{ x: 0, y: 0.3 }}

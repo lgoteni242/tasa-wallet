@@ -1,15 +1,17 @@
 import Icon from 'react-native-vector-icons/FontAwesome';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Image, StyleSheet, Text, StatusBar, TextInput, TouchableOpacity, ImageBackground, ActivityIndicator, ScrollView } from 'react-native';
 import default_color from '../styles/color';
 import { Roboto_700Bold, Roboto_100Thin, Roboto_400Regular, useFonts } from "@expo-google-fonts/roboto";
 import {
     RobotoSerif_400Regular,
     RobotoSerif_700Bold,
-    RobotoSerif_300Light,
     RobotoSerif_100Thin,
 } from "@expo-google-fonts/roboto-serif";
+
+
 const SettingsScreens = ({ navigation }) => {
+
 
     const [passwordVisible, setPasswordVisible] = useState(false);
 
@@ -33,6 +35,7 @@ const SettingsScreens = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <StatusBar translucent backgroundColor="transparent" />
+            <StatusBar barStyle="light-content" />
 
             <View style={styles.container_image}>
                 <View style={styles.container_logo}>
@@ -71,7 +74,15 @@ const SettingsScreens = ({ navigation }) => {
                             </View>
                         </View>
                     </View>
-
+                    <TouchableOpacity style={styles.transcationListe} onPress={() => navigation.navigate('CodeAcces')}>
+                        <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 10, justifyContent: 'space-between', alignItems: "center", width: "100%" }}>
+                            <View style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <Text style={{ fontFamily: "RobotoSerif_400Regular", }}>Définir un code de sécurité.</Text>
+                                <Text style={{ color: 'gray', fontSize: 8, fontFamily: "RobotoSerif_400Regular" }}>Le code de sécurité permet de protéger votre application.</Text>
+                            </View>
+                            <Icon name="chevron-right" color="grey" size={12} />
+                        </View>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.aujourdhui}>
                     <Text style={{ marginBottom: 14, color: default_color.orange, fontSize: 13, fontFamily: "RobotoSerif_700Bold", }}>Mettre a jour le mot de passe</Text>
@@ -99,7 +110,7 @@ const SettingsScreens = ({ navigation }) => {
                             secureTextEntry={!passwordVisible}
                         />
                     </View>
-                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Menu')}>
+                    <TouchableOpacity style={styles.button}>
                         <Text style={styles.buttonText}>Sauvegarder</Text>
                     </TouchableOpacity>
 
@@ -108,7 +119,7 @@ const SettingsScreens = ({ navigation }) => {
                 <View style={styles.aujourdhui}>
                     <Text style={{ marginBottom: 5, color: default_color.orange, fontSize: 13, fontFamily: "RobotoSerif_700Bold", }}>Authentification en deux étapes</Text>
                     <Text style={{ color: 'gray', fontSize: 10, marginBottom: 10, textAlign: 'justify', fontFamily: "RobotoSerif_400Regular" }}>Lorsque l’authentification à deux facteurs est activée, un jeton aléatoire sécurisé vous sera demandé pendant l’authentification. Vous pouvez récupérer ce jeton à partir de l’application Google Authenticator de votre téléphone.</Text>
-                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Menu')}>
+                    <TouchableOpacity style={styles.button}>
                         <Text style={styles.buttonText}>Activer</Text>
                     </TouchableOpacity>
 
@@ -117,7 +128,7 @@ const SettingsScreens = ({ navigation }) => {
                 <View style={styles.aujourdhui}>
                     <Text style={{ marginBottom: 5, color: default_color.orange, fontSize: 13, fontFamily: "RobotoSerif_700Bold", }}>Sessions de navigateur</Text>
                     <Text style={{ color: 'gray', fontSize: 10, marginBottom: 10, textAlign: 'justify', fontFamily: "RobotoSerif_400Regular" }}>Si nécessaire, vous pouvez vous déconnecter de toutes vos autres sessions de navigateur sur tous vos appareils. Certaines de vos sessions récentes sont énumérées ci-dessous; cependant, cette liste peut ne pas être exhaustive. Si vous pensez que votre compte a été compromis, vous devez également mettre à jour votre mot de passe.</Text>
-                    <TouchableOpacity style={styles.buttonEnd} onPress={() => navigation.navigate('Menu')}>
+                    <TouchableOpacity style={styles.buttonEnd} >
                         <Text style={styles.buttonTextEnd}>Se deconnecter des autres sessions du navigateur</Text>
                     </TouchableOpacity>
                 </View>
