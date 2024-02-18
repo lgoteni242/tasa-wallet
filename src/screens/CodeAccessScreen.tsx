@@ -110,7 +110,6 @@ const CodeAccesScreen = ({ navigation }) => {
     return (
         <View style={styles.section70}>
             <StatusBar barStyle="dark-content" />
-
             <TouchableOpacity onPress={() => navigation.goBack()} style={{ padding: 30 }}>
                 <Icon name="arrow-left" size={10} color="gray" style={{ fontSize: 20, position: 'absolute', left: -10, top: 25 }} />
             </TouchableOpacity>

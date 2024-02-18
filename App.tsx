@@ -8,6 +8,7 @@ import BottomMenuScreen from './src/screens/BottomMenuScreen';
 import CodeAccesScreen from './src/screens/CodeAccessScreen';
 import { Provider } from 'react-redux';
 import store from './src/store/store';
+import KycScreen from './src/screens/KycScreen';
 
 const Stack = createStackNavigator();
 
@@ -29,6 +30,8 @@ const App = () => {
           <Stack.Screen name="MotPasseOublier" component={MotPasseOublier} options={{ headerShown: false }} />
           <Stack.Screen name="Menu" component={BottomMenuScreen} options={{ headerShown: false }} />
           <Stack.Screen name="CodeAcces" component={CodeAccesScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="Kyc" component={KycScreen} options={{ headerShown: false }} />
+
         </Stack.Navigator>
       </NavigationContainer >
     </Provider>

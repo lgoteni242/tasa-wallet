@@ -154,9 +154,8 @@ const DashBoardScreen = ({ navigation }) => {
             if (!user.etat) {
                 bottomSheetModalRefRetirer.current?.present();
 
-
             } else {
-                console.error('ddd')
+                navigation.navigate("Kyc")
             }
         }
     }, []);
