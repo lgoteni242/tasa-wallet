@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Image, StyleSheet, Text, StatusBar, TextInput, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
+import React from 'react';
+import { View, StyleSheet, Text, StatusBar, TextInput, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import default_color from '../styles/color';
 import { Pacifico_400Regular, useFonts } from '@expo-google-fonts/pacifico';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
         borderColor: 'gray',
         borderWidth: 0.6,
         marginBottom: 20,
-        borderRadius: 3,
+        borderRadius: 100,
     },
     inputContainer2: {
         flexDirection: 'row',
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     },
     input: {
         flex: 1,
-        height: 55,
+        height: 50,
         paddingHorizontal: 10,
         fontFamily: 'RobotoSerif_400Regular',
         fontSize: 12,
@@ -120,9 +120,9 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: default_color.orange,
-        paddingVertical: 10,
+        paddingVertical: 7,
         alignItems: 'center',
-        borderRadius: 3,
+        borderRadius: 100,
         fontFamily: 'RobotoSerif_400Regular',
     },
     buttonText: {

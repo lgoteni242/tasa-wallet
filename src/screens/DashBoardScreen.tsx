@@ -29,6 +29,10 @@ import {
 import default_color from "../styles/color";
 import Modal from 'react-native-modal';
 import Icon from "react-native-vector-icons/FontAwesome";
+import { logout } from "../store/actions/authActions";
+import { connect, useSelector } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { useDispatch } from 'react-redux';
 
 const dataListe = [
     {
@@ -76,7 +80,40 @@ const dataListe = [
     }
 ]
 
-const DashBoardScreen = () => {
+const DashBoardScreen = ({ navigation }) => {
+    // =================Chargement============================
+    const user = useSelector(state => state.auth.user);
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [deconnexionConf, setDeconnexionConf] = useState(false);
+    // =======================================================
+    // ================Verify send money======================
+    const [sendMoney, setSendMoney] = useState(false);
+    const [notSendMoney, setNotSendMoney] = useState(false);
+    // ======================================================
+    const [soldeVisible, setSoldeVisible] = useState(false);
+    const [selectedOption, setSelectedOption] = useState('');
+    const [modalVisible, setModalVisible2] = useState(false);
+    const [sendResumeModal, setSendResumeModal] = useState(false)
+    // ==================Send money===================================
+    // const [solde, setSolde] = useState(user.balance);
+    const [numero, setNumero] = useState('');
+    const [montant, setMontant] = useState('500');
+    const [montantRetrait, setMontantRetrait] = useState('500');
+    const [montantCrediter, setMontantCrediter] = useState('500');
+    const [choixpayement, setChoixPayement] = useState("");
+    // ================================================================
+
+    const [verifPass, setVeerifPass] = useState(true)
+    const [passwordVisible, setPasswordVisible] = useState(false);
+
+    const dispatch = useDispatch();
+    const handleLogout = () => {
+        dispatch(logout()); // Déclencher la déconnexion en dispatchant l'action logout
+        setDeconnexionConf(false)
+        // Rediriger l'utilisateur vers l'écran de connexion ou la page d'accueil
+        navigation.replace('Home');
+    };
 
     // Send Money 
     // ref
@@ -87,7 +124,14 @@ const DashBoardScreen = () => {
     const handlePresentModalPress = useCallback(() => {
         // handleCloseModalPressRetirer()
         // handleCloseModalPressCrediter()
-        bottomSheetModalRef.current?.present();
+        if (user) {
+            if (!user.etat) {
+                bottomSheetModalRef.current?.present();
+
+            } else {
+                console.error('ddd')
+            }
+        }
     }, []);
 
     const handleSheetChanges = useCallback((index: number) => {
@@ -106,7 +150,15 @@ const DashBoardScreen = () => {
     const handlePresentModalPressRetirer = useCallback(() => {
         // handleCloseModalPress()
         // handleCloseModalPressCrediter()
-        bottomSheetModalRefRetirer.current?.present();
+        if (user) {
+            if (!user.etat) {
+                bottomSheetModalRefRetirer.current?.present();
+
+
+            } else {
+                console.error('ddd')
+            }
+        }
     }, []);
 
     const handleSheetChangesRetirer = useCallback((index: number) => {
@@ -125,37 +177,30 @@ const DashBoardScreen = () => {
     const handlePresentModalPressCrediter = useCallback(() => {
         // handleCloseModalPressRetirer()
         // handleCloseModalPress()
-        bottomSheetModalRefCrediter.current?.present();
+        if (user) {
+            if (!user.etat) {
+                bottomSheetModalRefCrediter.current?.present();
+
+            } else {
+                console.error('ddd')
+            }
+        }
     }, []);
 
     const handleSheetChangesCrediter = useCallback((index: number) => {
     }, []);
 
     const handleCloseModalPressCrediter = useCallback(() => {
+
         bottomSheetModalRefCrediter.current?.close();
     }, []);
-    // =================Chargement============================
-    const [isLoading, setIsLoading] = useState(false);
-    // =======================================================
-    // ================Verify send money======================
-    const [sendMoney, setSendMoney] = useState(false);
-    const [notSendMoney, setNotSendMoney] = useState(false);
-    // ======================================================
-    const [soldeVisible, setSoldeVisible] = useState(false);
-    const [selectedOption, setSelectedOption] = useState('');
-    const [modalVisible, setModalVisible2] = useState(false);
-    const [sendResumeModal, setSendResumeModal] = useState(false)
-    // ==================Send money===================================
-    const [solde, setSolde] = useState('1245192');
-    const [numero, setNumero] = useState('');
-    const [montant, setMontant] = useState('500');
-    const [montantRetrait, setMontantRetrait] = useState('500');
-    const [montantCrediter, setMontantCrediter] = useState('500');
-    const [choixpayement, setChoixPayement] = useState("");
-    // ================================================================
 
-    const [verifPass, setVeerifPass] = useState(true)
-    const [passwordVisible, setPasswordVisible] = useState(false);
+
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // Les mois commencent à partir de 0, donc on ajoute 1
+    const day = date.getDate();
+    const formattedDate = `${day}/${month}/${year}`;
 
 
     const options = [{
@@ -197,6 +242,8 @@ const DashBoardScreen = () => {
         return <ActivityIndicator size="large" />;
     }
 
+
+
     const handlePress = () => {
         setIsLoading(true);
         // Simuler un appel à une API (remplacez cette partie par votre appel réel à l'API)
@@ -222,7 +269,7 @@ const DashBoardScreen = () => {
         <BottomSheetModalProvider >
             <View style={styles.container}>
                 <StatusBar translucent backgroundColor="transparent" />
-                <StatusBar barStyle="light-content" />
+                {/* <StatusBar barStyle="light-content" /> */}
 
                 <LinearGradient
                     colors={[default_color.orange, "gray"]}
@@ -234,8 +281,8 @@ const DashBoardScreen = () => {
                         <TouchableOpacity>
                             <Icon name="user" size={20} color="white" />
                         </TouchableOpacity>
-                        <Text style={styles.welcomMessage}>Bienvenue sur Tasa wallet</Text>
-                        <TouchableOpacity>
+                        <Text style={styles.welcomMessage}>Tasa Wallet</Text>
+                        <TouchableOpacity onPress={() => setDeconnexionConf(!deconnexionConf)} style={{ padding: 0 }}>
                             <Icon name="sign-out" size={20} color="white" />
                         </TouchableOpacity>
                     </View>
@@ -262,7 +309,7 @@ const DashBoardScreen = () => {
                                             fontSize: 30,
                                         }}
                                     >
-                                        $ {solde}
+                                        $ {user && user.balance}
                                     </Text>
                                 ) : (
                                     <Text
@@ -293,7 +340,7 @@ const DashBoardScreen = () => {
                                         color: "white",
                                     }}
                                 >
-                                    18/2023
+                                    {formattedDate}
                                 </Text>
                                 <Text
                                     style={{
@@ -301,7 +348,8 @@ const DashBoardScreen = () => {
                                         color: "white",
                                     }}
                                 >
-                                    Levi Goteni
+                                    {user && user.name}
+
                                 </Text>
                             </View>
                             <Text
@@ -311,7 +359,7 @@ const DashBoardScreen = () => {
                                     color: "white",
                                 }}
                             >
-                                Congo
+                                {user && user.country}
                             </Text>
                         </View>
                     </View>
@@ -419,20 +467,45 @@ const DashBoardScreen = () => {
 
                     </ScrollView>
                 </View>
-                {/* ====================================Reumse modale============================================= */}
+                {/* =====================================Deconnexion============================================= */}
+                <Modal
+                    coverScreen={true} backdropOpacity={0.3} isVisible={deconnexionConf} animationIn="fadeIn" // Animation d'entrée du haut
+                    animationOut="fadeOut"
+                >
+                    <View style={styles.modalContainerSend}>
+                        <View style={{ backgroundColor: default_color.orange, borderTopEndRadius: 10, borderTopStartRadius: 10, paddingTop: 5 }}>
+                            <Text style={{ textAlign: 'center', fontSize: 20, paddingBottom: 10, fontWeight: 'bold', color: 'white', fontFamily: "RobotoSerif_400Regular" }}>Deconnexion</Text>
+                        </View>
+                        <View style={styles.modalContentSend}>
+                            <Text style={{ fontSize: 13, color: 'rgba(16,17,17,0.84)', fontFamily: "RobotoSerif_400Regular", marginBottom: 12 }}>Souhaitez-vous vous deconnecter ?</Text>
+                            <View style={{
+                                display: "flex", flexDirection: "row", justifyContent: "space-between", borderTopWidth: 1, borderTopColor: 'gray'
+                                , paddingTop: 10
+                            }}>
+                                <TouchableOpacity style={styles.buttonRetourDec} onPress={() => setDeconnexionConf(false)} >
+                                    <Text style={styles.buttonTextAnnul}>Non</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.buttonEnvoieDec} onPress={handleLogout} >
+                                    <Text style={styles.buttonText}>Oui</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
+                {/* ====================================Resume modale============================================= */}
                 <Modal
                     coverScreen={true} backdropOpacity={0.3} isVisible={sendResumeModal} animationIn="fadeIn" // Animation d'entrée du haut
                     animationOut="fadeOut"
                 >
                     <View style={styles.modalContainerSend}>
                         <View style={{ backgroundColor: default_color.orange, borderTopEndRadius: 10, borderTopStartRadius: 10, paddingTop: 5 }}>
-                            <Text style={{ textAlign: 'center', fontSize: 20, paddingBottom: 10, fontWeight: 'bold', color: 'white', fontFamily: "Roboto_400Regular" }}>Resumer de l'operation</Text>
+                            <Text style={{ textAlign: 'center', fontSize: 20, paddingBottom: 10, fontWeight: 'bold', color: 'white', fontFamily: "RobotoSerif_400Regular" }}>Resumer de l'operation</Text>
                         </View>
                         <View style={styles.modalContentSend}>
-                            <Text style={{ fontSize: 19, color: 'rgba(16,17,17,0.84)', fontFamily: "Roboto_400Regular" }}>Pays: {selectedOption}</Text>
-                            <Text style={{ fontSize: 19, color: 'rgba(16,17,17,0.84)', fontFamily: "Roboto_400Regular" }}>Beneficiare : GOTENI</Text>
-                            <Text style={{ fontSize: 19, color: 'rgba(16,17,17,0.84)', fontFamily: "Roboto_400Regular" }}>Numero : {numero}</Text>
-                            <Text style={{ marginBottom: 19, fontSize: 20, color: 'rgba(16,17,17,0.84)', fontFamily: "Roboto_400Regular" }}>Montant : {montant}</Text>
+                            <Text style={{ fontSize: 19, color: 'rgba(16,17,17,0.84)', fontFamily: "RobotoSerif_400Regular" }}>Pays: {selectedOption}</Text>
+                            <Text style={{ fontSize: 19, color: 'rgba(16,17,17,0.84)', fontFamily: "RobotoSerif_400Regular" }}>Beneficiare : GOTENI</Text>
+                            <Text style={{ fontSize: 19, color: 'rgba(16,17,17,0.84)', fontFamily: "RobotoSerif_400Regular" }}>Numero : {numero}</Text>
+                            <Text style={{ marginBottom: 19, fontSize: 20, color: 'rgba(16,17,17,0.84)', fontFamily: "RobotoSerif_400Regular" }}>Montant : {montant}</Text>
                             <View style={{
                                 display: "flex", flexDirection: "row", justifyContent: "space-between", borderTopWidth: 1, borderTopColor: 'gray'
                                 , paddingTop: 10
@@ -518,7 +591,7 @@ const DashBoardScreen = () => {
             >
                 <BottomSheetScrollView >
                     <View style={styles.modalContent}>
-                        <Text style={{ fontSize: 17, paddingBottom: 20, color: 'black', fontFamily: "Roboto_400Regular", }}>ENVOYER DE L'ARGENT</Text>
+                        <Text style={{ fontSize: 17, paddingBottom: 20, color: 'gray', fontFamily: "RobotoSerif_400Regular", }}>ENVOYER DE L'ARGENT</Text>
                         <View style={styles.inputContainer2}>
                             {selectedOption == "" ?
                                 <Icon name="globe" size={15} color="grey" style={styles.iconStyle} />
@@ -528,7 +601,7 @@ const DashBoardScreen = () => {
                                     <Text style={styles.iconStyle}>{flag('sn')}</Text>
                             }
                             <TouchableOpacity onPress={() => setModalVisible2(true)} style={{ width: "88%" }}>
-                                {selectedOption == "" ? (<Text style={{ color: 'grey', fontFamily: 'Roboto_400Regular' }}>Pays de residence</Text>) : <Text>{selectedOption}</Text>}
+                                {selectedOption == "" ? (<Text style={{ color: 'grey', fontFamily: 'RobotoSerif_400Regular' }}>Pays de residence</Text>) : <Text>{selectedOption}</Text>}
                             </TouchableOpacity>
                             <CustomModalPicker
                                 options={options}
@@ -583,7 +656,7 @@ const DashBoardScreen = () => {
                 onChange={handleSheetChangesRetirer}
             >
                 <View style={styles.modalContent}>
-                    <Text style={{ fontSize: 17, paddingBottom: 20, color: 'black', fontFamily: "Roboto_400Regular", }}>RETIRER DE L'ARGENT</Text>
+                    <Text style={{ fontSize: 17, paddingBottom: 20, color: 'gray', fontFamily: "RobotoSerif_400Regular", }}>RETIRER DE L'ARGENT</Text>
                     {verifPass ?
 
                         <>
@@ -627,12 +700,8 @@ const DashBoardScreen = () => {
                                     <Text style={styles.buttonText}>Retirer</Text>
                                 </TouchableOpacity>
                             </View>
-
                         </>
-
                     }
-
-
                 </View>
             </BottomSheetModal>
             {/* ==========================Fin Retirer l'argent=========================================== */}
@@ -649,7 +718,7 @@ const DashBoardScreen = () => {
                     {
                         choixpayement == "" ?
                             <>
-                                <Text style={{ fontSize: 13, paddingBottom: 20, color: 'black', fontFamily: "Roboto_400Regular", }}>CHOISISSEZ VOTRE MOYEN DE PAYEMENT</Text>
+                                <Text style={{ fontSize: 12, paddingBottom: 20, color: 'gray', fontFamily: "RobotoSerif_400Regular", }}>CHOISISSEZ VOTRE MOYEN DE PAYEMENT</Text>
                                 <View style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', width: '100%' }}>
                                     <TouchableOpacity onPress={() => setChoixPayement("mtn")}>
                                         <Image
@@ -666,8 +735,8 @@ const DashBoardScreen = () => {
                             :
                             choixpayement == "mtn" ?
                                 <>
-                                    <Text style={{ fontSize: 17, paddingBottom: 10, color: 'black', fontFamily: "Roboto_400Regular", }}>EFFECTUEZ UN DEPOT</Text>
-                                    <Text style={{ fontSize: 16, paddingBottom: 20, fontWeight: 'bold', color: 'black', textAlign: 'center', fontFamily: "Roboto_400Regular" }}>
+                                    <Text style={{ fontSize: 17, paddingBottom: 10, color: 'gray', fontFamily: "RobotoSerif_400Regular", }}>EFFECTUEZ UN DEPOT</Text>
+                                    <Text style={{ fontSize: 13, paddingBottom: 20, fontWeight: 'bold', color: 'gray', textAlign: 'center', fontFamily: "RobotoSerif_400Regular" }}>
                                         Assurez-vous d'avoir un compte au préalable avec le même numéro de téléphone ou la transaction sera impossible.
                                     </Text>
                                     <View style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', width: '100%' }}>
@@ -868,10 +937,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         borderColor: 'gray',
-        borderWidth: 1,
+        borderWidth: 0.6,
         marginBottom: 20,
-        borderRadius: 7,
-        paddingVertical: 17
+        borderRadius: 100,
+        paddingVertical: 12
     },
     iconStyle: {
         paddingHorizontal: 10,
@@ -881,55 +950,72 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         borderColor: 'gray',
-        borderWidth: 1,
+        borderWidth: 0.6,
         marginBottom: 20,
-        borderRadius: 7,
+        borderRadius: 100,
         width: "100%"
     },
     input: {
         flex: 1,
-        height: 55,
+        height: 50,
         // paddingHorizontal: 10,
-        fontFamily: 'Roboto_400Regular',
+        fontFamily: 'RobotoSerif_400Regular',
     },
     button: {
         backgroundColor: default_color.orange,
-        paddingVertical: 10,
+        paddingVertical: 5,
         alignItems: 'center',
-        borderRadius: 7,
+        borderRadius: 100,
         width: "100%"
     },
     buttonRetirer: {
         backgroundColor: default_color.orange,
-        paddingVertical: 10,
+        paddingVertical: 3,
         alignItems: 'center',
-        borderRadius: 7,
+        borderRadius: 100,
         width: "50%"
     },
     buttonAnnul: {
         marginVertical: 2,
         backgroundColor: "transparent",
-        paddingVertical: 10,
+        paddingVertical: 3,
         alignItems: 'center',
-        borderRadius: 7,
-        width: "25%",
+        borderRadius: 100,
+        width: "40%",
         borderWidth: 0.5
     },
     buttonEnvoie: {
         backgroundColor: default_color.orange,
-        paddingVertical: 10,
+        paddingVertical: 3,
         alignItems: 'center',
-        borderRadius: 7,
-        width: "50%",
+        borderRadius: 100,
+        width: "40%",
     },
     buttonRetour: {
         backgroundColor: 'white',
-        paddingVertical: 10,
+        paddingVertical: 3,
         alignItems: 'center',
-        borderRadius: 7,
-        width: "30%",
+        borderRadius: 100,
+        width: "40%",
         borderWidth: 0.5,
-        fontFamily: 'Roboto_400Regular',
+        fontFamily: 'RobotoSerif_400Regular',
+
+    },
+    buttonEnvoieDec: {
+        backgroundColor: default_color.orange,
+        paddingVertical: 3,
+        alignItems: 'center',
+        borderRadius: 100,
+        width: "40%",
+    },
+    buttonRetourDec: {
+        backgroundColor: 'white',
+        paddingVertical: 3,
+        alignItems: 'center',
+        borderRadius: 100,
+        width: "40%",
+        borderWidth: 0.5,
+        fontFamily: 'RobotoSerif_400Regular',
 
     },
     buttonTextAnnul: {
@@ -938,7 +1024,7 @@ const styles = StyleSheet.create({
         paddingVertical: 4,
         width: "100%",
         textAlign: 'center',
-        fontFamily: 'Roboto_400Regular',
+        fontFamily: 'RobotoSerif_400Regular',
     },
     buttonText: {
         color: default_color.white,
@@ -946,7 +1032,7 @@ const styles = StyleSheet.create({
         paddingVertical: 4,
         width: "100%",
         textAlign: 'center',
-        fontFamily: 'Roboto_400Regular',
+        fontFamily: 'RobotoSerif_400Regular',
     },
     modalContentSend: {
         backgroundColor: 'white',
@@ -1030,4 +1116,12 @@ const styles = StyleSheet.create({
 
 });
 
-export default DashBoardScreen;
+// export default DashBoardScreen;
+export default connect(
+    // Mappez l'état de Redux aux props du composant
+    (state) => ({
+        isLoggedIn: state.auth.isLoggedIn, // Supposant que "auth" est le nom de votre reducer d'authentification
+    }),
+    // Mappez les actions Redux aux props du composant
+    (dispatch) => bindActionCreators({ logout }, dispatch)
+)(DashBoardScreen);

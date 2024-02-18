@@ -72,9 +72,9 @@ const HistoriqueScreen = ({ navigation }) => {
 
 
     return (
-        <View style={styles.container}>
+        <View style={styles.container} >
             <StatusBar translucent backgroundColor="transparent" />
-            <StatusBar barStyle="light-content" />
+            {/* <StatusBar barStyle="light-content" /> */}
 
             <View style={styles.container_image}>
                 <View style={styles.container_logo}>
@@ -89,8 +89,9 @@ const HistoriqueScreen = ({ navigation }) => {
                     value={searchText}
                     onChangeText={(text) => setSearchText(text)}
                 />
+                <Icon name='search' color='gray' size={15} />
             </View>
-            <ScrollView style={{ backgroundColor: '#E7E7E7' }}>
+            <ScrollView style={{ backgroundColor: '#E7E7E7' }} >
 
                 <View style={styles.aujourdhui}>
                     <View style={styles.transcationTexte}>
@@ -339,6 +340,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'white',
+        // paddingTop: StatusBar.currentHeight || 0,
+        // paddingBottom: StatusBar.currentHeight || 0,
     },
     container_logo: {
         display: 'flex',
@@ -363,7 +366,7 @@ const styles = StyleSheet.create({
     },
 
     container_image: {
-        height: 150,
+        height: 140,
         justifyContent: 'flex-end',
         backgroundColor: default_color.orange,
         paddingHorizontal: 20,
@@ -381,17 +384,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 2,
         paddingHorizontal: 20,
-        backgroundColor: '#ecece9b0',
-        borderBottomWidth: 1,
+        backgroundColor: '#ccc',
+        // borderBottomWidth: 0.5,
         // borderColor: 'red'
 
 
     },
     input: {
         flex: 1,
-        height: 50,
+        height: 30,
         fontFamily: "RobotoSerif_400Regular",
         fontSize: 10,
+        // color: 'white'
     },
     aujourdhui: {
         marginBottom: 3,

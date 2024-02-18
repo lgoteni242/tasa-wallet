@@ -115,7 +115,7 @@ const CodeAccesScreen = ({ navigation }) => {
                 <Icon name="arrow-left" size={10} color="gray" style={{ fontSize: 20, position: 'absolute', left: -10, top: 25 }} />
             </TouchableOpacity>
             <View style={styles.container3}>
-                <View style={{ position: 'absolute', top: 20 }}>
+                <View style={{ position: 'absolute', top: 5 }}>
                     <Icon name="key" size={50} color="gray" />
 
                 </View>
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         paddingVertical: 3,
         paddingHorizontal: 40,
-        color: 'black',
+        color: 'gray',
         borderColor: 'white',
         backgroundColor: '#ecece9b0',
         fontFamily: 'RobotoSerif_400Regular'
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
 
     },
     container3: {
-        marginTop: 50,
+        marginTop: 40,
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',

@@ -20,7 +20,7 @@ const UserScreen = ({ navigation }) => {
                 </View>
                 <View style={{ bottom: -70, flex: 1, justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
                     <View style={{ borderColor: 'white', borderWidth: 4, borderRadius: 100 }}>
-                        <Image source={require('../../assets/images/user.png')} style={styles.image} />
+                        {/* <Image source={require('../../assets/images/user.png')} style={styles.image} /> */}
                     </View>
                     <Text style={{ textAlign: 'center', fontSize: 20, fontFamily: 'Pacifico_400Regular' }}>Levi Goteni</Text>
                 </View>

@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
 
     container_image: {
         // flex: 0.4,
-        height: 150,
+        height: 140,
         justifyContent: 'center',
         backgroundColor: default_color.orange,
         // borderBottomLeftRadius: 20,
@@ -177,14 +177,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         borderColor: 'gray',
-        borderWidth: 0.4,
+        borderWidth: 0.6,
         marginBottom: 20,
-        borderRadius: 3,
+        borderRadius: 100,
     },
 
     input: {
         flex: 1,
-        height: 55,
+        height: 50,
         paddingHorizontal: 10,
         fontSize: 10,
         fontFamily: 'RobotoSerif_400Regular'
@@ -192,9 +192,9 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: default_color.orange,
-        paddingVertical: 10,
+        paddingVertical: 7,
         alignItems: 'center',
-        borderRadius: 3,
+        borderRadius: 100,
         marginBottom: 10,
         width: '40%',
 
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
         backgroundColor: default_color.orange,
         paddingVertical: 13,
         alignItems: 'center',
-        borderRadius: 3,
+        borderRadius: 100,
         marginBottom: 10,
         width: '100%',
 
