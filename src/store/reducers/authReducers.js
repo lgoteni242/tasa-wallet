@@ -5,6 +5,7 @@ const initialState = {
     isLoggedIn: false,
     user: null,
     error: null,
+    token: null
 };
 
 const authReducers = (state = initialState, action) => {
@@ -22,6 +23,7 @@ const authReducers = (state = initialState, action) => {
                 isLoggedIn: true,
                 user: action.payload.data,
                 error: null,
+                token: action.payload.access_token
             };
         case LOGIN_FAILURE:
             return {

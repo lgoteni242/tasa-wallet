@@ -193,7 +193,6 @@ const KycScreen = ({ navigation }) => {
                                         </View>
                                     </TouchableOpacity>
                                 }
-
                                 {
                                     selfie &&
 

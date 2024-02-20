@@ -8,11 +8,13 @@ import {
     RobotoSerif_700Bold,
     RobotoSerif_100Thin,
 } from "@expo-google-fonts/roboto-serif";
+import { useSelector } from 'react-redux';
+
 
 
 const SettingsScreens = ({ navigation }) => {
 
-
+    const user = useSelector(state => state.auth.user);
     const [passwordVisible, setPasswordVisible] = useState(false);
 
     let [fontsLoaded] = useFonts({
@@ -44,7 +46,7 @@ const SettingsScreens = ({ navigation }) => {
                     </View>
                 </View>
 
-                <Text style={{ color: 'white', fontSize: 12, fontFamily: 'RobotoSerif_400Regular', marginBottom: 20 }}>LEVI CHRIST GOTENI</Text>
+                <Text style={{ color: 'white', fontSize: 12, fontFamily: 'RobotoSerif_400Regular', marginBottom: 20, textTransform: 'uppercase' }}>{user && user.prenom} {user && user.name}</Text>
             </View>
 
             <ScrollView style={{ backgroundColor: '#E7E7E7' }}>
@@ -53,15 +55,15 @@ const SettingsScreens = ({ navigation }) => {
                     <View style={styles.transcationListe}>
                         <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 10 }}>
                             <View style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <Text style={{ fontFamily: "RobotoSerif_400Regular", fontSize: 12 }}>LEVI CHRIST GOTENI</Text>
-                                <Text style={{ color: 'gray', fontSize: 8, fontFamily: "RobotoSerif_400Regular" }}>Nom(s) et prenom(s)</Text>
+                                <Text style={{ fontFamily: "RobotoSerif_400Regular", fontSize: 12 }}>{user && user.prenom} {user && user.name}</Text>
+                                <Text style={{ textTransform: 'uppercase', color: 'gray', fontSize: 8, fontFamily: "RobotoSerif_400Regular" }}>Nom(s) et prenom(s)</Text>
                             </View>
                         </View>
                     </View>
                     <View style={styles.transcationListe}>
                         <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 10 }}>
                             <View style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <Text style={{ fontFamily: "RobotoSerif_400Regular", }}>+242 068676562</Text>
+                                <Text style={{ fontFamily: "RobotoSerif_400Regular", }}>{user && user.phone}</Text>
                                 <Text style={{ color: 'gray', fontSize: 8, fontFamily: "RobotoSerif_400Regular" }}>Numero de telephone</Text>
                             </View>
                         </View>
@@ -69,7 +71,7 @@ const SettingsScreens = ({ navigation }) => {
                     <View style={styles.transcationListe}>
                         <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 10 }}>
                             <View style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <Text style={{ fontFamily: "RobotoSerif_400Regular", }}>lgoteni00@gmail.com</Text>
+                                <Text style={{ fontFamily: "RobotoSerif_400Regular", }}>{user && user.email}</Text>
                                 <Text style={{ color: 'gray', fontSize: 8, fontFamily: "RobotoSerif_400Regular" }}>Adresse email</Text>
                             </View>
                         </View>

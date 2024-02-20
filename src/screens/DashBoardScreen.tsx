@@ -33,6 +33,10 @@ import { logout } from "../store/actions/authActions";
 import { connect, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useDispatch } from 'react-redux';
+import axios from 'axios';
+import OTPTextInput from 'react-native-otp-textinput';
+
+
 
 const dataListe = [
     {
@@ -83,7 +87,10 @@ const dataListe = [
 const DashBoardScreen = ({ navigation }) => {
     // =================Chargement============================
     const user = useSelector(state => state.auth.user);
-
+    const token = useSelector(state => state.auth.token);
+    const otpInputRef = useRef(null);
+    const [showOpt, setShowOpt] = useState(false)
+    const [optCode, setOptCode] = useState('')
     const [isLoading, setIsLoading] = useState(false);
     const [deconnexionConf, setDeconnexionConf] = useState(false);
     // =======================================================
@@ -106,6 +113,7 @@ const DashBoardScreen = ({ navigation }) => {
 
     const [verifPass, setVeerifPass] = useState(true)
     const [passwordVisible, setPasswordVisible] = useState(false);
+    const [codePays, setCodePays] = useState('');
 
     const dispatch = useDispatch();
     const handleLogout = () => {
@@ -129,7 +137,9 @@ const DashBoardScreen = ({ navigation }) => {
                 bottomSheetModalRef.current?.present();
 
             } else {
-                console.error('ddd')
+                bottomSheetModalRef.current?.present();
+
+                // console.error('ddd')
             }
         }
     }, []);
@@ -153,9 +163,9 @@ const DashBoardScreen = ({ navigation }) => {
         if (user) {
             if (!user.etat) {
                 bottomSheetModalRefRetirer.current?.present();
-
             } else {
-                navigation.navigate("Kyc")
+                bottomSheetModalRefRetirer.current?.present();
+                // navigation.navigate("Kyc")
             }
         }
     }, []);
@@ -181,7 +191,8 @@ const DashBoardScreen = ({ navigation }) => {
                 bottomSheetModalRefCrediter.current?.present();
 
             } else {
-                console.error('ddd')
+                bottomSheetModalRefCrediter.current?.present();
+
             }
         }
     }, []);
@@ -221,8 +232,15 @@ const DashBoardScreen = ({ navigation }) => {
         return 0x1F1A5 + c.charCodeAt();
     }));
 
+
     const handleSelect = (option: React.SetStateAction<string>) => {
         setSelectedOption(option);
+        if (option == 'Republique du Congo') {
+            setCodePays("CG")
+
+        } else {
+            setCodePays("SN")
+        }
     };
 
     let [fontsLoaded] = useFonts({
@@ -241,28 +259,115 @@ const DashBoardScreen = ({ navigation }) => {
         return <ActivityIndicator size="large" />;
     }
 
-
-
-    const handlePress = () => {
+    const handleSend = () => {
         setIsLoading(true);
-        // Simuler un appel à une API (remplacez cette partie par votre appel réel à l'API)
-        setTimeout(() => {
-            // Après un certain délai, obtenir la réponse de l'API (simulée ici)
-            const response = 'Réponse de l\'API';
-            if (randomTrueOrFalse()) {
-                setSendResumeModal(false)
-                setIsLoading(false);
-                handleCloseModalPress()
-                setSendMoney(true)
-            } else {
-                setSendResumeModal(false)
-                setIsLoading(false);
-                handleCloseModalPress()
-                setNotSendMoney(true)
-            }
-        }, 2000); // Temps de délai simulé pour la réponse de l'API (2 secondes)
-    };
+        const checkData = async () => {
+            (async () => {
+                try {
+                    await axios.get('https://walet.tasa.pro/api/otp', {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+                    setSendResumeModal(false)
+                    setIsLoading(false);
+                    handleCloseModalPress()
+                    setShowOpt(true)
+                } catch (error) {
+                    console.log('levi goteni verification', error)
+                }
+            })();
+        };
+        checkData();
+    }
 
+    const handleSendVerif = () => {
+        setIsLoading(true);
+        const sendMoney = async () => {
+            (async () => {
+                try {
+                    await axios.post('https://walet.tasa.pro/api/sendmoney', {
+                        country_code: codePays,
+                        phone: numero,
+                        montant: montant,
+                        code_otp: optCode,
+                    }, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+                    setIsLoading(false);
+                    setShowOpt(false)
+                    setSendMoney(true)
+                } catch (error) {
+                    setIsLoading(false);
+                    setShowOpt(false)
+                    setNotSendMoney(true)
+                    // console.error('Argent non envoye', error)
+                }
+            })();
+        };
+        sendMoney();
+    }
+
+    const handleRetirer = () => {
+        setIsLoading(true);
+        console.error(montantRetrait, token)
+        const sendMoney = async () => {
+            (async () => {
+                try {
+                    await axios.post('https://walet.tasa.pro/api/withdrawal', {
+                        montant: montantRetrait,
+                    }, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+                    setIsLoading(false);
+                    handleCloseModalPressCrediter()
+                    setSendMoney(true)
+                } catch (error) {
+                    setIsLoading(false);
+                    handleCloseModalPressCrediter()
+                    setNotSendMoney(true)
+                    // console.error('Argent non envoye', error)
+                }
+            })();
+        };
+        sendMoney();
+    }
+
+    const handleCrediter = () => {
+        setIsLoading(true);
+        console.error(montantCrediter, token)
+        const sendMoney = async () => {
+            (async () => {
+                try {
+                    await axios.post('https://walet.tasa.pro/api/withdrawal', {
+                        mode_id: choixpayement,
+                        montant: montantCrediter,
+                    }, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+                    setIsLoading(false);
+                    handleCloseModalPressCrediter()
+                    setSendMoney(true)
+                } catch (error) {
+                    setIsLoading(false);
+                    // handleCloseModalPressRetirer()
+                    setNotSendMoney(true)
+                    // console.error('Argent non envoye', error)
+                }
+            })();
+        };
+        sendMoney();
+    }
+
+    const handleTextChange = (text: any) => {
+        setOptCode(text)
+    };
 
     return (
         <BottomSheetModalProvider >
@@ -280,7 +385,7 @@ const DashBoardScreen = ({ navigation }) => {
                         <TouchableOpacity>
                             <Icon name="user" size={20} color="white" />
                         </TouchableOpacity>
-                        <Text style={styles.welcomMessage}>Tasa Wallet</Text>
+                        <Text style={styles.welcomMessage}>WALLET</Text>
                         <TouchableOpacity onPress={() => setDeconnexionConf(!deconnexionConf)} style={{ padding: 0 }}>
                             <Icon name="sign-out" size={20} color="white" />
                         </TouchableOpacity>
@@ -305,7 +410,7 @@ const DashBoardScreen = ({ navigation }) => {
                                         style={{
                                             fontFamily: "Roboto_700Bold",
                                             color: "gray",
-                                            fontSize: 30,
+                                            fontSize: 28,
                                         }}
                                     >
                                         $ {user && user.balance}
@@ -315,7 +420,7 @@ const DashBoardScreen = ({ navigation }) => {
                                         style={{
                                             fontFamily: "Roboto_700Bold",
                                             color: "gray",
-                                            fontSize: 30,
+                                            fontSize: 28,
                                         }}
                                     >
                                         $ XXXXXXX
@@ -466,6 +571,40 @@ const DashBoardScreen = ({ navigation }) => {
 
                     </ScrollView>
                 </View>
+                {/*  =============================OTP CODE=============================== */}
+
+                <Modal
+                    coverScreen={true} backdropOpacity={0.3} isVisible={showOpt} animationIn="fadeIn" // Animation d'entrée du haut
+                    animationOut="fadeOut"
+                >
+                    <View style={styles.modalContainerSend}>
+                        <View style={{ backgroundColor: default_color.orange, borderTopEndRadius: 10, borderTopStartRadius: 10, paddingTop: 5 }}>
+                            <Text style={{ textAlign: 'center', fontSize: 20, paddingBottom: 20, fontWeight: 'bold', color: 'white', fontFamily: "RobotoSerif_400Regular" }}>Saisir le code reçu par sms</Text>
+                        </View>
+                        <View style={styles.modalContentSend}>
+                            <OTPTextInput
+                                ref={otpInputRef}
+                                containerStyle={styles.textInputContainer}
+                                textInputStyle={styles.roundedTextInput}
+                                handleTextChange={handleTextChange}
+                                inputCount={4}
+                                keyboardType="numeric"
+                                tintColor={default_color.orange}
+                            />
+                            <View style={{
+                                display: "flex", flexDirection: "row", justifyContent: "space-between"
+                                , paddingTop: 20
+                            }}>
+                                <TouchableOpacity style={styles.buttonRetourDec} onPress={() => { setShowOpt(false) }} >
+                                    <Text style={styles.buttonTextAnnul}>Annuler</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.buttonEnvoieDec} onPress={() => { handleSendVerif() }} >
+                                    <Text style={styles.buttonText}>Envoyer</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
                 {/* =====================================Deconnexion============================================= */}
                 <Modal
                     coverScreen={true} backdropOpacity={0.3} isVisible={deconnexionConf} animationIn="fadeIn" // Animation d'entrée du haut
@@ -512,7 +651,7 @@ const DashBoardScreen = ({ navigation }) => {
                                 <TouchableOpacity style={styles.buttonRetour} onPress={() => setSendResumeModal(false)} >
                                     <Text style={styles.buttonTextAnnul}>Retour</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.buttonEnvoie} onPress={handlePress} disabled={isLoading} >
+                                <TouchableOpacity style={styles.buttonEnvoie} onPress={() => handleSend()} disabled={isLoading} >
                                     <Text style={styles.buttonText}>Envoyer</Text>
                                 </TouchableOpacity>
                             </View>
@@ -670,7 +809,10 @@ const DashBoardScreen = ({ navigation }) => {
                                     onChangeText={setMontantRetrait}
                                 />
                             </View>
-                            <TouchableOpacity style={styles.button} onPress={() => setVeerifPass(false)} >
+                            {/* <TouchableOpacity style={styles.button} onPress={() => setVeerifPass(false)} >
+                                <Text style={styles.buttonText}>Valider</Text>
+                            </TouchableOpacity> */}
+                            <TouchableOpacity style={styles.button} onPress={() => handleRetirer()} >
                                 <Text style={styles.buttonText}>Valider</Text>
                             </TouchableOpacity>
                         </>
@@ -719,7 +861,7 @@ const DashBoardScreen = ({ navigation }) => {
                             <>
                                 <Text style={{ fontSize: 12, paddingBottom: 20, color: 'gray', fontFamily: "RobotoSerif_400Regular", }}>CHOISISSEZ VOTRE MOYEN DE PAYEMENT</Text>
                                 <View style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', width: '100%' }}>
-                                    <TouchableOpacity onPress={() => setChoixPayement("mtn")}>
+                                    <TouchableOpacity onPress={() => setChoixPayement("1")}>
                                         <Image
                                             source={require("../../assets/images/mtn.png")}
                                             style={{ width: 100, height: 70, borderRadius: 10 }} />
@@ -732,7 +874,7 @@ const DashBoardScreen = ({ navigation }) => {
                                 </View>
                             </>
                             :
-                            choixpayement == "mtn" ?
+                            choixpayement == "1" ?
                                 <>
                                     <Text style={{ fontSize: 17, paddingBottom: 10, color: 'gray', fontFamily: "RobotoSerif_400Regular", }}>EFFECTUEZ UN DEPOT</Text>
                                     <Text style={{ fontSize: 13, paddingBottom: 20, fontWeight: 'bold', color: 'gray', textAlign: 'center', fontFamily: "RobotoSerif_400Regular" }}>
@@ -756,7 +898,7 @@ const DashBoardScreen = ({ navigation }) => {
                                         <TouchableOpacity style={styles.buttonAnnul} onPress={() => setChoixPayement("")} >
                                             <Text style={styles.buttonTextAnnul}>Retour</Text>
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={styles.buttonRetirer} onPress={() => setVeerifPass(false)} >
+                                        <TouchableOpacity style={styles.buttonRetirer} onPress={() => handleCrediter()} >
                                             <Text style={styles.buttonText}>Valider</Text>
                                         </TouchableOpacity>
                                     </View>
@@ -1035,7 +1177,8 @@ const styles = StyleSheet.create({
     },
     modalContentSend: {
         backgroundColor: 'white',
-        padding: 23,
+        paddingVertical: 15,
+        paddingHorizontal: 20,
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10,
     },
@@ -1111,6 +1254,18 @@ const styles = StyleSheet.create({
     contentContainer: {
         flex: 1,
         alignItems: 'center',
+    },
+    textInputContainer: {
+        marginBottom: 2,
+    },
+    roundedTextInput: {
+        width: 40, // Ajustez la largeur selon votre besoin
+        height: 40, // Ajustez la hauteur selon votre besoin
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: 'gray',
+        textAlign: 'center',
+        fontSize: 20,
     },
 
 });

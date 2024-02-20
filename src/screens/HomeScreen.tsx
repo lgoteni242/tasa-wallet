@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, StatusBar, TextInput, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, StatusBar, TextInput, TouchableOpacity, ActivityIndicator, ScrollView, Image } from 'react-native';
 import default_color from '../styles/color';
 import {
     RobotoSerif_400Regular,
@@ -12,6 +12,7 @@ import CustomModalPicker from '../components/CustomModalPicker';
 import { connect, useSelector } from 'react-redux';
 import { login } from '../store/actions/authActions';
 import { bindActionCreators } from 'redux';
+
 
 
 
@@ -90,30 +91,12 @@ const HomeScreen = ({ navigation, login }) => {
     if (!fontsLoaded) {
         return <ActivityIndicator size="large" />;
     }
-
-    // const checkLogin = async () => {
-    //     try {
-    //         const response = await axios.post('https://walet.tasa.pro/api/auth', {
-    //             country_code: codePays,
-    //             phone: username,
-    //             pin: password
-    //         });
-    //         const data = response.data;
-    //         console.error(data)
-    //         navigation.navigate('Menu');
-    //         // authStore.login();
-
-    //     } catch (error) {
-    //         console.error("Cela marche de chez o")
-    //         // console.warn(error); 
-    //         throw error;
-    //     }
-    // }
-
     return (
         <View style={styles.container}>
             <StatusBar translucent backgroundColor="transparent" />
-            <View style={styles.container_image}>
+            <StatusBar barStyle="dark-content" />
+
+            {/* <View style={styles.container_image}>
                 <View style={styles.container_logo}>
                     <Text style={styles.icon}>Tasa wallet</Text>
 
@@ -122,191 +105,81 @@ const HomeScreen = ({ navigation, login }) => {
 
                         <Text style={styles.connexion}>Creation d'un compte tasa walet</Text>
                     }
+                    <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Image source={require('../../assets/images/kyc.jpg')} style={styles.image} />
+                    </View>
+                </View>
+            </View> */}
+            <View style={styles.container_form}>
+                {/* <View style={{ width: '100%', height: '50%' }}> */}
+
+                <Image source={require('../../assets/images/login.png')} style={styles.image} />
+                {/* </View> */}
+                <View style={{ padding: 20 }}>
+                    <View style={styles.inputContainer2}>
+                        {selectedOption == "" ?
+                            <Icon name="globe" size={15} color="grey" style={styles.iconStyle} />
+                            :
+                            selectedOption == "Republique du Congo" ?
+                                <Text style={styles.iconStyle}>{flag('cg')}</Text> :
+                                <Text style={styles.iconStyle}>{flag('sn')}</Text>
+                        }
+                        <TouchableOpacity onPress={() => setModalVisible(true)} style={{ width: "100%" }}>
+                            {selectedOption == "" ? (<Text style={{ color: 'grey' }}>Pays de residence</Text>) : <Text>{selectedOption}</Text>}
+                        </TouchableOpacity>
+                        <CustomModalPicker
+                            options={options}
+                            onSelect={handleSelect}
+                            visible={modalVisible}
+                            onClose={() => setModalVisible(false)}
+                            titre="Choisir le pays de residence"
+                        />
+                    </View>
+                    <View style={styles.inputContainer}>
+                        <Icon name="phone" size={15} color="grey" style={styles.iconStyle} />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Numero de telephone"
+                            keyboardType="phone-pad"
+                            autoCapitalize="none"
+                            value={username}
+                            onChangeText={(text) => setUsername(text)}
+                        />
+                    </View>
+
+                    <View style={styles.inputContainer3}>
+                        <Icon name="lock" size={20} color="grey" style={styles.iconStyle} />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Mot de passe"
+                            keyboardType="phone-pad"
+                            secureTextEntry={!passwordVisible}
+                            value={password}
+                            onChangeText={(text) => setPassword(text)}
+                        />
+                        <TouchableOpacity
+                            style={styles.eyeIcon}
+                            onPress={() => setPasswordVisible(!passwordVisible)}
+                        >
+                            <Icon name={passwordVisible ? 'eye' : 'eye-slash'} size={20} color="gray" />
+                        </TouchableOpacity>
+                    </View>
+                    {loginError && <Text style={{ color: 'red', fontSize: 7, fontFamily: 'RobotoSerif_400Regular', textAlign: 'center' }}>Les donnees d'authentification sont invalides, veillez recommencer</Text>}
+                    <Text style={styles.mdp} onPress={() => navigation.navigate('MotPasseOublier')}>
+                        Mot de passe oublier
+                    </Text>
+                    <TouchableOpacity style={styles.button} onPress={() => handleLogin()}>
+                        <Text style={styles.buttonText}>Se connecter</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.signupText} onPress={() => setVerifInscription(false)}>
+                        Vous n'avez pas de compte ? Inscrivez-vous
+                    </Text>
+                    <View>
+                        <Text style={styles.slogan}>Tasa, the power of your money is in your hands</Text>
+                    </View>
                 </View>
             </View>
-            {
-                verifInscription ?
-                    <ScrollView style={styles.container_form}>
-                        <View style={styles.inputContainer2}>
-                            {selectedOption == "" ?
-                                <Icon name="globe" size={15} color="grey" style={styles.iconStyle} />
-                                :
-                                selectedOption == "Republique du Congo" ?
-                                    <Text style={styles.iconStyle}>{flag('cg')}</Text> :
-                                    <Text style={styles.iconStyle}>{flag('sn')}</Text>
-                            }
-                            <TouchableOpacity onPress={() => setModalVisible(true)} style={{ width: "100%" }}>
-                                {selectedOption == "" ? (<Text style={{ color: 'grey' }}>Pays de residence</Text>) : <Text>{selectedOption}</Text>}
-                            </TouchableOpacity>
-                            <CustomModalPicker
-                                options={options}
-                                onSelect={handleSelect}
-                                visible={modalVisible}
-                                onClose={() => setModalVisible(false)}
-                                titre="Choisir le pays de residence"
-                            />
-                        </View>
-                        <View style={styles.inputContainer}>
-                            <Icon name="phone" size={15} color="grey" style={styles.iconStyle} />
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Numero de telephone"
-                                keyboardType="phone-pad"
-                                autoCapitalize="none"
-                                value={username}
-                                onChangeText={(text) => setUsername(text)}
-                            />
-                        </View>
 
-                        <View style={styles.inputContainer3}>
-                            <Icon name="lock" size={20} color="grey" style={styles.iconStyle} />
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Mot de passe"
-                                keyboardType="phone-pad"
-                                secureTextEntry={!passwordVisible}
-                                value={password}
-                                onChangeText={(text) => setPassword(text)}
-                            />
-                            <TouchableOpacity
-                                style={styles.eyeIcon}
-                                onPress={() => setPasswordVisible(!passwordVisible)}
-                            >
-                                <Icon name={passwordVisible ? 'eye' : 'eye-slash'} size={20} color="gray" />
-                            </TouchableOpacity>
-                        </View>
-                        {loginError && <Text style={{ color: 'red', fontSize: 7, fontFamily: 'RobotoSerif_400Regular', textAlign: 'center' }}>Les donnees d'authentification sont invalides, veillez recommencer</Text>}
-                        <Text style={styles.mdp} onPress={() => navigation.navigate('MotPasseOublier')}>
-                            Mot de passe oublier
-                        </Text>
-                        <TouchableOpacity style={styles.button} onPress={() => handleLogin()}>
-                            <Text style={styles.buttonText}>Se connecter</Text>
-                        </TouchableOpacity>
-                        {/* <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Menu')}>
-                            <Text style={styles.buttonText}>Se connecter</Text>
-                        </TouchableOpacity> */}
-
-                        <Text style={styles.signupText} onPress={() => setVerifInscription(false)}>
-                            Vous n'avez pas de compte ? Inscrivez-vous
-                        </Text>
-                        <View>
-                            <Text style={styles.slogan}>Tasa, the power of your money is in your hands</Text>
-                        </View>
-                    </ScrollView>
-                    :
-                    <ScrollView style={styles.container_form}>
-                        <View style={styles.inputContainer}>
-                            <Icon name="user" size={15} color="grey" style={styles.iconStyle} />
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Nom(s)"
-                                keyboardType="default"
-                                autoCapitalize="none"
-                            />
-                        </View>
-                        <View style={styles.inputContainer}>
-                            <Icon name="user" size={15} color="grey" style={styles.iconStyle} />
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Prenom(s)"
-                                keyboardType="default"
-                                autoCapitalize="none"
-                            />
-                        </View>
-                        <View style={styles.inputContainer}>
-                            <Icon name="mars" size={15} color="grey" style={styles.iconStyle} />
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Sexe"
-                                keyboardType="default"
-                                autoCapitalize="none"
-                            />
-                        </View>
-                        <View style={styles.inputContainer2}>
-                            {selectedOption == "" ?
-                                <Icon name="globe" size={15} color="grey" style={styles.iconStyle} />
-                                :
-                                selectedOption == "Republique du Congo" ?
-                                    <Text style={styles.iconStyle}>{flag('cg')}</Text> :
-                                    <Text style={styles.iconStyle}>{flag('sn')}</Text>
-                            }
-                            <TouchableOpacity onPress={() => setModalVisible(true)} style={{ width: "100%" }}>
-                                {selectedOption == "" ? (<Text style={{ color: 'grey' }}>Pays de residence</Text>) : <Text>{selectedOption}</Text>}
-                            </TouchableOpacity>
-                            <CustomModalPicker
-                                options={options}
-                                onSelect={handleSelect}
-                                visible={modalVisible}
-                                onClose={() => setModalVisible(false)}
-                                titre="Choisir le pays de residence"
-                            />
-                        </View>
-                        <View style={styles.inputContainer}>
-                            {selectedOption == "Republique du Congo" ?
-                                <Text style={styles.iconStyle}>+242 |</Text>
-                                :
-                                selectedOption == "Senegal" ?
-                                    <Text style={styles.iconStyle}>+221 |</Text> :
-                                    <Icon name="phone" size={15} color="grey" style={styles.iconStyle} />
-
-
-                            }
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Telephone"
-                                keyboardType="phone-pad"
-                                autoCapitalize="none"
-                            />
-                        </View>
-                        <View style={styles.inputContainer}>
-                            <Icon name="envelope" size={15} color="grey" style={styles.iconStyle} />
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Email"
-                                keyboardType="email-address"
-                                autoCapitalize="none"
-                            />
-                        </View>
-
-                        <View style={styles.inputContainer}>
-                            <Icon name="lock" size={20} color="grey" style={styles.iconStyle} />
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Mot de passe"
-                                secureTextEntry={!passwordVisible}
-                            />
-                            <TouchableOpacity
-                                style={styles.eyeIcon}
-                                onPress={() => setPasswordVisible(!passwordVisible)}
-                            >
-                                <Icon name={passwordVisible ? 'eye' : 'eye-slash'} size={20} color="gray" />
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.inputContainer}>
-                            <Icon name="lock" size={20} color="grey" style={styles.iconStyle} />
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Confirmer votre mot de passe"
-                                secureTextEntry={!passwordVisible2}
-                            />
-                            <TouchableOpacity
-                                style={styles.eyeIcon}
-                                onPress={() => setPasswordVisible2(!passwordVisible2)}
-                            >
-                                <Icon name={passwordVisible2 ? 'eye' : 'eye-slash'} size={20} color="gray" />
-                            </TouchableOpacity>
-                        </View>
-                        <TouchableOpacity style={styles.button} >
-                            <Text style={styles.buttonText}>S'inscrire</Text>
-                        </TouchableOpacity>
-                        <Text style={styles.signupText} onPress={() => setVerifInscription(true)}>
-                            Avez-vous deja un compte ? Si oui, veillez-vous connecter.
-                        </Text>
-                        <View>
-                            <Text style={styles.slogan}>Tasa, the power of your money is in your hands</Text>
-                        </View>
-                    </ScrollView>
-            }
         </View >
     );
 };
@@ -332,14 +205,14 @@ const styles = StyleSheet.create({
 
     },
     image: {
-        height: '100%',
+        height: '40%',
         width: '100%',
         resizeMode: 'cover',
-        borderBottomLeftRadius: 70,
+        marginBottom: 30
     },
     container_image: {
         // flex: "",
-        height: "20%",
+        // height: "40%",
         justifyContent: 'flex-start',
         backgroundColor: default_color.orange,
         borderBottomLeftRadius: 70,
@@ -354,9 +227,6 @@ const styles = StyleSheet.create({
         color: 'white'
     },
     container_form: {
-        flex: 0.6,
-        padding: 20,
-        // justifyContent:'center'
     },
     inputContainer: {
         flexDirection: 'row',
