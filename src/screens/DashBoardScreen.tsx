@@ -30,11 +30,15 @@ import default_color from "../styles/color";
 import Modal from 'react-native-modal';
 import Icon from "react-native-vector-icons/FontAwesome";
 import { logout } from "../store/actions/authActions";
-import { connect, useSelector } from 'react-redux';
+import { connect, useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { useDispatch } from 'react-redux';
+// import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import OTPTextInput from 'react-native-otp-textinput';
+import RadioButtonCustom from '../components/RadioButtonCustom';
+import * as SecureStore from 'expo-secure-store';
+
+
 
 
 
@@ -100,6 +104,7 @@ const DashBoardScreen = ({ navigation }) => {
     // ======================================================
     const [soldeVisible, setSoldeVisible] = useState(false);
     const [selectedOption, setSelectedOption] = useState('');
+    const [selectedOptionSenegal, setSelectedOptionSenegal] = useState('');
     const [modalVisible, setModalVisible2] = useState(false);
     const [sendResumeModal, setSendResumeModal] = useState(false)
     // ==================Send money===================================
@@ -114,6 +119,7 @@ const DashBoardScreen = ({ navigation }) => {
     const [verifPass, setVeerifPass] = useState(true)
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [codePays, setCodePays] = useState('');
+    const [modalClock, setModalClock] = useState(true);
 
     const dispatch = useDispatch();
     const handleLogout = () => {
@@ -368,6 +374,19 @@ const DashBoardScreen = ({ navigation }) => {
     const handleTextChange = (text: any) => {
         setOptCode(text)
     };
+
+    const handleSelectOption = (option: string) => {
+        setSelectedOptionSenegal(option)
+    }
+
+    const getCodeAccesVerif = async () => {
+        return SecureStore.getItemAsync('codeAccesVerif');
+    };
+
+    const handleLockModal = () => {
+        navigation.navigate('CodeAcces')
+        setModalClock(false)
+    }
 
     return (
         <BottomSheetModalProvider >
@@ -696,7 +715,31 @@ const DashBoardScreen = ({ navigation }) => {
                         </Text>
                     </LinearGradient>
                 </Modal>
-
+                {/* ==================== Modal ro verife lock message =====================*/}
+                <Modal
+                    coverScreen={true} backdropOpacity={0.3} isVisible={modalClock} animationIn="fadeIn" // Animation d'entrée du haut
+                    animationOut="fadeOut"
+                >
+                    <View style={styles.modalContainerSend}>
+                        <View style={styles.modalContentSend2}>
+                            <Text style={{ fontSize: 12, color: 'rgba(16,17,17,0.84)', fontFamily: "RobotoSerif_400Regular" }}>
+                                Nous vous encourageons à définir un code de sécurité pour verrouiller votre téléphone, ce qui vous évitera de vous reconnecter à chaque session.
+                            </Text>
+                            <View style={{
+                                display: "flex", flexDirection: "row", justifyContent: "space-between", borderTopWidth: 0.5, borderTopColor: 'gray'
+                                , paddingTop: 10, marginTop: 7,
+                            }}>
+                                <TouchableOpacity style={styles.buttonRetour} onPress={() => setModalClock(false)} >
+                                    <Text style={styles.buttonTextAnnul}>Plus tard</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.buttonEnvoie} onPress={() => handleLockModal()} disabled={isLoading} >
+                                    <Text style={styles.buttonText}>Continuer</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
+                {/* ==================== Modal ro verife lock message =====================*/}
                 <Modal isVisible={notSendMoney}
                     coverScreen={true}
                     backdropOpacity={0.4}
@@ -730,7 +773,7 @@ const DashBoardScreen = ({ navigation }) => {
                 <BottomSheetScrollView >
                     <View style={styles.modalContent}>
                         <Text style={{ fontSize: 17, paddingBottom: 20, color: 'gray', fontFamily: "RobotoSerif_400Regular", }}>ENVOYER DE L'ARGENT</Text>
-                        <View style={styles.inputContainer2}>
+                        <View style={styles.inputContainer3}>
                             {selectedOption == "" ?
                                 <Icon name="globe" size={15} color="grey" style={styles.iconStyle} />
                                 :
@@ -747,9 +790,18 @@ const DashBoardScreen = ({ navigation }) => {
                                 visible={modalVisible}
                                 onClose={() => setModalVisible2(false)}
                                 titre="Choisir le pays de destination"
-
                             />
                         </View>
+                        {selectedOption == "Senegal" &&
+                            <View style={{ width: "100%", paddingHorizontal: 10 }}>
+                                <Text style={{ fontFamily: 'RobotoSerif_400Regular', fontSize: 11, color: "gray" }}>Choisir votre option d'envoie vers le senegal</Text>
+                                <View style={{ width: "100%", display: 'flex', flexDirection: 'row', justifyContent: 'space-around', }}>
+                                    <RadioButtonCustom label="Orange money" selected={selectedOptionSenegal === "orange"} onSelect={() => handleSelectOption("orange")} />
+                                    <RadioButtonCustom label="Wave" selected={selectedOptionSenegal === 'wave'} onSelect={() => handleSelectOption('wave')} />
+                                </View>
+                            </View>
+                        }
+
                         <View style={styles.inputContainer}>
                             {selectedOption == "Republique du Congo" ?
                                 <Text style={styles.iconStyle}>+242 |</Text>
@@ -767,6 +819,7 @@ const DashBoardScreen = ({ navigation }) => {
                                 onChangeText={setNumero}
                             />
                         </View>
+
                         <View style={styles.inputContainer}>
                             <Icon name="money" size={15} color="grey" style={styles.iconStyle} />
                             <TextInput
@@ -1083,6 +1136,15 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         paddingVertical: 12
     },
+    inputContainer3: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderColor: 'gray',
+        borderWidth: 0.6,
+        marginBottom: 20,
+        borderRadius: 100,
+        paddingVertical: 12
+    },
     iconStyle: {
         paddingHorizontal: 10,
         color: 'grey'
@@ -1183,11 +1245,19 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 10,
     },
 
+    modalContentSend2: {
+        backgroundColor: 'white',
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        borderRadius: 10
+    },
+
     modalContainerSend: {
         backgroundColor: 'white.orange',
         borderRadius: 10,
         // padding: 20,
     },
+
     modalContainerChargement: {
         backgroundColor: 'transparent',
         // borderRadius: 10,

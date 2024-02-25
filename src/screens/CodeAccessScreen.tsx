@@ -14,6 +14,7 @@ import {
 } from "@expo-google-fonts/roboto-serif";
 
 
+
 const CodeAccesScreen = ({ navigation }) => {
 
 
@@ -25,7 +26,6 @@ const CodeAccesScreen = ({ navigation }) => {
     const elementRef = useRef(null);
     const elementRef2 = useRef(null);
     // const { setLock } = useAuth();
-
 
     let [fontsLoaded] = useFonts({
         RobotoSerif_400Regular,
@@ -74,15 +74,15 @@ const CodeAccesScreen = ({ navigation }) => {
             }, 1500);
         } else {
             (async () => {
-                // await SecureStore.setItemAsync('codeAcces', inputText);
-                // await SecureStore.setItemAsync('codeAccesVerif', 'true');
-                // setLock(true)
+                await SecureStore.setItemAsync('codeAcces', inputText);
+                await SecureStore.setItemAsync('codeAccesVerif', 'true');
+                navigation.goBack()
             })();
         }
     }
     const handlePress = () => {
         if (elementRef.current) {
-            elementRef.current.fadeOut(100).then(endState => setIsVisible(false));
+            elementRef.current.fadeOut(100).then((endState: any) => setIsVisible(false));
         }
     };
     if (nombreDeCaracteres == 3) {
@@ -90,21 +90,17 @@ const CodeAccesScreen = ({ navigation }) => {
     }
 
     const handleClear = () => {
-        if (isVisible) {
-            setInputText('');
-            setNombreDeCaracteres(0)
-        } else {
-            setInputText2('');
-        }
+        setInputText('');
+    };
+    const handleClear2 = () => {
+        setInputText2('')
     };
 
     const handleBackspace = () => {
-        if (isVisible) {
-            setInputText(inputText.slice(0, -1));
-            setNombreDeCaracteres(nombreDeCaracteres - 1)
-        } else {
-            setInputText2(inputText.slice(0, -1));
-        }
+        setInputText(inputText.slice(0, -1));
+    };
+    const handleBackspace2 = () => {
+        setInputText2(inputText2.slice(0, -1));
     };
 
     return (
@@ -116,7 +112,6 @@ const CodeAccesScreen = ({ navigation }) => {
             <View style={styles.container3}>
                 <View style={{ position: 'absolute', top: 5 }}>
                     <Icon name="key" size={50} color="gray" />
-
                 </View>
                 {isVisible && (
                     <Animatable.View ref={elementRef} style={styles.container3}>
@@ -141,7 +136,6 @@ const CodeAccesScreen = ({ navigation }) => {
                         <Animatable.View ref={elementRef2}>
                             <Text style={{ color: 'black', marginBottom: 10, fontFamily: 'RobotoSerif_700Bold', textAlign: 'center' }}>Saisissez a nouveau votre code d'accès</Text>
                         </Animatable.View>
-
                         <Text style={{ color: 'gray', textAlign: 'center', fontFamily: 'RobotoSerif_400Regular', fontSize: 10 }}>Si vous oubliez votre code d'accè, vous devrez vous déonnecter ou reinstallez l'application.</Text>
                         <View style={styles.inputContainer}>
                             <TextInput
@@ -165,10 +159,18 @@ const CodeAccesScreen = ({ navigation }) => {
                                     key={num}
                                     style={styles.button}
                                     onPress={() => {
-                                        if (num === 'C') {
-                                            handleClear();
+                                        if (num === 'c') {
+                                            if (isVisible) {
+                                                handleClear();
+                                            } else {
+                                                handleClear2();
+                                            }
                                         } else if (num === 'x') {
-                                            handleBackspace();
+                                            if (isVisible) {
+                                                handleBackspace();
+                                            } else {
+                                                handleBackspace2();
+                                            }
                                         } else {
                                             handleButtonClick(num);
                                         }

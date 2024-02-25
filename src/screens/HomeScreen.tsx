@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, StatusBar, TextInput, TouchableOpacity, ActivityIndicator, ScrollView, Image } from 'react-native';
+import { View, StyleSheet, Text, StatusBar, TextInput, TouchableOpacity, ActivityIndicator, ScrollView, Image, ToastAndroid } from 'react-native';
 import default_color from '../styles/color';
 import {
     RobotoSerif_400Regular,
@@ -12,11 +12,13 @@ import CustomModalPicker from '../components/CustomModalPicker';
 import { connect, useSelector } from 'react-redux';
 import { login } from '../store/actions/authActions';
 import { bindActionCreators } from 'redux';
-
+import NetInfo from '@react-native-community/netinfo';
 
 
 
 const HomeScreen = ({ navigation, login }) => {
+
+
 
     const flag = countryCode => String.fromCodePoint(...[...countryCode.toUpperCase()].map(c => 0x1F1A5 + c.charCodeAt()));
 
@@ -28,6 +30,7 @@ const HomeScreen = ({ navigation, login }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [codePays, setCodePays] = useState('');
+    const [isConnected, setIsConnected] = useState(false);
 
 
     const loginError = useSelector(state => state.auth.error);
@@ -44,21 +47,47 @@ const HomeScreen = ({ navigation, login }) => {
         }
     }, [isLogged]);
 
+    useEffect(() => {
+        const unsubscribe = NetInfo.addEventListener(state => {
+            setIsConnected(state.isConnected);
+        });
+
+        return () => {
+            unsubscribe(); // Nettoyer l'écouteur lorsque le composant est démonté
+        };
+    }, []);
+
 
     const handleLogin = async () => {
-        try {
-            // Dispatch login action
-            await login(username, password, codePays);
 
-            // Si la connexion réussit, naviguez vers l'écran de tableau de bord
-            if (!isLogged) {
-                // Gestion erreur
+        if (username && password && codePays) {
+            // Vérifier la connectivité internet
+            if (isConnected) {
+                try {
+                    // Dispatch login action
+                    await login(username, password, codePays);
+
+                    // Si la connexion réussit, naviguez vers l'écran de tableau de bord
+                    if (!isLogged) {
+                        // Gestion erreur
+                    }
+                } catch (error) {
+                    // Gérer les erreurs de connexion
+                    console.error('Erreur de connexion :', error.message);
+                }
+            } else {
+                showToast();
             }
-        } catch (error) {
-            // Gérer les erreurs de connexion
-            console.error('Erreur de connexion :', error.message);
+        } else {
+            // Afficher un message d'erreur pour informer l'utilisateur que tous les champs doivent être remplis
+            ToastAndroid.show('Veuillez remplir tous les champs', ToastAndroid.SHORT);
         }
+
     };
+
+    function showToast() {
+        ToastAndroid.show('Vous n\'etes pas connecte a internet', ToastAndroid.SHORT);
+    }
 
 
     const options = [{
@@ -95,27 +124,12 @@ const HomeScreen = ({ navigation, login }) => {
         <View style={styles.container}>
             <StatusBar translucent backgroundColor="transparent" />
             <StatusBar barStyle="dark-content" />
-
-            {/* <View style={styles.container_image}>
-                <View style={styles.container_logo}>
-                    <Text style={styles.icon}>Tasa wallet</Text>
-
-                    {verifInscription ?
-                        <Text style={styles.connexion}>Connexion au compte tasa wallet</Text> :
-
-                        <Text style={styles.connexion}>Creation d'un compte tasa walet</Text>
-                    }
-                    <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <Image source={require('../../assets/images/kyc.jpg')} style={styles.image} />
-                    </View>
-                </View>
-            </View> */}
             <View style={styles.container_form}>
-                {/* <View style={{ width: '100%', height: '50%' }}> */}
-
-                <Image source={require('../../assets/images/login.png')} style={styles.image} />
+                <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: "50%" }}>
+                    <Image source={require('../../assets/images/login.png')} style={styles.image} />
+                </View>
                 {/* </View> */}
-                <View style={{ padding: 20 }}>
+                <View style={{ paddingHorizontal: 20 }}>
                     <View style={styles.inputContainer2}>
                         {selectedOption == "" ?
                             <Icon name="globe" size={15} color="grey" style={styles.iconStyle} />
@@ -189,13 +203,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'white',
     },
-    container_logo: {
 
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingTop: 20
-    },
     icon: {
         fontSize: 50,
         fontWeight: 'bold',
@@ -205,19 +213,10 @@ const styles = StyleSheet.create({
 
     },
     image: {
-        height: '40%',
+        height: '100%',
         width: '100%',
         resizeMode: 'cover',
         marginBottom: 30
-    },
-    container_image: {
-        // flex: "",
-        // height: "40%",
-        justifyContent: 'flex-start',
-        backgroundColor: default_color.orange,
-        borderBottomLeftRadius: 70,
-        // marginBottom:70
-
     },
     connexion: {
         textAlign: 'center',
@@ -227,6 +226,10 @@ const styles = StyleSheet.create({
         color: 'white'
     },
     container_form: {
+        flex: 1,
+        justifyContent: 'flex-start',
+        backgroundColor: "white",
+        // padding: 20
     },
     inputContainer: {
         flexDirection: 'row',
@@ -236,19 +239,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         borderRadius: 100,
     },
-    inputContainer5: {
-        flexDirection: 'row',
-        // justifyContent: 'space-between',
-        // alignItems: 'center',
-        borderColor: 'gray',
 
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderWidth: 0.6,
-        marginBottom: 20,
-        borderRadius: 3,
-    },
     inputContainer2: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -275,24 +266,6 @@ const styles = StyleSheet.create({
         height: 50,
         paddingHorizontal: 10,
         fontFamily: 'RobotoSerif_400Regular',
-
-    },
-    passwordContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderColor: 'gray',
-        borderWidth: 1,
-        marginBottom: 20,
-        borderRadius: 7,
-        fontFamily: 'RobotoSerif_400Regular',
-
-    },
-    passwordInput: {
-        flex: 1,
-        height: 55,
-        paddingHorizontal: 10,
-        fontFamily: 'RobotoSerif_400Regular',
-
 
     },
     eyeIcon: {

@@ -9,7 +9,8 @@ import {
     RobotoSerif_100Thin,
 } from "@expo-google-fonts/roboto-serif";
 import { useSelector } from 'react-redux';
-
+import * as SecureStore from 'expo-secure-store';
+import { retrieveValue } from '../../utils/utils.js'
 
 
 const SettingsScreens = ({ navigation }) => {
@@ -34,6 +35,11 @@ const SettingsScreens = ({ navigation }) => {
         // Logique de connexion ici
     };
 
+    const getCodeAccesVerif = (async () => {
+        return SecureStore.getItemAsync('codeAccesVerif');
+    })();
+
+
     return (
         <View style={styles.container}>
             <StatusBar translucent backgroundColor="transparent" />
@@ -45,15 +51,16 @@ const SettingsScreens = ({ navigation }) => {
                         <Image source={require('../../assets/images/user.jpg')} style={styles.image} />
                     </View>
                 </View>
-
                 <Text style={{ color: 'white', fontSize: 12, fontFamily: 'RobotoSerif_400Regular', marginBottom: 20, textTransform: 'uppercase' }}>{user && user.prenom} {user && user.name}</Text>
             </View>
 
             <ScrollView style={{ backgroundColor: '#E7E7E7' }}>
                 <View style={styles.aujourdhui}>
-                    <Text style={{ marginBottom: 5, color: default_color.orange, fontSize: 13, fontFamily: "RobotoSerif_700Bold", }}>Compte</Text>
+                    {/* <Text style={{ marginBottom: 5, color: default_color.orange, fontSize: 13, fontFamily: "RobotoSerif_700Bold", }}>Compte</Text> */}
                     <View style={styles.transcationListe}>
-                        <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 10 }}>
+                        <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 10, alignItems: "center" }}>
+                            <Icon name="user" color="grey" size={20} style={{ marginRight: 18 }} />
+
                             <View style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Text style={{ fontFamily: "RobotoSerif_400Regular", fontSize: 12 }}>{user && user.prenom} {user && user.name}</Text>
                                 <Text style={{ textTransform: 'uppercase', color: 'gray', fontSize: 8, fontFamily: "RobotoSerif_400Regular" }}>Nom(s) et prenom(s)</Text>
@@ -61,7 +68,9 @@ const SettingsScreens = ({ navigation }) => {
                         </View>
                     </View>
                     <View style={styles.transcationListe}>
-                        <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 10 }}>
+                        <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 10, alignItems: "center" }}>
+                            <Icon name="phone" color="grey" size={20} style={{ marginRight: 18 }} />
+
                             <View style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Text style={{ fontFamily: "RobotoSerif_400Regular", }}>{user && user.phone}</Text>
                                 <Text style={{ color: 'gray', fontSize: 8, fontFamily: "RobotoSerif_400Regular" }}>Numero de telephone</Text>
@@ -69,22 +78,38 @@ const SettingsScreens = ({ navigation }) => {
                         </View>
                     </View>
                     <View style={styles.transcationListe}>
-                        <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 10 }}>
+                        <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 10, alignItems: "center" }}>
+                            <Icon name="envelope" color="grey" size={20} style={{ marginRight: 18 }} />
                             <View style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Text style={{ fontFamily: "RobotoSerif_400Regular", }}>{user && user.email}</Text>
                                 <Text style={{ color: 'gray', fontSize: 8, fontFamily: "RobotoSerif_400Regular" }}>Adresse email</Text>
                             </View>
                         </View>
                     </View>
-                    <TouchableOpacity style={styles.transcationListe} onPress={() => navigation.navigate('CodeAcces')}>
-                        <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 10, justifyContent: 'space-between', alignItems: "center", width: "100%" }}>
-                            <View style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <Text style={{ fontFamily: "RobotoSerif_400Regular", }}>Définir un code de sécurité.</Text>
-                                <Text style={{ color: 'gray', fontSize: 8, fontFamily: "RobotoSerif_400Regular" }}>Le code de sécurité permet de protéger votre application.</Text>
+                    {retrieveValue('codeAccesVerif') ?
+                        <TouchableOpacity style={styles.transcationListe} onPress={() => navigation.navigate('CodeVerif')}>
+                            <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 10, justifyContent: 'space-between', alignItems: "center", width: "90%" }}>
+                                <Icon name="lock" color="grey" size={20} style={{ marginRight: 18 }} />
+                                <View style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: "center", width: "100%" }}>
+                                    <Text style={{ fontFamily: "RobotoSerif_400Regular" }}>Code d'accès</Text>
+                                    <Text style={{ color: default_color.orange, fontSize: 12, fontFamily: "RobotoSerif_400Regular" }}>Activée</Text>
+                                </View>
                             </View>
-                            <Icon name="chevron-right" color="grey" size={12} />
-                        </View>
-                    </TouchableOpacity>
+                        </TouchableOpacity> :
+                        <TouchableOpacity style={styles.transcationListe} onPress={() => navigation.navigate('CodeAcces')}>
+                            <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 10, alignItems: "center", width: "100%" }}>
+                                <Icon name="lock" color="grey" size={20} style={{ marginRight: 18 }} />
+                                <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 10, justifyContent: 'space-between', alignItems: "center", width: "90%" }}>
+                                    <View style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                        <Text style={{ fontFamily: "RobotoSerif_400Regular", }}>Définir un code de sécurité.</Text>
+                                        <Text style={{ color: 'gray', fontSize: 8, fontFamily: "RobotoSerif_400Regular" }}>Le code de sécurité protege votre application.</Text>
+                                    </View>
+                                    <Icon name="chevron-right" color="grey" size={12} />
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    }
+
                 </View>
                 <View style={styles.aujourdhui}>
                     <Text style={{ marginBottom: 14, color: default_color.orange, fontSize: 13, fontFamily: "RobotoSerif_700Bold", }}>Mettre a jour le mot de passe</Text>
@@ -238,12 +263,13 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         borderBottomWidth: 0.3,
-        borderColor: '#ccc'
+        borderColor: '#ccc',
+
 
     },
     image: {
-        width: 70,
-        height: 70,
+        width: 50,
+        height: 50,
         backgroundColor: 'white',
         borderRadius: 100
     },

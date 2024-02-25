@@ -1,11 +1,13 @@
-import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT } from '../actions/authActions';
+import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT, SET_ACCESS_CODE, SET_VERIF_ACCESS_CODE } from '../actions/authActions';
 
 const initialState = {
     loading: false,
     isLoggedIn: false,
     user: null,
     error: null,
-    token: null
+    token: null,
+    isCodeAcces: false,
+    accessCode: null
 };
 
 const authReducers = (state = initialState, action) => {
@@ -41,6 +43,16 @@ const authReducers = (state = initialState, action) => {
                 user: null,
                 error: null,
             }
+        case SET_ACCESS_CODE:
+            return {
+                ...state,
+                accessCode: action.payload,
+            };
+        case SET_VERIF_ACCESS_CODE:
+            return {
+                ...state,
+                isCodeAcces: true
+            };
         default:
             return state;
     }

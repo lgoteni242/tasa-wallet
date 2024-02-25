@@ -4,6 +4,8 @@ export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 export const LOGOUT = 'LOGOUT';
+export const SET_ACCESS_CODE = 'SET_ACCESS_CODE';
+export const SET_VERIF_ACCESS_CODE = 'SET_VERIF_ACCESS_CODE';
 
 // Action creator
 export const logout = () => ({
@@ -24,6 +26,19 @@ export const loginFailure = (error) => ({
     type: LOGIN_FAILURE,
     payload: error,
 });
+
+export const setAccessCode = (code) => {
+    return {
+        type: 'SET_ACCESS_CODE',
+        payload: code,
+    };
+};
+
+export const setVerifAccesCode = () => {
+    return {
+        type: 'SET_VERIF_ACCESS_CODE',
+    };
+};
 
 // Async action to handle login
 export const login = (username, password, codePays) => {
