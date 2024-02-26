@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, StatusBar, TextInput, TouchableOpacity, ActivityIndicator, ScrollView, Image, ToastAndroid } from 'react-native';
+import { CommonActions } from '@react-navigation/native';
 import default_color from '../styles/color';
 import {
     RobotoSerif_400Regular,
@@ -36,22 +37,34 @@ const HomeScreen = ({ navigation, login }) => {
     const loginError = useSelector(state => state.auth.error);
     const isLogged = useSelector(state => state.auth.isLoggedIn);
 
+    // useEffect(() => {
+    //     if (isLogged) {
+    //         navigation.reset({
+    //             index: 0,
+    //             routes: [{ name: 'Menu' }],
+    //         });
+    //     } else {
+    //         navigation.navigate('Home');
+    //     }
+    // }, [isLogged]);
+
     useEffect(() => {
         if (isLogged) {
-            navigation.reset({
-                index: 0,
-                routes: [{ name: 'Menu' }],
-            });
+            navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'Menu' }],
+                })
+            );
         } else {
             navigation.navigate('Home');
         }
-    }, [isLogged]);
+    }, [isLogged, navigation]);
 
     useEffect(() => {
         const unsubscribe = NetInfo.addEventListener(state => {
             setIsConnected(state.isConnected);
         });
-
         return () => {
             unsubscribe(); // Nettoyer l'écouteur lorsque le composant est démonté
         };
@@ -317,6 +330,8 @@ export default connect(
     // Mappez l'état de Redux aux props du composant
     (state) => ({
         isLoggedIn: state.auth.isLoggedIn, // Supposant que "auth" est le nom de votre reducer d'authentification
+        accessCode: state.auth.accessCode, // Supposant que "auth" est le nom de votre reducer d'authentification
+        isCodeAcces: state.auth.isCodeAcces, // Supposant que "auth" est le nom de votre reducer d'authentification
     }),
     // Mappez les actions Redux aux props du composant
     (dispatch) => bindActionCreators({ login }, dispatch)

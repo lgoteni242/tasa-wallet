@@ -12,6 +12,10 @@ import {
     RobotoSerif_100Thin,
     useFonts
 } from "@expo-google-fonts/roboto-serif";
+import { setVerifAccesCode, setAccessCode } from '../store/actions/authActions';
+import { connect, useSelector, useDispatch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
 
 
 
@@ -62,6 +66,8 @@ const CodeAccesScreen = ({ navigation }) => {
 
     };
 
+    const dispatch = useDispatch();
+
     if (inputText2.length == 4) {
         if (inputText != inputText2) {
             setInputText2('');
@@ -74,8 +80,11 @@ const CodeAccesScreen = ({ navigation }) => {
             }, 1500);
         } else {
             (async () => {
-                await SecureStore.setItemAsync('codeAcces', inputText);
-                await SecureStore.setItemAsync('codeAccesVerif', 'true');
+                dispatch(setAccessCode(inputText))
+                dispatch(setVerifAccesCode())
+
+                // await SecureStore.setItemAsync('codeAcces', inputText);
+                // await SecureStore.setItemAsync('codeAccesVerif', 'true');
                 navigation.goBack()
             })();
         }
@@ -249,4 +258,12 @@ const styles = StyleSheet.create({
 
 });
 
-export default CodeAccesScreen;
+export default connect(
+    // Mappez l'état de Redux aux props du composant
+    (state) => ({
+        accessCode: state.auth.accessCode, // Supposant que "auth" est le nom de votre reducer d'authentification
+        isCodeAcces: state.auth.isCodeAcces
+    }),
+    // Mappez les actions Redux aux props du composant
+    (dispatch) => bindActionCreators({ setVerifAccesCode, setAccessCode }, dispatch)
+)(CodeAccesScreen);

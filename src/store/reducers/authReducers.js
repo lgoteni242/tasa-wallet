@@ -25,7 +25,9 @@ const authReducers = (state = initialState, action) => {
                 isLoggedIn: true,
                 user: action.payload.data,
                 error: null,
-                token: action.payload.access_token
+                token: action.payload.access_token,
+                isCodeAcces: false,
+
             };
         case LOGIN_FAILURE:
             return {
@@ -42,6 +44,8 @@ const authReducers = (state = initialState, action) => {
                 isLoggedIn: false,
                 user: null,
                 error: null,
+                isCodeAcces: false,
+                accessCode: null
             }
         case SET_ACCESS_CODE:
             return {

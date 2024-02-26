@@ -655,8 +655,8 @@ const DashBoardScreen = ({ navigation }) => {
                     animationOut="fadeOut"
                 >
                     <View style={styles.modalContainerSend}>
-                        <View style={{ backgroundColor: default_color.orange, borderTopEndRadius: 10, borderTopStartRadius: 10, paddingTop: 5 }}>
-                            <Text style={{ textAlign: 'center', fontSize: 20, paddingBottom: 10, fontWeight: 'bold', color: 'white', fontFamily: "RobotoSerif_400Regular" }}>Resumer de l'operation</Text>
+                        <View style={{ backgroundColor: 'white', borderTopEndRadius: 10, borderTopStartRadius: 10, paddingTop: 5, borderBottomWidth: 0.5, borderBottomColor: 'gray' }}>
+                            <Text style={{ textAlign: 'center', fontSize: 20, paddingBottom: 5, color: 'black', fontFamily: "RobotoSerif_400Regular" }}>Resumer de l'operation</Text>
                         </View>
                         <View style={styles.modalContentSend}>
                             <Text style={{ fontSize: 19, color: 'rgba(16,17,17,0.84)', fontFamily: "RobotoSerif_400Regular" }}>Pays: {selectedOption}</Text>
@@ -664,14 +664,14 @@ const DashBoardScreen = ({ navigation }) => {
                             <Text style={{ fontSize: 19, color: 'rgba(16,17,17,0.84)', fontFamily: "RobotoSerif_400Regular" }}>Numero : {numero}</Text>
                             <Text style={{ marginBottom: 19, fontSize: 20, color: 'rgba(16,17,17,0.84)', fontFamily: "RobotoSerif_400Regular" }}>Montant : {montant}</Text>
                             <View style={{
-                                display: "flex", flexDirection: "row", justifyContent: "space-between", borderTopWidth: 1, borderTopColor: 'gray'
-                                , paddingTop: 10
+                                display: "flex", flexDirection: "row", justifyContent: "flex-end", borderTopWidth: 0.5, borderTopColor: 'gray'
+                                , paddingTop: 3
                             }}>
                                 <TouchableOpacity style={styles.buttonRetour} onPress={() => setSendResumeModal(false)} >
                                     <Text style={styles.buttonTextAnnul}>Retour</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.buttonEnvoie} onPress={() => handleSend()} disabled={isLoading} >
-                                    <Text style={styles.buttonText}>Envoyer</Text>
+                                    <Text style={styles.buttonText2}>Envoyer</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -726,14 +726,14 @@ const DashBoardScreen = ({ navigation }) => {
                                 Nous vous encourageons à définir un code de sécurité pour verrouiller votre téléphone, ce qui vous évitera de vous reconnecter à chaque session.
                             </Text>
                             <View style={{
-                                display: "flex", flexDirection: "row", justifyContent: "space-between", borderTopWidth: 0.5, borderTopColor: 'gray'
-                                , paddingTop: 10, marginTop: 7,
+                                display: "flex", flexDirection: "row", justifyContent: "flex-end", borderTopColor: 'gray'
+                                , marginTop: 5,
                             }}>
                                 <TouchableOpacity style={styles.buttonRetour} onPress={() => setModalClock(false)} >
                                     <Text style={styles.buttonTextAnnul}>Plus tard</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.buttonEnvoie} onPress={() => handleLockModal()} disabled={isLoading} >
-                                    <Text style={styles.buttonText}>Continuer</Text>
+                                    <Text style={styles.buttonText2}>Continuer</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -1188,7 +1188,7 @@ const styles = StyleSheet.create({
         borderWidth: 0.5
     },
     buttonEnvoie: {
-        backgroundColor: default_color.orange,
+        // backgroundColor: default_color.orange,
         paddingVertical: 3,
         alignItems: 'center',
         borderRadius: 100,
@@ -1200,7 +1200,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 100,
         width: "40%",
-        borderWidth: 0.5,
+        // borderWidth: 0.5,
         fontFamily: 'RobotoSerif_400Regular',
 
     },
@@ -1222,7 +1222,7 @@ const styles = StyleSheet.create({
 
     },
     buttonTextAnnul: {
-        color: 'gray',
+        color: 'black',
         fontSize: 15,
         paddingVertical: 4,
         width: "100%",
@@ -1230,7 +1230,15 @@ const styles = StyleSheet.create({
         fontFamily: 'RobotoSerif_400Regular',
     },
     buttonText: {
-        color: default_color.white,
+        color: 'white',
+        fontSize: 15,
+        paddingVertical: 4,
+        width: "100%",
+        textAlign: 'center',
+        fontFamily: 'RobotoSerif_400Regular',
+    },
+    buttonText2: {
+        color: 'black',
         fontSize: 15,
         paddingVertical: 4,
         width: "100%",
@@ -1239,7 +1247,7 @@ const styles = StyleSheet.create({
     },
     modalContentSend: {
         backgroundColor: 'white',
-        paddingVertical: 15,
+        paddingVertical: 10,
         paddingHorizontal: 20,
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10,
