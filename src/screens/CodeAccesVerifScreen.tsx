@@ -2,8 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, StatusBar, TextInput, Vibration, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import colorDefault from '../styles/color';
-// import * as NavigationBar from 'expo-navigation-bar';
-// import { useAuth } from '../../AuthContext';
 import * as Animatable from 'react-native-animatable';
 import {
     RobotoSerif_400Regular,
@@ -11,7 +9,8 @@ import {
     RobotoSerif_100Thin,
     useFonts
 } from "@expo-google-fonts/roboto-serif";
-import { retrieveValue } from '../../utils/utils.js'
+import { useSelector } from 'react-redux';
+
 
 
 
@@ -19,20 +18,15 @@ import { retrieveValue } from '../../utils/utils.js'
 
 const CodeAccesVerifScreen = ({ navigation }) => {
 
-
+    const accessCode = useSelector(state => state.auth.accessCode);
     const [inputText, setInputText] = useState('');
-    const [inputText2, setInputText2] = useState('');
     const [hidenText, setHidenText] = useState('')
     const [nombreDeCaracteres, setNombreDeCaracteres] = useState(0);
-    const elementRef = useRef(null);
     const elementRef2 = useRef(null);
-    const otpInputRef = useRef(null);
 
-    // const { setLock } = useAuth();
 
     let [fontsLoaded] = useFonts({
         RobotoSerif_400Regular,
-        RobotoSerif_100Thin,
         RobotoSerif_700Bold,
     });
     if (!fontsLoaded) {
@@ -42,9 +36,10 @@ const CodeAccesVerifScreen = ({ navigation }) => {
         if (nombreDeCaracteres < 3) {
             setInputText(inputText + value);
             setNombreDeCaracteres(inputText.length);
-            // Vibration.vibrate(100);
         }
     }
+
+
 
     const handlePress2 = () => {
         if (elementRef2.current) {
@@ -53,19 +48,16 @@ const CodeAccesVerifScreen = ({ navigation }) => {
     };
 
     const onButtonPress = () => {
-        // Durée de la vibration en millisecondes
         const DURATION = 300;
-        // Déclenche la vibration
         Vibration.vibrate(DURATION);
 
     };
 
     (async () => {
         try {
-            const code = await retrieveValue('codeAcces');
             if (nombreDeCaracteres == 3) {
-                if (inputText == code) {
-                    navigation.navigate("Code d'accès")
+                if (inputText == accessCode) {
+                    navigation.navigate("CodeAccesConfig")
                     setInputText('')
                 } else {
                     setInputText('')

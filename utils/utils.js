@@ -23,3 +23,22 @@ export const retrieveValue = async (key) => {
         console.error('Erreur lors de la récupération de la valeur :', error);
     }
 };
+
+export const generateUniqueImageName = (prefix) => {
+    // Générer une chaîne aléatoire unique
+    const uniqueString = Math.random().toString(36).substring(2, 10); // Par exemple, "abc12345"
+    // Concaténer le préfixe et la chaîne unique
+    const imageName = `${prefix}-${uniqueString}.jpg`; // Par exemple, "ncash-abc12345.jpg"
+
+    return imageName;
+}
+
+export function convertImageToBlob(imageUri) {
+    return fetch(imageUri)
+        .then(response => response.blob())
+        .then(blob => blob)
+        .catch(error => {
+            console.error('Erreur lors de la conversion de l\'image en Blob :', error);
+            return null;
+        });
+}

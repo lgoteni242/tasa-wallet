@@ -29,14 +29,14 @@ export const loginFailure = (error) => ({
 
 export const setAccessCode = (code) => {
     return {
-        type: 'SET_ACCESS_CODE',
+        type: SET_ACCESS_CODE,
         payload: code,
     };
 };
 
 export const setVerifAccesCode = () => {
     return {
-        type: 'SET_VERIF_ACCESS_CODE',
+        type: SET_VERIF_ACCESS_CODE,
     };
 };
 

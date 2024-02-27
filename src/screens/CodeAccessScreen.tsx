@@ -18,7 +18,6 @@ import { bindActionCreators } from 'redux';
 
 
 
-
 const CodeAccesScreen = ({ navigation }) => {
 
 
@@ -82,9 +81,6 @@ const CodeAccesScreen = ({ navigation }) => {
             (async () => {
                 dispatch(setAccessCode(inputText))
                 dispatch(setVerifAccesCode())
-
-                // await SecureStore.setItemAsync('codeAcces', inputText);
-                // await SecureStore.setItemAsync('codeAccesVerif', 'true');
                 navigation.goBack()
             })();
         }

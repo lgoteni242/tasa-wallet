@@ -13,6 +13,8 @@ import {
     useFonts
 } from "@expo-google-fonts/roboto-serif";
 import { retrieveValue } from '../../utils/utils.js'
+import { useSelector } from 'react-redux';
+
 
 
 
@@ -20,6 +22,7 @@ import { retrieveValue } from '../../utils/utils.js'
 
 const CodeDeblockAppScreen = ({ navigation }) => {
 
+    const accessCode = useSelector(state => state.auth.accessCode);
 
     const [inputText, setInputText] = useState('');
     const [inputText2, setInputText2] = useState('');
@@ -61,28 +64,32 @@ const CodeDeblockAppScreen = ({ navigation }) => {
 
     };
 
-    (async () => {
-        try {
-            const code = await retrieveValue('codeAcces');
-            if (nombreDeCaracteres == 3) {
-                if (inputText == code) {
-                    navigation.navigate("Code d'accès")
-                    setInputText('')
-                } else {
-                    setInputText('')
-                    setNombreDeCaracteres(0)
-                    handlePress2()
-                    onButtonPress()
-                    setHidenText("Les codes d'acces ne correspondent pas, veuillez ressayer")
-                    setTimeout(() => {
-                        setHidenText('');
-                    }, 1500);
-                }
+    useEffect(() => {
+        if (nombreDeCaracteres == 3) {
+            if (inputText == accessCode) {
+                navigation.navigate("Menu")
+                setInputText('')
+            } else {
+                setInputText('')
+                setNombreDeCaracteres(0)
+                handlePress2()
+                onButtonPress()
+                setHidenText("Les codes d'acces ne correspondent pas, veuillez ressayer")
+                setTimeout(() => {
+                    setHidenText('');
+                }, 1500);
             }
-        } catch (error) {
-            console.error(error);
         }
-    })()
+    }, [nombreDeCaracteres])
+
+
+    // (async () => {
+    //     try {
+
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // })()
 
     const handleClear = () => {
         setInputText('');
@@ -96,6 +103,8 @@ const CodeDeblockAppScreen = ({ navigation }) => {
     return (
         <View style={styles.section70}>
             <StatusBar barStyle="dark-content" />
+            <StatusBar translucent backgroundColor="transparent" />
+
             <View style={styles.container3}>
                 <View style={{ position: 'absolute', top: 5 }}>
                     <Icon name="lock" size={50} color="gray" />
@@ -114,11 +123,9 @@ const CodeDeblockAppScreen = ({ navigation }) => {
                             textAlign='center'
                             maxLength={4}
                             secureTextEntry={true}
-                        // onChangeText={gererChangementDeTexte}
                         />
                     </View>
                     <Text style={{ color: 'red', fontSize: 8, fontFamily: 'RobotoSerif_400Regular' }}>{hidenText}</Text>
-
                 </View>
                 <View style={styles.container2}>
                     {[[1, 2, 3], [4, 5, 6], [7, 8, 9], ['c', '0', 'x']].map((row, rowIndex) => (
@@ -133,7 +140,6 @@ const CodeDeblockAppScreen = ({ navigation }) => {
                                         } else if (num === 'x') {
                                             handleBackspace();
                                         } else {
-                                            // handleButtonClick(num);
                                             handleButtonClick(num.toString())
                                         }
                                     }}

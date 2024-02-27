@@ -1,4 +1,4 @@
-import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT, SET_ACCESS_CODE, SET_VERIF_ACCESS_CODE } from '../actions/authActions';
+import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT, SET_ACCESS_CODE, SET_VERIF_ACCESS_CODE, LOCK_APP } from '../actions/authActions';
 
 const initialState = {
     loading: false,
@@ -7,7 +7,8 @@ const initialState = {
     error: null,
     token: null,
     isCodeAcces: false,
-    accessCode: null
+    accessCode: null,
+    isLock: false
 };
 
 const authReducers = (state = initialState, action) => {
@@ -44,8 +45,9 @@ const authReducers = (state = initialState, action) => {
                 isLoggedIn: false,
                 user: null,
                 error: null,
-                isCodeAcces: false,
-                accessCode: null
+                token: null,
+                // isCodeAcces: false,
+                // accessCode: null
             }
         case SET_ACCESS_CODE:
             return {
@@ -56,6 +58,11 @@ const authReducers = (state = initialState, action) => {
             return {
                 ...state,
                 isCodeAcces: true
+            };
+        case LOCK_APP:
+            return {
+                ...state,
+                isLock: true
             };
         default:
             return state;

@@ -14,7 +14,7 @@ import { connect, useSelector } from 'react-redux';
 import { login } from '../store/actions/authActions';
 import { bindActionCreators } from 'redux';
 import NetInfo from '@react-native-community/netinfo';
-
+import Modal from "react-native-modal";
 
 
 const HomeScreen = ({ navigation, login }) => {
@@ -32,10 +32,12 @@ const HomeScreen = ({ navigation, login }) => {
     const [password, setPassword] = useState('');
     const [codePays, setCodePays] = useState('');
     const [isConnected, setIsConnected] = useState(false);
+    const [isLoading, setIsLoading] = useState(false)
 
 
     const loginError = useSelector(state => state.auth.error);
     const isLogged = useSelector(state => state.auth.isLoggedIn);
+    const loading = useSelector(state => state.auth.loading);
 
     // useEffect(() => {
     //     if (isLogged) {
@@ -78,13 +80,15 @@ const HomeScreen = ({ navigation, login }) => {
             if (isConnected) {
                 try {
                     // Dispatch login action
+                    setIsLoading(true)
                     await login(username, password, codePays);
-
+                    setIsLoading(false)
                     // Si la connexion réussit, naviguez vers l'écran de tableau de bord
                     if (!isLogged) {
                         // Gestion erreur
                     }
                 } catch (error) {
+                    setIsLoading(false)
                     // Gérer les erreurs de connexion
                     console.error('Erreur de connexion :', error.message);
                 }
@@ -143,6 +147,7 @@ const HomeScreen = ({ navigation, login }) => {
                 </View>
                 {/* </View> */}
                 <View style={{ paddingHorizontal: 20 }}>
+                    {loginError && <Text style={{ color: 'red', fontSize: 7.5, fontFamily: 'RobotoSerif_400Regular', textAlign: 'center', marginBottom: 10 }}>Les donnees d'authentification sont invalides, veillez recommencer</Text>}
                     <View style={styles.inputContainer2}>
                         {selectedOption == "" ?
                             <Icon name="globe" size={15} color="grey" style={styles.iconStyle} />
@@ -191,7 +196,7 @@ const HomeScreen = ({ navigation, login }) => {
                             <Icon name={passwordVisible ? 'eye' : 'eye-slash'} size={20} color="gray" />
                         </TouchableOpacity>
                     </View>
-                    {loginError && <Text style={{ color: 'red', fontSize: 7, fontFamily: 'RobotoSerif_400Regular', textAlign: 'center' }}>Les donnees d'authentification sont invalides, veillez recommencer</Text>}
+
                     <Text style={styles.mdp} onPress={() => navigation.navigate('MotPasseOublier')}>
                         Mot de passe oublier
                     </Text>
@@ -204,6 +209,23 @@ const HomeScreen = ({ navigation, login }) => {
                     <View>
                         <Text style={styles.slogan}>Tasa, the power of your money is in your hands</Text>
                     </View>
+                    <Modal
+                        coverScreen={fontsLoaded}
+                        backdropOpacity={0.3}
+                        isVisible={isLoading}
+                        animationIn="fadeIn"
+                        animationOut="fadeOut"
+                    >
+                        <View style={styles.modalContainerChargement}>
+                            <View style={styles.modalContentChargement}>
+                                <ActivityIndicator
+                                    size={80}
+                                    color={default_color.orange}
+                                    animating={isLoading}
+                                />
+                            </View>
+                        </View>
+                    </Modal>
                 </View>
             </View>
 
@@ -321,9 +343,24 @@ const styles = StyleSheet.create({
         fontSize: 10,
         fontFamily: 'RobotoSerif_100Thin',
         color: 'gray'
+    },
 
-
-    }
+    modalContainerChargement: {
+        backgroundColor: "transparent",
+        // borderRadius: 10,
+        width: "100%",
+        height: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    modalContentChargement: {
+        backgroundColor: "transparent",
+        // padding: 23,
+        // borderRadius: 10,
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
 });
 
 export default connect(

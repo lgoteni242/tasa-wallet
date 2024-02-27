@@ -1,5 +1,9 @@
 import { Pacifico_400Regular } from "@expo-google-fonts/pacifico";
-import { Roboto_700Bold, Roboto_100Thin, Roboto_400Regular } from "@expo-google-fonts/roboto";
+import {
+    Roboto_700Bold,
+    Roboto_100Thin,
+    Roboto_400Regular,
+} from "@expo-google-fonts/roboto";
 import CustomModalPicker from "../components/CustomModalPicker";
 import {
     RobotoSerif_400Regular,
@@ -9,12 +13,18 @@ import {
     useFonts,
 } from "@expo-google-fonts/roboto-serif";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useState, useCallback, useMemo, useRef, useEffect } from "react";
+import React, {
+    useState,
+    useCallback,
+    useMemo,
+    useRef,
+    useEffect,
+} from "react";
 import {
     BottomSheetModal,
     BottomSheetModalProvider,
-    BottomSheetScrollView
-} from '@gorhom/bottom-sheet';
+    BottomSheetScrollView,
+} from "@gorhom/bottom-sheet";
 import {
     ActivityIndicator,
     ScrollView,
@@ -24,77 +34,75 @@ import {
     TextInput,
     TouchableOpacity,
     View,
-    Image
+    Image,
 } from "react-native";
 import default_color from "../styles/color";
-import Modal from 'react-native-modal';
+import Modal from "react-native-modal";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { logout } from "../store/actions/authActions";
-import { connect, useSelector, useDispatch } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { connect, useSelector, useDispatch } from "react-redux";
+import { bindActionCreators } from "redux";
 // import { useDispatch } from 'react-redux';
-import axios from 'axios';
-import OTPTextInput from 'react-native-otp-textinput';
-import RadioButtonCustom from '../components/RadioButtonCustom';
-import * as SecureStore from 'expo-secure-store';
-
-
-
-
+import axios from "axios";
+import OTPTextInput from "react-native-otp-textinput";
+import RadioButtonCustom from "../components/RadioButtonCustom";
+import * as SecureStore from "expo-secure-store";
 
 const dataListe = [
     {
         id: 1,
         name: "Levi Goteni",
         heure: "13:15",
-        montant: '1200',
-        flag: 'cg'
+        montant: "1200",
+        flag: "cg",
     },
     {
         id: 2,
         name: "Chris N'gakosso",
         heure: "17:55",
-        montant: '30000',
-        flag: 'sn'
-
+        montant: "30000",
+        flag: "sn",
     },
     {
         id: 3,
         name: "Mik Divin",
         heure: "20:18",
-        montant: '400',
-        flag: 'cg'
+        montant: "400",
+        flag: "cg",
     },
     {
         id: 4,
         name: "Paul Mboungou",
         heure: "22:45",
-        montant: '5600',
-        flag: 'sn'
+        montant: "5600",
+        flag: "sn",
     },
     {
         id: 5,
         name: "Delice Kissangou",
         heure: "00:05",
-        montant: '400',
-        flag: 'cg'
+        montant: "400",
+        flag: "cg",
     },
     {
         id: 6,
         name: "Gomez Itoua",
         heure: "12:19",
-        montant: '1300',
-        flag: 'sn'
-    }
-]
+        montant: "1300",
+        flag: "sn",
+    },
+];
 
 const DashBoardScreen = ({ navigation }) => {
     // =================Chargement============================
-    const user = useSelector(state => state.auth.user);
-    const token = useSelector(state => state.auth.token);
+    const user = useSelector((state) => state.auth.user);
+    const token = useSelector((state) => state.auth.token);
+    const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+    const isCodeAcces = useSelector((state) => state.auth.isCodeAcces);
+
     const otpInputRef = useRef(null);
-    const [showOpt, setShowOpt] = useState(false)
-    const [optCode, setOptCode] = useState('')
+    const [showOpt, setShowOpt] = useState(false);
+    const [optCode, setOptCode] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [deconnexionConf, setDeconnexionConf] = useState(false);
     // =======================================================
@@ -103,37 +111,46 @@ const DashBoardScreen = ({ navigation }) => {
     const [notSendMoney, setNotSendMoney] = useState(false);
     // ======================================================
     const [soldeVisible, setSoldeVisible] = useState(false);
-    const [selectedOption, setSelectedOption] = useState('');
-    const [selectedOptionSenegal, setSelectedOptionSenegal] = useState('');
+    const [selectedOption, setSelectedOption] = useState("");
+    const [selectedOptionSenegal, setSelectedOptionSenegal] = useState("");
     const [modalVisible, setModalVisible2] = useState(false);
-    const [sendResumeModal, setSendResumeModal] = useState(false)
+    const [sendResumeModal, setSendResumeModal] = useState(false);
     // ==================Send money===================================
     // const [solde, setSolde] = useState(user.balance);
-    const [numero, setNumero] = useState('');
-    const [montant, setMontant] = useState('500');
-    const [montantRetrait, setMontantRetrait] = useState('500');
-    const [montantCrediter, setMontantCrediter] = useState('500');
+    const [numero, setNumero] = useState("");
+    const [montant, setMontant] = useState("500");
+    const [montantRetrait, setMontantRetrait] = useState("500");
+    const [montantCrediter, setMontantCrediter] = useState("500");
     const [choixpayement, setChoixPayement] = useState("");
     // ================================================================
 
-    const [verifPass, setVeerifPass] = useState(true)
+    const [verifPass, setVeerifPass] = useState(true);
     const [passwordVisible, setPasswordVisible] = useState(false);
-    const [codePays, setCodePays] = useState('');
+    const [codePays, setCodePays] = useState("");
     const [modalClock, setModalClock] = useState(true);
 
     const dispatch = useDispatch();
     const handleLogout = () => {
         dispatch(logout()); // Déclencher la déconnexion en dispatchant l'action logout
-        setDeconnexionConf(false)
+        setDeconnexionConf(false);
         // Rediriger l'utilisateur vers l'écran de connexion ou la page d'accueil
-        navigation.replace('Home');
+        navigation.replace("Home");
+    };
+    const handleLogout2 = () => {
+        navigation.replace("Home");
     };
 
-    // Send Money 
+    useEffect(() => {
+        if (isLoggedIn == false) {
+            handleLogout2()
+        }
+    }, [isLoggedIn])
+
+    // Send Money
     // ref
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
     // variables
-    const snapPoints = useMemo(() => ['17%', '60%'], []);
+    const snapPoints = useMemo(() => ["17%", "60%"], []);
     // callbacks
     const handlePresentModalPress = useCallback(() => {
         // handleCloseModalPressRetirer()
@@ -141,7 +158,6 @@ const DashBoardScreen = ({ navigation }) => {
         if (user) {
             if (!user.etat) {
                 bottomSheetModalRef.current?.present();
-
             } else {
                 bottomSheetModalRef.current?.present();
 
@@ -150,8 +166,7 @@ const DashBoardScreen = ({ navigation }) => {
         }
     }, []);
 
-    const handleSheetChanges = useCallback((index: number) => {
-    }, []);
+    const handleSheetChanges = useCallback((index: number) => { }, []);
 
     const handleCloseModalPress = useCallback(() => {
         bottomSheetModalRef.current?.close();
@@ -161,7 +176,7 @@ const DashBoardScreen = ({ navigation }) => {
     // ref
     const bottomSheetModalRefRetirer = useRef<BottomSheetModal>(null);
     // variables
-    const snapPointsRetirer = useMemo(() => ['17%', '60%'], []);
+    const snapPointsRetirer = useMemo(() => ["17%", "60%"], []);
     // callbacks
     const handlePresentModalPressRetirer = useCallback(() => {
         // handleCloseModalPress()
@@ -176,8 +191,7 @@ const DashBoardScreen = ({ navigation }) => {
         }
     }, []);
 
-    const handleSheetChangesRetirer = useCallback((index: number) => {
-    }, []);
+    const handleSheetChangesRetirer = useCallback((index: number) => { }, []);
 
     const handleCloseModalPressRetirer = useCallback(() => {
         bottomSheetModalRefRetirer.current?.close();
@@ -187,7 +201,7 @@ const DashBoardScreen = ({ navigation }) => {
     // ref
     const bottomSheetModalRefCrediter = useRef<BottomSheetModal>(null);
     // variables
-    const snapPointsCrediter = useMemo(() => ['17%', '60%'], []);
+    const snapPointsCrediter = useMemo(() => ["17%", "60%"], []);
     // callbacks
     const handlePresentModalPressCrediter = useCallback(() => {
         // handleCloseModalPressRetirer()
@@ -195,22 +209,18 @@ const DashBoardScreen = ({ navigation }) => {
         if (user) {
             if (!user.etat) {
                 bottomSheetModalRefCrediter.current?.present();
-
             } else {
-                bottomSheetModalRefCrediter.current?.present();
-
+                navigation.navigate('Kyc')
+                // bottomSheetModalRefCrediter.current?.present();
             }
         }
     }, []);
 
-    const handleSheetChangesCrediter = useCallback((index: number) => {
-    }, []);
+    const handleSheetChangesCrediter = useCallback((index: number) => { }, []);
 
     const handleCloseModalPressCrediter = useCallback(() => {
-
         bottomSheetModalRefCrediter.current?.close();
     }, []);
-
 
     const date = new Date();
     const year = date.getFullYear();
@@ -218,34 +228,36 @@ const DashBoardScreen = ({ navigation }) => {
     const day = date.getDate();
     const formattedDate = `${day}/${month}/${year}`;
 
-
-    const options = [{
-        label: 'Republique du Congo',
-        value: 242,
-        flag: 'cg'
-    },
-    {
-        label: 'Senegal',
-        value: 221,
-        flag: 'sn'
-    }];
+    const options = [
+        {
+            label: "Republique du Congo",
+            value: 242,
+            flag: "cg",
+        },
+        {
+            label: "Senegal",
+            value: 221,
+            flag: "sn",
+        },
+    ];
 
     function randomTrueOrFalse() {
         return Math.random() < 0.5;
     }
 
-    const flag = (countryCode: string) => String.fromCodePoint(...[...countryCode.toUpperCase()].map(c => {
-        return 0x1F1A5 + c.charCodeAt();
-    }));
-
+    const flag = (countryCode: string) =>
+        String.fromCodePoint(
+            ...[...countryCode.toUpperCase()].map((c) => {
+                return 0x1f1a5 + c.charCodeAt();
+            })
+        );
 
     const handleSelect = (option: React.SetStateAction<string>) => {
         setSelectedOption(option);
-        if (option == 'Republique du Congo') {
-            setCodePays("CG")
-
+        if (option == "Republique du Congo") {
+            setCodePays("CG");
         } else {
-            setCodePays("SN")
+            setCodePays("SN");
         }
     };
 
@@ -258,11 +270,29 @@ const DashBoardScreen = ({ navigation }) => {
         RobotoSerif_700Bold,
         RobotoSerif_300Light,
         RobotoSerif_100Thin,
-
     });
 
     if (!fontsLoaded) {
-        return <ActivityIndicator size="large" />;
+        return <Modal
+            coverScreen={fontsLoaded}
+            backdropOpacity={0.3}
+            isVisible={isLoading}
+            animationIn="fadeIn" // Animation d'entrée du haut
+            animationOut="fadeOut"
+        >
+            <View style={styles.modalContainerChargement}>
+                <View style={styles.modalContentChargement}>
+                    {/* <Image
+                    source={require("../../assets/images/charger.gif")}
+                    style={{ width: 200, height: 200 }} /> */}
+                    <ActivityIndicator
+                        size={100}
+                        color={default_color.orange}
+                        animating={isLoading}
+                    />
+                </View>
+            </View>
+        </Modal>;
     }
 
     const handleSend = () => {
@@ -270,126 +300,138 @@ const DashBoardScreen = ({ navigation }) => {
         const checkData = async () => {
             (async () => {
                 try {
-                    await axios.get('https://walet.tasa.pro/api/otp', {
+                    await axios.get("https://walet.tasa.pro/api/otp", {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
                     });
-                    setSendResumeModal(false)
+                    setSendResumeModal(false);
                     setIsLoading(false);
-                    handleCloseModalPress()
-                    setShowOpt(true)
+                    handleCloseModalPress();
+                    setShowOpt(true);
                 } catch (error) {
-                    console.log('levi goteni verification', error)
+                    console.log("levi goteni verification", error);
                 }
             })();
         };
         checkData();
-    }
+    };
 
     const handleSendVerif = () => {
         setIsLoading(true);
         const sendMoney = async () => {
             (async () => {
                 try {
-                    await axios.post('https://walet.tasa.pro/api/sendmoney', {
-                        country_code: codePays,
-                        phone: numero,
-                        montant: montant,
-                        code_otp: optCode,
-                    }, {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
+                    await axios.post(
+                        "https://walet.tasa.pro/api/sendmoney",
+                        {
+                            country_code: codePays,
+                            phone: numero,
+                            montant: montant,
+                            code_otp: optCode,
                         },
-                    });
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        }
+                    );
                     setIsLoading(false);
-                    setShowOpt(false)
-                    setSendMoney(true)
+                    setShowOpt(false);
+                    setSendMoney(true);
                 } catch (error) {
                     setIsLoading(false);
-                    setShowOpt(false)
-                    setNotSendMoney(true)
+                    setShowOpt(false);
+                    setNotSendMoney(true);
                     // console.error('Argent non envoye', error)
                 }
             })();
         };
         sendMoney();
-    }
+    };
 
     const handleRetirer = () => {
         setIsLoading(true);
-        console.error(montantRetrait, token)
+        console.error(montantRetrait, token);
         const sendMoney = async () => {
             (async () => {
                 try {
-                    await axios.post('https://walet.tasa.pro/api/withdrawal', {
-                        montant: montantRetrait,
-                    }, {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
+                    await axios.post(
+                        "https://walet.tasa.pro/api/withdrawal",
+                        {
+                            montant: montantRetrait,
                         },
-                    });
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        }
+                    );
                     setIsLoading(false);
-                    handleCloseModalPressCrediter()
-                    setSendMoney(true)
+                    handleCloseModalPressCrediter();
+                    setSendMoney(true);
                 } catch (error) {
                     setIsLoading(false);
-                    handleCloseModalPressCrediter()
-                    setNotSendMoney(true)
+                    handleCloseModalPressCrediter();
+                    setNotSendMoney(true);
                     // console.error('Argent non envoye', error)
                 }
             })();
         };
         sendMoney();
-    }
+    };
 
     const handleCrediter = () => {
         setIsLoading(true);
-        console.error(montantCrediter, token)
+        console.error(montantCrediter, token);
         const sendMoney = async () => {
             (async () => {
                 try {
-                    await axios.post('https://walet.tasa.pro/api/withdrawal', {
-                        mode_id: choixpayement,
-                        montant: montantCrediter,
-                    }, {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
+                    await axios.post(
+                        "https://walet.tasa.pro/api/withdrawal",
+                        {
+                            mode_id: choixpayement,
+                            montant: montantCrediter,
                         },
-                    });
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        }
+                    );
                     setIsLoading(false);
-                    handleCloseModalPressCrediter()
-                    setSendMoney(true)
+                    handleCloseModalPressCrediter();
+                    setSendMoney(true);
                 } catch (error) {
                     setIsLoading(false);
                     // handleCloseModalPressRetirer()
-                    setNotSendMoney(true)
+                    setNotSendMoney(true);
                     // console.error('Argent non envoye', error)
                 }
             })();
         };
         sendMoney();
-    }
+    };
 
     const handleTextChange = (text: any) => {
-        setOptCode(text)
+        setOptCode(text);
     };
 
     const handleSelectOption = (option: string) => {
-        setSelectedOptionSenegal(option)
-    }
+        setSelectedOptionSenegal(option);
+    };
 
     const getCodeAccesVerif = async () => {
-        return SecureStore.getItemAsync('codeAccesVerif');
+        return SecureStore.getItemAsync("codeAccesVerif");
     };
 
     const handleLockModal = () => {
-        navigation.navigate('CodeAcces')
-        setModalClock(false)
-    }
+        navigation.navigate("CodeAcces");
+        setModalClock(false);
+    };
 
     return (
-        <BottomSheetModalProvider >
+        <BottomSheetModalProvider>
             <View style={styles.container}>
                 <StatusBar translucent backgroundColor="transparent" />
                 {/* <StatusBar barStyle="light-content" /> */}
@@ -405,7 +447,10 @@ const DashBoardScreen = ({ navigation }) => {
                             <Icon name="user" size={20} color="white" />
                         </TouchableOpacity>
                         <Text style={styles.welcomMessage}>WALLET</Text>
-                        <TouchableOpacity onPress={() => setDeconnexionConf(!deconnexionConf)} style={{ padding: 0 }}>
+                        <TouchableOpacity
+                            onPress={() => setDeconnexionConf(!deconnexionConf)}
+                            style={{ padding: 0 }}
+                        >
                             <Icon name="sign-out" size={20} color="white" />
                         </TouchableOpacity>
                     </View>
@@ -414,7 +459,7 @@ const DashBoardScreen = ({ navigation }) => {
                             <View style={styles.hautBarShowBalance}>
                                 <Text
                                     style={{
-                                        fontFamily: 'RobotoSerif_400Regular',
+                                        fontFamily: "RobotoSerif_400Regular",
 
                                         color: "gray",
                                         fontSize: 15,
@@ -445,7 +490,9 @@ const DashBoardScreen = ({ navigation }) => {
                                         $ XXXXXXX
                                     </Text>
                                 )}
-                                <TouchableOpacity onPress={() => setSoldeVisible(!soldeVisible)}>
+                                <TouchableOpacity
+                                    onPress={() => setSoldeVisible(!soldeVisible)}
+                                >
                                     <Icon
                                         name={soldeVisible ? "eye" : "eye-slash"}
                                         size={40}
@@ -458,7 +505,7 @@ const DashBoardScreen = ({ navigation }) => {
                             <View>
                                 <Text
                                     style={{
-                                        fontFamily: 'RobotoSerif_400Regular',
+                                        fontFamily: "RobotoSerif_400Regular",
 
                                         color: "white",
                                     }}
@@ -467,17 +514,16 @@ const DashBoardScreen = ({ navigation }) => {
                                 </Text>
                                 <Text
                                     style={{
-                                        fontFamily: 'RobotoSerif_400Regular',
+                                        fontFamily: "RobotoSerif_400Regular",
                                         color: "white",
                                     }}
                                 >
                                     {user && user.name}
-
                                 </Text>
                             </View>
                             <Text
                                 style={{
-                                    fontFamily: 'RobotoSerif_400Regular',
+                                    fontFamily: "RobotoSerif_400Regular",
 
                                     color: "white",
                                 }}
@@ -488,19 +534,28 @@ const DashBoardScreen = ({ navigation }) => {
                     </View>
                     <View style={styles.optionContainer}>
                         <View style={styles.option}>
-                            <TouchableOpacity style={styles.iconShowbar} onPress={handlePresentModalPress}>
+                            <TouchableOpacity
+                                style={styles.iconShowbar}
+                                onPress={handlePresentModalPress}
+                            >
                                 <Icon name="send" size={25} color="gray" />
                             </TouchableOpacity>
                             <Text style={styles.textShowbar}>Envoyer</Text>
                         </View>
                         <View style={styles.option}>
-                            <TouchableOpacity style={styles.iconShowbar} onPress={handlePresentModalPressRetirer}>
+                            <TouchableOpacity
+                                style={styles.iconShowbar}
+                                onPress={handlePresentModalPressRetirer}
+                            >
                                 <Icon name="money" size={25} color="gray" />
                             </TouchableOpacity>
                             <Text style={styles.textShowbar}>Retirer</Text>
                         </View>
                         <View style={styles.option}>
-                            <TouchableOpacity style={styles.iconShowbar} onPress={handlePresentModalPressCrediter}>
+                            <TouchableOpacity
+                                style={styles.iconShowbar}
+                                onPress={handlePresentModalPressCrediter}
+                            >
                                 <View style={{ paddingHorizontal: 2.4 }}>
                                     <Icon name="plus" size={25} color="gray" />
                                 </View>
@@ -511,9 +566,7 @@ const DashBoardScreen = ({ navigation }) => {
                 </LinearGradient>
                 <View style={styles.transaction}>
                     <View style={styles.transcationTexte}>
-                        <Text
-                            style={{ fontSize: 12, fontFamily: "RobotoSerif_100Thin" }}
-                        >
+                        <Text style={{ fontSize: 12, fontFamily: "RobotoSerif_100Thin" }}>
                             Transactions
                         </Text>
                         <View style={styles.transactionPillule}>
@@ -533,72 +586,85 @@ const DashBoardScreen = ({ navigation }) => {
                         style={{ marginBottom: 60 }}
                         showsVerticalScrollIndicator={false}
                     >
-                        {
-                            dataListe.map((item) => (
-
-                                <View style={styles.transcationListe} key={item.id}>
+                        {dataListe.map((item) => (
+                            <View style={styles.transcationListe} key={item.id}>
+                                <View
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        marginBottom: 10,
+                                    }}
+                                >
+                                    <TouchableOpacity style={styles.iconShowbarTransaction}>
+                                        <Icon name="user-circle" size={40} color="gray" />
+                                    </TouchableOpacity>
                                     <View
-                                        style={{
-                                            display: "flex",
-                                            flexDirection: "row",
-                                            marginBottom: 10,
-                                        }}
+                                        style={{ display: "flex", justifyContent: "space-between" }}
                                     >
-                                        <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                            <Icon name="user-circle" size={40} color="gray" />
-                                        </TouchableOpacity>
-                                        <View
-                                            style={{ display: "flex", justifyContent: "space-between" }}
+                                        <Text
+                                            style={{
+                                                color: "gray",
+                                                fontFamily: "RobotoSerif_400Regular",
+                                            }}
                                         >
-                                            <Text
-                                                style={{
-                                                    color: "gray",
-                                                    fontFamily: "RobotoSerif_400Regular",
-                                                }}
-                                            >
-                                                {item.name}
-                                            </Text>
-                                            <Text
-                                                style={{
-                                                    color: "gray",
-                                                    fontFamily: "RobotoSerif_100Thin",
-
-                                                }}
-                                            >
-                                                {item.heure} PM
-                                            </Text>
-                                        </View>
-                                    </View>
-                                    <View>
-                                        <Text style={{ textAlign: 'right' }}>
-                                            {flag(item.flag)}
+                                            {item.name}
                                         </Text>
                                         <Text
                                             style={{
                                                 color: "gray",
                                                 fontFamily: "RobotoSerif_100Thin",
-
                                             }}
                                         >
-                                            {item.montant} Fcfa
+                                            {item.heure} PM
                                         </Text>
                                     </View>
                                 </View>
-
-                            ))
-                        }
-
+                                <View>
+                                    <Text style={{ textAlign: "right" }}>{flag(item.flag)}</Text>
+                                    <Text
+                                        style={{
+                                            color: "gray",
+                                            fontFamily: "RobotoSerif_100Thin",
+                                        }}
+                                    >
+                                        {item.montant} Fcfa
+                                    </Text>
+                                </View>
+                            </View>
+                        ))}
                     </ScrollView>
                 </View>
                 {/*  =============================OTP CODE=============================== */}
 
                 <Modal
-                    coverScreen={true} backdropOpacity={0.3} isVisible={showOpt} animationIn="fadeIn" // Animation d'entrée du haut
+                    coverScreen={true}
+                    backdropOpacity={0.3}
+                    isVisible={showOpt}
+                    animationIn="fadeIn" // Animation d'entrée du haut
                     animationOut="fadeOut"
                 >
                     <View style={styles.modalContainerSend}>
-                        <View style={{ backgroundColor: default_color.orange, borderTopEndRadius: 10, borderTopStartRadius: 10, paddingTop: 5 }}>
-                            <Text style={{ textAlign: 'center', fontSize: 20, paddingBottom: 20, fontWeight: 'bold', color: 'white', fontFamily: "RobotoSerif_400Regular" }}>Saisir le code reçu par sms</Text>
+                        <View
+                            style={{
+                                backgroundColor: 'white',
+                                borderTopEndRadius: 10,
+                                borderTopStartRadius: 10,
+                                paddingTop: 5,
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    textAlign: "center",
+                                    fontSize: 18,
+                                    paddingBottom: 10,
+                                    marginBottom: 5,
+                                    color: "black",
+                                    fontFamily: "RobotoSerif_400Regular",
+                                    borderBottomWidth: 0.5
+                                }}
+                            >
+                                Saisir le code reçu par sms.
+                            </Text>
                         </View>
                         <View style={styles.modalContentSend}>
                             <OTPTextInput
@@ -610,14 +676,28 @@ const DashBoardScreen = ({ navigation }) => {
                                 keyboardType="numeric"
                                 tintColor={default_color.orange}
                             />
-                            <View style={{
-                                display: "flex", flexDirection: "row", justifyContent: "space-between"
-                                , paddingTop: 20
-                            }}>
-                                <TouchableOpacity style={styles.buttonRetourDec} onPress={() => { setShowOpt(false) }} >
+                            <View
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    justifyContent: "space-between",
+                                    paddingTop: 20,
+                                }}
+                            >
+                                <TouchableOpacity
+                                    style={styles.buttonRetourDec2}
+                                    onPress={() => {
+                                        setShowOpt(false);
+                                    }}
+                                >
                                     <Text style={styles.buttonTextAnnul}>Annuler</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.buttonEnvoieDec} onPress={() => { handleSendVerif() }} >
+                                <TouchableOpacity
+                                    style={styles.buttonEnvoieDec}
+                                    onPress={() => {
+                                        handleSendVerif();
+                                    }}
+                                >
                                     <Text style={styles.buttonText}>Envoyer</Text>
                                 </TouchableOpacity>
                             </View>
@@ -626,51 +706,135 @@ const DashBoardScreen = ({ navigation }) => {
                 </Modal>
                 {/* =====================================Deconnexion============================================= */}
                 <Modal
-                    coverScreen={true} backdropOpacity={0.3} isVisible={deconnexionConf} animationIn="fadeIn" // Animation d'entrée du haut
+                    coverScreen={true}
+                    backdropOpacity={0.3}
+                    isVisible={deconnexionConf}
+                    animationIn="fadeIn" // Animation d'entrée du haut
                     animationOut="fadeOut"
                 >
-                    <View style={styles.modalContainerSend}>
-                        <View style={{ backgroundColor: default_color.orange, borderTopEndRadius: 10, borderTopStartRadius: 10, paddingTop: 5 }}>
-                            <Text style={{ textAlign: 'center', fontSize: 20, paddingBottom: 10, fontWeight: 'bold', color: 'white', fontFamily: "RobotoSerif_400Regular" }}>Deconnexion</Text>
-                        </View>
-                        <View style={styles.modalContentSend}>
-                            <Text style={{ fontSize: 13, color: 'rgba(16,17,17,0.84)', fontFamily: "RobotoSerif_400Regular", marginBottom: 12 }}>Souhaitez-vous vous deconnecter ?</Text>
-                            <View style={{
-                                display: "flex", flexDirection: "row", justifyContent: "space-between", borderTopWidth: 1, borderTopColor: 'gray'
-                                , paddingTop: 10
-                            }}>
-                                <TouchableOpacity style={styles.buttonRetourDec} onPress={() => setDeconnexionConf(false)} >
-                                    <Text style={styles.buttonTextAnnul}>Non</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.buttonEnvoieDec} onPress={handleLogout} >
-                                    <Text style={styles.buttonText}>Oui</Text>
-                                </TouchableOpacity>
-                            </View>
+
+                    <View style={styles.modalContentSend2}>
+                        <Text
+                            style={{
+                                fontSize: 13.4,
+                                color: "rgba(16,17,17,0.84)",
+                                fontFamily: "RobotoSerif_400Regular",
+                                marginBottom: 12,
+                                textAlign: 'center'
+                            }}
+                        >
+                            Souhaitez-vous vous deconnecter ?
+                        </Text>
+                        <View
+                            style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "flex-end",
+                                // paddingTop: 10,
+                            }}
+                        >
+                            <TouchableOpacity
+                                style={styles.buttonRetourDec}
+                                onPress={() => setDeconnexionConf(false)}
+                            >
+                                <Text style={styles.buttonTextAnnul}>Non</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={styles.buttonRetourDec}
+                                onPress={handleLogout}
+                            >
+                                <Text style={styles.buttonTextAnnul}>Oui</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </Modal>
                 {/* ====================================Resume modale============================================= */}
                 <Modal
-                    coverScreen={true} backdropOpacity={0.3} isVisible={sendResumeModal} animationIn="fadeIn" // Animation d'entrée du haut
+                    coverScreen={true}
+                    backdropOpacity={0.3}
+                    isVisible={sendResumeModal}
+                    animationIn="fadeIn" // Animation d'entrée du haut
                     animationOut="fadeOut"
                 >
                     <View style={styles.modalContainerSend}>
-                        <View style={{ backgroundColor: 'white', borderTopEndRadius: 10, borderTopStartRadius: 10, paddingTop: 5, borderBottomWidth: 0.5, borderBottomColor: 'gray' }}>
-                            <Text style={{ textAlign: 'center', fontSize: 20, paddingBottom: 5, color: 'black', fontFamily: "RobotoSerif_400Regular" }}>Resumer de l'operation</Text>
+                        <View
+                            style={{
+                                backgroundColor: "white",
+                                borderTopEndRadius: 10,
+                                borderTopStartRadius: 10,
+                                paddingTop: 5,
+                                borderBottomWidth: 0.5,
+                                borderBottomColor: "gray",
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    textAlign: "center",
+                                    fontSize: 20,
+                                    paddingBottom: 5,
+                                    color: "black",
+                                    fontFamily: "RobotoSerif_400Regular",
+                                }}
+                            >
+                                Resumer de l'operation
+                            </Text>
                         </View>
                         <View style={styles.modalContentSend}>
-                            <Text style={{ fontSize: 19, color: 'rgba(16,17,17,0.84)', fontFamily: "RobotoSerif_400Regular" }}>Pays: {selectedOption}</Text>
-                            <Text style={{ fontSize: 19, color: 'rgba(16,17,17,0.84)', fontFamily: "RobotoSerif_400Regular" }}>Beneficiare : GOTENI</Text>
-                            <Text style={{ fontSize: 19, color: 'rgba(16,17,17,0.84)', fontFamily: "RobotoSerif_400Regular" }}>Numero : {numero}</Text>
-                            <Text style={{ marginBottom: 19, fontSize: 20, color: 'rgba(16,17,17,0.84)', fontFamily: "RobotoSerif_400Regular" }}>Montant : {montant}</Text>
-                            <View style={{
-                                display: "flex", flexDirection: "row", justifyContent: "flex-end", borderTopWidth: 0.5, borderTopColor: 'gray'
-                                , paddingTop: 3
-                            }}>
-                                <TouchableOpacity style={styles.buttonRetour} onPress={() => setSendResumeModal(false)} >
+                            <Text
+                                style={{
+                                    fontSize: 19,
+                                    color: "rgba(16,17,17,0.84)",
+                                    fontFamily: "RobotoSerif_400Regular",
+                                }}
+                            >
+                                Pays: {selectedOption}
+                            </Text>
+                            <Text
+                                style={{
+                                    fontSize: 19,
+                                    color: "rgba(16,17,17,0.84)",
+                                    fontFamily: "RobotoSerif_400Regular",
+                                }}
+                            >
+                                Beneficiare : GOTENI
+                            </Text>
+                            <Text
+                                style={{
+                                    fontSize: 19,
+                                    color: "rgba(16,17,17,0.84)",
+                                    fontFamily: "RobotoSerif_400Regular",
+                                }}
+                            >
+                                Numero : {numero}
+                            </Text>
+                            <Text
+                                style={{
+                                    marginBottom: 19,
+                                    fontSize: 20,
+                                    color: "rgba(16,17,17,0.84)",
+                                    fontFamily: "RobotoSerif_400Regular",
+                                }}
+                            >
+                                Montant : {montant}
+                            </Text>
+                            <View
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    justifyContent: "flex-end",
+                                }}
+                            >
+                                <TouchableOpacity
+                                    style={styles.buttonRetour}
+                                    onPress={() => setSendResumeModal(false)}
+                                >
                                     <Text style={styles.buttonTextAnnul}>Retour</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.buttonEnvoie} onPress={() => handleSend()} disabled={isLoading} >
+                                <TouchableOpacity
+                                    style={styles.buttonEnvoie}
+                                    onPress={() => handleSend()}
+                                    disabled={isLoading}
+                                >
                                     <Text style={styles.buttonText2}>Envoyer</Text>
                                 </TouchableOpacity>
                             </View>
@@ -679,7 +843,10 @@ const DashBoardScreen = ({ navigation }) => {
                 </Modal>
                 {/* =================================Chargement modal============================== */}
                 <Modal
-                    coverScreen={true} backdropOpacity={0.3} isVisible={isLoading} animationIn="fadeIn" // Animation d'entrée du haut
+                    coverScreen={true}
+                    backdropOpacity={0.3}
+                    isVisible={isLoading}
+                    animationIn="fadeIn" // Animation d'entrée du haut
                     animationOut="fadeOut"
                 >
                     <View style={styles.modalContainerChargement}>
@@ -687,60 +854,72 @@ const DashBoardScreen = ({ navigation }) => {
                             {/* <Image
                                 source={require("../../assets/images/charger.gif")}
                                 style={{ width: 200, height: 200 }} /> */}
-                            <ActivityIndicator size={100} color={default_color.orange} animating={isLoading} />
+                            <ActivityIndicator
+                                size={80}
+                                color={default_color.orange}
+                                animating={isLoading}
+                            />
                         </View>
                     </View>
                 </Modal>
                 {/* =================================Verifie modal============================== */}
-                <Modal isVisible={sendMoney}
-                    coverScreen={true}
-                    backdropOpacity={0.4}
-                    onBackdropPress={() => setSendMoney(false)}
-                    animationIn="fadeIn" // Animation d'entrée du haut
-                    animationOut="fadeOut"
-                >
-                    <LinearGradient
-                        colors={['white', 'gray']}
-                        start={{ x: 0.8, y: 0 }}
-                        end={{ x: 0.8, y: 9 }}
-                        style={styles.modalContainer}
+
+
+                {/* ==================== Modal ro verife lock message =====================*/}
+                {!isCodeAcces &&
+
+
+                    <Modal
+                        coverScreen={true}
+                        backdropOpacity={0.3}
+                        isVisible={modalClock}
+                        animationIn="fadeIn" // Animation d'entrée du haut
+                        animationOut="fadeOut"
                     >
-                        <View style={styles.checkmarkContainer}>
-                            <View style={styles.checkmark}>
-                                <Icon name="check-circle" size={100} color='#00b33c' />
+                        <View style={styles.modalContainerSend}>
+                            <View style={styles.modalContentSend2}>
+                                <Text
+                                    style={{
+                                        fontSize: 12,
+                                        color: "rgba(16,17,17,0.84)",
+                                        fontFamily: "RobotoSerif_400Regular",
+                                    }}
+                                >
+                                    Nous vous encourageons à définir un code de sécurité pour
+                                    verrouiller votre téléphone, ce qui vous évitera de vous
+                                    reconnecter à chaque session.
+                                </Text>
+                                <View
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        justifyContent: "flex-end",
+                                        borderTopColor: "gray",
+                                        marginTop: 5,
+                                    }}
+                                >
+                                    <TouchableOpacity
+                                        style={styles.buttonRetour}
+                                        onPress={() => setModalClock(false)}
+                                    >
+                                        <Text style={styles.buttonTextAnnul}>Plus tard</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={styles.buttonEnvoie}
+                                        onPress={() => handleLockModal()}
+                                        disabled={isLoading}
+                                    >
+                                        <Text style={styles.buttonText2}>Continuer</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         </View>
-                        <Text style={styles.modalText2}>
-                            Transfert effectue avec success
-                        </Text>
-                    </LinearGradient>
-                </Modal>
+                    </Modal>
+                }
+
                 {/* ==================== Modal ro verife lock message =====================*/}
                 <Modal
-                    coverScreen={true} backdropOpacity={0.3} isVisible={modalClock} animationIn="fadeIn" // Animation d'entrée du haut
-                    animationOut="fadeOut"
-                >
-                    <View style={styles.modalContainerSend}>
-                        <View style={styles.modalContentSend2}>
-                            <Text style={{ fontSize: 12, color: 'rgba(16,17,17,0.84)', fontFamily: "RobotoSerif_400Regular" }}>
-                                Nous vous encourageons à définir un code de sécurité pour verrouiller votre téléphone, ce qui vous évitera de vous reconnecter à chaque session.
-                            </Text>
-                            <View style={{
-                                display: "flex", flexDirection: "row", justifyContent: "flex-end", borderTopColor: 'gray'
-                                , marginTop: 5,
-                            }}>
-                                <TouchableOpacity style={styles.buttonRetour} onPress={() => setModalClock(false)} >
-                                    <Text style={styles.buttonTextAnnul}>Plus tard</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.buttonEnvoie} onPress={() => handleLockModal()} disabled={isLoading} >
-                                    <Text style={styles.buttonText2}>Continuer</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    </View>
-                </Modal>
-                {/* ==================== Modal ro verife lock message =====================*/}
-                <Modal isVisible={notSendMoney}
+                    isVisible={notSendMoney}
                     coverScreen={true}
                     backdropOpacity={0.4}
                     onBackdropPress={() => setNotSendMoney(false)}
@@ -748,14 +927,14 @@ const DashBoardScreen = ({ navigation }) => {
                     animationOut="fadeOut"
                 >
                     <LinearGradient
-                        colors={['white', 'gray']}
+                        colors={["white", "gray"]}
                         start={{ x: 0.8, y: 0 }}
                         end={{ x: 0.8, y: 9 }}
                         style={styles.modalContainer}
                     >
                         <View style={styles.checkmarkContainer}>
                             <View style={styles.checkmark}>
-                                <Icon name="exclamation-circle" size={100} color='#bf1717' />
+                                <Icon name="exclamation-circle" size={100} color="#bf1717" />
                             </View>
                         </View>
                         <Text style={styles.modalText3}>
@@ -763,26 +942,54 @@ const DashBoardScreen = ({ navigation }) => {
                         </Text>
                     </LinearGradient>
                 </Modal>
-            </View>
+            </View >
             <BottomSheetModal
                 ref={bottomSheetModalRef}
                 index={1}
                 snapPoints={snapPoints}
                 onChange={handleSheetChanges}
             >
-                <BottomSheetScrollView >
+                <BottomSheetScrollView>
                     <View style={styles.modalContent}>
-                        <Text style={{ fontSize: 17, paddingBottom: 20, color: 'gray', fontFamily: "RobotoSerif_400Regular", }}>ENVOYER DE L'ARGENT</Text>
+                        <Text
+                            style={{
+                                fontSize: 17,
+                                paddingBottom: 20,
+                                color: "gray",
+                                fontFamily: "RobotoSerif_400Regular",
+                            }}
+                        >
+                            ENVOYER DE L'ARGENT
+                        </Text>
                         <View style={styles.inputContainer3}>
-                            {selectedOption == "" ?
-                                <Icon name="globe" size={15} color="grey" style={styles.iconStyle} />
-                                :
-                                selectedOption == "Republique du Congo" ?
-                                    <Text style={styles.iconStyle}>{flag('cg')}</Text> :
-                                    <Text style={styles.iconStyle}>{flag('sn')}</Text>
-                            }
-                            <TouchableOpacity onPress={() => setModalVisible2(true)} style={{ width: "88%" }}>
-                                {selectedOption == "" ? (<Text style={{ color: 'grey', fontFamily: 'RobotoSerif_400Regular' }}>Pays de residence</Text>) : <Text>{selectedOption}</Text>}
+                            {selectedOption == "" ? (
+                                <Icon
+                                    name="globe"
+                                    size={15}
+                                    color="grey"
+                                    style={styles.iconStyle}
+                                />
+                            ) : selectedOption == "Republique du Congo" ? (
+                                <Text style={styles.iconStyle}>{flag("cg")}</Text>
+                            ) : (
+                                <Text style={styles.iconStyle}>{flag("sn")}</Text>
+                            )}
+                            <TouchableOpacity
+                                onPress={() => setModalVisible2(true)}
+                                style={{ width: "88%" }}
+                            >
+                                {selectedOption == "" ? (
+                                    <Text
+                                        style={{
+                                            color: "grey",
+                                            fontFamily: "RobotoSerif_400Regular",
+                                        }}
+                                    >
+                                        Pays de residence
+                                    </Text>
+                                ) : (
+                                    <Text>{selectedOption}</Text>
+                                )}
                             </TouchableOpacity>
                             <CustomModalPicker
                                 options={options}
@@ -792,24 +999,52 @@ const DashBoardScreen = ({ navigation }) => {
                                 titre="Choisir le pays de destination"
                             />
                         </View>
-                        {selectedOption == "Senegal" &&
+                        {selectedOption == "Senegal" && (
                             <View style={{ width: "100%", paddingHorizontal: 10 }}>
-                                <Text style={{ fontFamily: 'RobotoSerif_400Regular', fontSize: 11, color: "gray" }}>Choisir votre option d'envoie vers le senegal</Text>
-                                <View style={{ width: "100%", display: 'flex', flexDirection: 'row', justifyContent: 'space-around', }}>
-                                    <RadioButtonCustom label="Orange money" selected={selectedOptionSenegal === "orange"} onSelect={() => handleSelectOption("orange")} />
-                                    <RadioButtonCustom label="Wave" selected={selectedOptionSenegal === 'wave'} onSelect={() => handleSelectOption('wave')} />
+                                <Text
+                                    style={{
+                                        fontFamily: "RobotoSerif_400Regular",
+                                        fontSize: 11,
+                                        color: "gray",
+                                    }}
+                                >
+                                    Choisir votre option d'envoie vers le senegal
+                                </Text>
+                                <View
+                                    style={{
+                                        width: "100%",
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        justifyContent: "space-around",
+                                    }}
+                                >
+                                    <RadioButtonCustom
+                                        label="Orange money"
+                                        selected={selectedOptionSenegal === "orange"}
+                                        onSelect={() => handleSelectOption("orange")}
+                                    />
+                                    <RadioButtonCustom
+                                        label="Wave"
+                                        selected={selectedOptionSenegal === "wave"}
+                                        onSelect={() => handleSelectOption("wave")}
+                                    />
                                 </View>
                             </View>
-                        }
+                        )}
 
                         <View style={styles.inputContainer}>
-                            {selectedOption == "Republique du Congo" ?
+                            {selectedOption == "Republique du Congo" ? (
                                 <Text style={styles.iconStyle}>+242 |</Text>
-                                :
-                                selectedOption == "Senegal" ?
-                                    <Text style={styles.iconStyle}>+221 |</Text> :
-                                    <Icon name="phone" size={15} color="grey" style={styles.iconStyle} />
-                            }
+                            ) : selectedOption == "Senegal" ? (
+                                <Text style={styles.iconStyle}>+221 |</Text>
+                            ) : (
+                                <Icon
+                                    name="phone"
+                                    size={15}
+                                    color="grey"
+                                    style={styles.iconStyle}
+                                />
+                            )}
                             <TextInput
                                 style={styles.input}
                                 placeholder="Telephone du destinateur"
@@ -821,7 +1056,12 @@ const DashBoardScreen = ({ navigation }) => {
                         </View>
 
                         <View style={styles.inputContainer}>
-                            <Icon name="money" size={15} color="grey" style={styles.iconStyle} />
+                            <Icon
+                                name="money"
+                                size={15}
+                                color="grey"
+                                style={styles.iconStyle}
+                            />
                             <TextInput
                                 style={styles.input}
                                 placeholder="Saisir le montant"
@@ -831,7 +1071,10 @@ const DashBoardScreen = ({ navigation }) => {
                                 onChangeText={setMontant}
                             />
                         </View>
-                        <TouchableOpacity style={styles.button} onPress={() => setSendResumeModal(true)} >
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={() => setSendResumeModal(true)}
+                        >
                             <Text style={styles.buttonText}>Envoyer</Text>
                         </TouchableOpacity>
                     </View>
@@ -847,12 +1090,25 @@ const DashBoardScreen = ({ navigation }) => {
                 onChange={handleSheetChangesRetirer}
             >
                 <View style={styles.modalContent}>
-                    <Text style={{ fontSize: 17, paddingBottom: 20, color: 'gray', fontFamily: "RobotoSerif_400Regular", }}>RETIRER DE L'ARGENT</Text>
-                    {verifPass ?
-
+                    <Text
+                        style={{
+                            fontSize: 17,
+                            paddingBottom: 20,
+                            color: "gray",
+                            fontFamily: "RobotoSerif_400Regular",
+                        }}
+                    >
+                        RETIRER DE L'ARGENT
+                    </Text>
+                    {verifPass ? (
                         <>
                             <View style={styles.inputContainer}>
-                                <Icon name="money" size={15} color="grey" style={styles.iconStyle} />
+                                <Icon
+                                    name="money"
+                                    size={15}
+                                    color="grey"
+                                    style={styles.iconStyle}
+                                />
                                 <TextInput
                                     style={styles.input}
                                     placeholder="Saisir le montant"
@@ -865,15 +1121,22 @@ const DashBoardScreen = ({ navigation }) => {
                             {/* <TouchableOpacity style={styles.button} onPress={() => setVeerifPass(false)} >
                                 <Text style={styles.buttonText}>Valider</Text>
                             </TouchableOpacity> */}
-                            <TouchableOpacity style={styles.button} onPress={() => handleRetirer()} >
+                            <TouchableOpacity
+                                style={styles.button}
+                                onPress={() => handleRetirer()}
+                            >
                                 <Text style={styles.buttonText}>Valider</Text>
                             </TouchableOpacity>
                         </>
-
-                        :
+                    ) : (
                         <>
                             <View style={styles.inputContainer}>
-                                <Icon name="lock" size={20} color="grey" style={styles.iconStyle} />
+                                <Icon
+                                    name="lock"
+                                    size={20}
+                                    color="grey"
+                                    style={styles.iconStyle}
+                                />
                                 <TextInput
                                     style={styles.input}
                                     placeholder="Mot de passe"
@@ -883,19 +1146,37 @@ const DashBoardScreen = ({ navigation }) => {
                                     style={styles.eyeIcon}
                                     onPress={() => setPasswordVisible(!passwordVisible)}
                                 >
-                                    <Icon name={passwordVisible ? 'eye' : 'eye-slash'} size={20} color="gray" />
+                                    <Icon
+                                        name={passwordVisible ? "eye" : "eye-slash"}
+                                        size={20}
+                                        color="gray"
+                                    />
                                 </TouchableOpacity>
                             </View>
-                            <View style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-                                <TouchableOpacity style={styles.buttonAnnul} onPress={() => setVeerifPass(true)} >
+                            <View
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    width: "100%",
+                                }}
+                            >
+                                <TouchableOpacity
+                                    style={styles.buttonAnnul}
+                                    onPress={() => setVeerifPass(true)}
+                                >
                                     <Text style={styles.buttonTextAnnul}>Retour</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.buttonRetirer} onPress={() => setVeerifPass(false)} >
+                                <TouchableOpacity
+                                    style={styles.buttonRetirer}
+                                    onPress={() => setVeerifPass(false)}
+                                >
                                     <Text style={styles.buttonText}>Retirer</Text>
                                 </TouchableOpacity>
                             </View>
                         </>
-                    }
+                    )}
                 </View>
             </BottomSheetModal>
             {/* ==========================Fin Retirer l'argent=========================================== */}
@@ -908,69 +1189,123 @@ const DashBoardScreen = ({ navigation }) => {
                 onChange={handleSheetChangesCrediter}
             >
                 <View style={styles.modalContent}>
-
-                    {
-                        choixpayement == "" ?
-                            <>
-                                <Text style={{ fontSize: 12, paddingBottom: 20, color: 'gray', fontFamily: "RobotoSerif_400Regular", }}>CHOISISSEZ VOTRE MOYEN DE PAYEMENT</Text>
-                                <View style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', width: '100%' }}>
-                                    <TouchableOpacity onPress={() => setChoixPayement("1")}>
-                                        <Image
-                                            source={require("../../assets/images/mtn.png")}
-                                            style={{ width: 100, height: 70, borderRadius: 10 }} />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity  >
-                                        <Image
-                                            source={require("../../assets/images/airtel.png")}
-                                            style={{ width: 100, height: 70, borderRadius: 10 }} />
-                                    </TouchableOpacity>
+                    {choixpayement == "" ? (
+                        <>
+                            <Text
+                                style={{
+                                    fontSize: 12,
+                                    paddingBottom: 20,
+                                    color: "gray",
+                                    fontFamily: "RobotoSerif_400Regular",
+                                }}
+                            >
+                                CHOISISSEZ VOTRE MOYEN DE PAYEMENT
+                            </Text>
+                            <View
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "space-evenly",
+                                    alignItems: "center",
+                                    flexDirection: "row",
+                                    width: "100%",
+                                }}
+                            >
+                                <TouchableOpacity onPress={() => setChoixPayement("1")}>
+                                    <Image
+                                        source={require("../../assets/images/mtn.png")}
+                                        style={{ width: 100, height: 70, borderRadius: 10 }}
+                                    />
+                                </TouchableOpacity>
+                                <TouchableOpacity>
+                                    <Image
+                                        source={require("../../assets/images/airtel.png")}
+                                        style={{ width: 100, height: 70, borderRadius: 10 }}
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                        </>
+                    ) : choixpayement == "1" ? (
+                        <>
+                            <Text
+                                style={{
+                                    fontSize: 17,
+                                    paddingBottom: 10,
+                                    color: "gray",
+                                    fontFamily: "RobotoSerif_400Regular",
+                                }}
+                            >
+                                EFFECTUEZ UN DEPOT
+                            </Text>
+                            <Text
+                                style={{
+                                    fontSize: 13,
+                                    paddingBottom: 20,
+                                    fontWeight: "bold",
+                                    color: "gray",
+                                    textAlign: "center",
+                                    fontFamily: "RobotoSerif_400Regular",
+                                }}
+                            >
+                                Assurez-vous d'avoir un compte au préalable avec le même numéro
+                                de téléphone ou la transaction sera impossible.
+                            </Text>
+                            <View
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "space-evenly",
+                                    alignItems: "center",
+                                    flexDirection: "row",
+                                    width: "100%",
+                                }}
+                            >
+                                <View style={styles.inputContainer}>
+                                    <Icon
+                                        name="money"
+                                        size={15}
+                                        color="grey"
+                                        style={styles.iconStyle}
+                                    />
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder="Saisir le montant"
+                                        keyboardType="numeric"
+                                        autoCapitalize="none"
+                                        value={montantCrediter}
+                                        onChangeText={setMontantCrediter}
+                                    />
                                 </View>
-                            </>
-                            :
-                            choixpayement == "1" ?
-                                <>
-                                    <Text style={{ fontSize: 17, paddingBottom: 10, color: 'gray', fontFamily: "RobotoSerif_400Regular", }}>EFFECTUEZ UN DEPOT</Text>
-                                    <Text style={{ fontSize: 13, paddingBottom: 20, fontWeight: 'bold', color: 'gray', textAlign: 'center', fontFamily: "RobotoSerif_400Regular" }}>
-                                        Assurez-vous d'avoir un compte au préalable avec le même numéro de téléphone ou la transaction sera impossible.
-                                    </Text>
-                                    <View style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', width: '100%' }}>
-                                        <View style={styles.inputContainer}>
-                                            <Icon name="money" size={15} color="grey" style={styles.iconStyle} />
-                                            <TextInput
-                                                style={styles.input}
-                                                placeholder="Saisir le montant"
-                                                keyboardType="numeric"
-                                                autoCapitalize="none"
-                                                value={montantCrediter}
-                                                onChangeText={setMontantCrediter}
-                                            />
-                                        </View>
-
-                                    </View>
-                                    <View style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-                                        <TouchableOpacity style={styles.buttonAnnul} onPress={() => setChoixPayement("")} >
-                                            <Text style={styles.buttonTextAnnul}>Retour</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={styles.buttonRetirer} onPress={() => handleCrediter()} >
-                                            <Text style={styles.buttonText}>Valider</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </>
-                                :
-                                <>
-
-                                </>
-                    }
-                    <View>
-
-                    </View>
+                            </View>
+                            <View
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    width: "100%",
+                                }}
+                            >
+                                <TouchableOpacity
+                                    style={styles.buttonAnnul}
+                                    onPress={() => setChoixPayement("")}
+                                >
+                                    <Text style={styles.buttonTextAnnul}>Retour</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={styles.buttonRetirer}
+                                    onPress={() => handleCrediter()}
+                                >
+                                    <Text style={styles.buttonText}>Valider</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </>
+                    ) : (
+                        <></>
+                    )}
+                    <View></View>
                 </View>
             </BottomSheetModal>
             {/* ==========================fin Crediter  l'argent=========================================== */}
-
-
-        </BottomSheetModalProvider>
-
+        </BottomSheetModalProvider >
     );
 };
 
@@ -1004,7 +1339,7 @@ const styles = StyleSheet.create({
     },
     container_image: {
         // flex: 0.6,
-        height: '53%',
+        height: "53%",
         justifyContent: "flex-start",
         alignItems: "center",
         padding: 20,
@@ -1083,7 +1418,7 @@ const styles = StyleSheet.create({
     },
     transaction: {
         // flex: 0.5,
-        height: '49%',
+        height: "49%",
         paddingTop: 10,
         // paddingHorizontal: 20,
     },
@@ -1092,14 +1427,13 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         paddingHorizontal: 20,
-
     },
     transactionPillule: {
         justifyContent: "center",
         display: "flex",
         backgroundColor: "gray",
         borderRadius: 20,
-        alignItems: 'center'
+        alignItems: "center",
     },
     transcationListe: {
         marginTop: 10,
@@ -1111,142 +1445,151 @@ const styles = StyleSheet.create({
         borderBottomWidth: 0.3,
         borderColor: "#ccc",
         marginHorizontal: 20,
-
     },
     modal: {
-        justifyContent: 'flex-end',
+        justifyContent: "flex-end",
         margin: 0,
         // padding: 8
     },
     modalContent: {
-        backgroundColor: 'white',
+        backgroundColor: "white",
         padding: 20,
         paddingBottom: 20,
         marginBottom: 20,
-        alignItems: 'center',
+        alignItems: "center",
         borderRadius: 4,
-        borderColor: 'rgba(0, 0, 0, 0.1)',
+        borderColor: "rgba(0, 0, 0, 0.1)",
     },
     inputContainer2: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderColor: 'gray',
+        flexDirection: "row",
+        alignItems: "center",
+        borderColor: "gray",
         borderWidth: 0.6,
         marginBottom: 20,
         borderRadius: 100,
-        paddingVertical: 12
+        paddingVertical: 12,
     },
     inputContainer3: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderColor: 'gray',
+        flexDirection: "row",
+        alignItems: "center",
+        borderColor: "gray",
         borderWidth: 0.6,
         marginBottom: 20,
         borderRadius: 100,
-        paddingVertical: 12
+        paddingVertical: 12,
     },
     iconStyle: {
         paddingHorizontal: 10,
-        color: 'grey'
+        color: "grey",
     },
     inputContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderColor: 'gray',
+        flexDirection: "row",
+        alignItems: "center",
+        borderColor: "gray",
         borderWidth: 0.6,
         marginBottom: 20,
         borderRadius: 100,
-        width: "100%"
+        width: "100%",
     },
     input: {
         flex: 1,
         height: 50,
         // paddingHorizontal: 10,
-        fontFamily: 'RobotoSerif_400Regular',
+        fontFamily: "RobotoSerif_400Regular",
     },
     button: {
         backgroundColor: default_color.orange,
         paddingVertical: 5,
-        alignItems: 'center',
+        alignItems: "center",
         borderRadius: 100,
-        width: "100%"
+        width: "100%",
     },
     buttonRetirer: {
         backgroundColor: default_color.orange,
         paddingVertical: 3,
-        alignItems: 'center',
+        alignItems: "center",
         borderRadius: 100,
-        width: "50%"
+        width: "50%",
     },
     buttonAnnul: {
         marginVertical: 2,
         backgroundColor: "transparent",
         paddingVertical: 3,
-        alignItems: 'center',
+        alignItems: "center",
         borderRadius: 100,
         width: "40%",
-        borderWidth: 0.5
+        borderWidth: 0.5,
     },
     buttonEnvoie: {
         // backgroundColor: default_color.orange,
         paddingVertical: 3,
-        alignItems: 'center',
+        alignItems: "center",
         borderRadius: 100,
         width: "40%",
     },
     buttonRetour: {
-        backgroundColor: 'white',
+        backgroundColor: "white",
         paddingVertical: 3,
-        alignItems: 'center',
+        alignItems: "center",
         borderRadius: 100,
         width: "40%",
         // borderWidth: 0.5,
-        fontFamily: 'RobotoSerif_400Regular',
-
+        fontFamily: "RobotoSerif_400Regular",
     },
     buttonEnvoieDec: {
         backgroundColor: default_color.orange,
         paddingVertical: 3,
-        alignItems: 'center',
+        alignItems: "center",
         borderRadius: 100,
         width: "40%",
     },
     buttonRetourDec: {
-        backgroundColor: 'white',
-        paddingVertical: 3,
-        alignItems: 'center',
-        borderRadius: 100,
+        backgroundColor: "white",
+        alignItems: "center",
         width: "40%",
+        fontFamily: "RobotoSerif_400Regular",
+
+
+
+
+    },
+    buttonRetourDec2: {
+        backgroundColor: "white",
+        alignItems: "center",
+        width: "40%",
+        fontFamily: "RobotoSerif_400Regular",
         borderWidth: 0.5,
-        fontFamily: 'RobotoSerif_400Regular',
+        borderRadius: 50
+
+
 
     },
     buttonTextAnnul: {
-        color: 'black',
+        color: "black",
         fontSize: 15,
         paddingVertical: 4,
         width: "100%",
-        textAlign: 'center',
-        fontFamily: 'RobotoSerif_400Regular',
+        textAlign: "center",
+        fontFamily: "RobotoSerif_400Regular",
     },
     buttonText: {
-        color: 'white',
+        color: "white",
         fontSize: 15,
         paddingVertical: 4,
         width: "100%",
-        textAlign: 'center',
-        fontFamily: 'RobotoSerif_400Regular',
+        textAlign: "center",
+        fontFamily: "RobotoSerif_400Regular",
     },
     buttonText2: {
-        color: 'black',
+        color: "black",
         fontSize: 15,
         paddingVertical: 4,
         width: "100%",
-        textAlign: 'center',
-        fontFamily: 'RobotoSerif_400Regular',
+        textAlign: "center",
+        fontFamily: "RobotoSerif_400Regular",
     },
     modalContentSend: {
-        backgroundColor: 'white',
+        backgroundColor: "white",
         paddingVertical: 10,
         paddingHorizontal: 20,
         borderBottomLeftRadius: 10,
@@ -1254,84 +1597,83 @@ const styles = StyleSheet.create({
     },
 
     modalContentSend2: {
-        backgroundColor: 'white',
-        paddingVertical: 15,
+        backgroundColor: "white",
+        paddingVertical: 10,
         paddingHorizontal: 20,
-        borderRadius: 10
+        borderRadius: 10,
     },
 
     modalContainerSend: {
-        backgroundColor: 'white.orange',
+        backgroundColor: "white.orange",
         borderRadius: 10,
         // padding: 20,
     },
 
     modalContainerChargement: {
-        backgroundColor: 'transparent',
+        backgroundColor: "transparent",
         // borderRadius: 10,
-        width: '100%',
-        height: '100%',
-        alignItems: 'center',
-        justifyContent: 'center',
+        width: "100%",
+        height: "100%",
+        alignItems: "center",
+        justifyContent: "center",
     },
     modalContentChargement: {
-        backgroundColor: 'transparent',
+        backgroundColor: "transparent",
         // padding: 23,
         // borderRadius: 10,
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
+        justifyContent: "center",
+        alignItems: "center",
     },
 
     modalContainer: {
-        backgroundColor: 'transparent',
+        backgroundColor: "transparent",
         borderRadius: 10,
         padding: 20,
     },
 
     checkmarkContainer: {
-        backgroundColor: 'transparent',
+        backgroundColor: "transparent",
         width: 100,
         height: 100,
         borderRadius: 50,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        alignSelf: 'center',
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        alignSelf: "center",
         marginBottom: 5,
     },
     checkmark: {
         width: 100,
         height: 100,
-        backgroundColor: 'transparent',
+        backgroundColor: "transparent",
         borderRadius: 50,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
     },
     modalText2: {
         fontSize: 15,
         marginBottom: 1,
-        textAlign: 'center',
-        color: '#00b33c',
+        textAlign: "center",
+        color: "#00b33c",
         // color: 'white',
-        fontWeight: 'bold'
-
+        fontWeight: "bold",
     },
     modalText3: {
         fontSize: 15,
         marginBottom: 1,
-        textAlign: 'center',
-        color: '#bf1717',
+        textAlign: "center",
+        color: "#bf1717",
         // color: 'rgba(124,23,31,0.55)',
-        fontWeight: 'bold'
+        fontWeight: "bold",
     },
     eyeIcon: {
         padding: 10,
     },
     contentContainer: {
         flex: 1,
-        alignItems: 'center',
+        alignItems: "center",
     },
     textInputContainer: {
         marginBottom: 2,
@@ -1341,11 +1683,10 @@ const styles = StyleSheet.create({
         height: 40, // Ajustez la hauteur selon votre besoin
         borderRadius: 5,
         borderWidth: 1,
-        borderColor: 'gray',
-        textAlign: 'center',
+        borderColor: "gray",
+        textAlign: "center",
         fontSize: 20,
     },
-
 });
 
 // export default DashBoardScreen;

@@ -16,6 +16,8 @@ import { retrieveValue } from '../../utils/utils.js'
 const SettingsScreens = ({ navigation }) => {
 
     const user = useSelector(state => state.auth.user);
+    const isCodeAcces = useSelector(state => state.auth.isCodeAcces);
+
     const [passwordVisible, setPasswordVisible] = useState(false);
 
     let [fontsLoaded] = useFonts({
@@ -79,14 +81,14 @@ const SettingsScreens = ({ navigation }) => {
                     </View>
                     <View style={styles.transcationListe}>
                         <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 10, alignItems: "center" }}>
-                            <Icon name="envelope" color="grey" size={20} style={{ marginRight: 18 }} />
+                            <Icon name="envelope" color="grey" size={18} style={{ marginRight: 18 }} />
                             <View style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Text style={{ fontFamily: "RobotoSerif_400Regular", }}>{user && user.email}</Text>
                                 <Text style={{ color: 'gray', fontSize: 8, fontFamily: "RobotoSerif_400Regular" }}>Adresse email</Text>
                             </View>
                         </View>
                     </View>
-                    {retrieveValue('codeAccesVerif') ?
+                    {isCodeAcces ?
                         <TouchableOpacity style={styles.transcationListe} onPress={() => navigation.navigate('CodeVerif')}>
                             <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 10, justifyContent: 'space-between', alignItems: "center", width: "90%" }}>
                                 <Icon name="lock" color="grey" size={20} style={{ marginRight: 18 }} />
