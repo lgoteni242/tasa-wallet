@@ -20,8 +20,8 @@ const CustomModalPicker = ({ options, onSelect, visible, onClose, titre }) => {
             animationOut="fadeOut"
         >
             <View style={styles.modalContainer}>
-                <View style={{ borderTopEndRadius: 10, borderTopStartRadius: 10, paddingTop: 5, borderBottomWidth: 0.5 }}>
-                    <Text style={{ textAlign: 'center', fontSize: 18, paddingBottom: 10, color: '#7f7f7f', fontFamily: 'RobotoSerif_400Regular' }}>{titre}</Text>
+                <View style={{ borderTopEndRadius: 10, borderTopStartRadius: 10, paddingTop: 5, borderBottomWidth: 0.2 }}>
+                    <Text style={{ textAlign: 'center', fontSize: 15, paddingBottom: 10, color: '#7f7f7f', fontFamily: 'RobotoSerif_400Regular' }}>{titre}</Text>
                 </View>
                 <View style={styles.modalContent}>
                     {options.map((option, index) => (
@@ -30,7 +30,7 @@ const CustomModalPicker = ({ options, onSelect, visible, onClose, titre }) => {
                             style={styles.optionItem}
                             onPress={() => handleSelectOption(option.label)}
                         >
-                            <Text style={styles.optionLabel}>{flag(option.flag)}</Text>
+                            {option.flag && <Text style={styles.optionLabel}>{flag(option.flag)}</Text>}
                             <Text style={styles.optionLabel}>{option.label}</Text>
                         </TouchableOpacity>
                     ))}

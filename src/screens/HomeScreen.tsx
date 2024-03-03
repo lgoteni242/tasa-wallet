@@ -264,14 +264,6 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         // padding: 20
     },
-    // inputContainer: {
-    //     flexDirection: 'row',
-    //     alignItems: 'center',
-    //     borderColor: 'gray',
-    //     borderWidth: 0.6,
-    //     marginBottom: 20,
-    //     borderRadius: 100,
-    // },
 
     inputContainer: {
         flexDirection: 'row',
@@ -281,7 +273,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         height: 55,
         width: '100%',
-        // borderRadius: 100,
+        borderRadius: 100,
     },
     iconStyle: {
         backgroundColor: '#7f7f7f',
@@ -289,8 +281,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         width: '15%',
         alignItems: 'center',
-        borderTopLeftRadius: 2,
-        borderBottomLeftRadius: 2
+        borderTopRightRadius: 2,
+        borderBottomRightRadius: 2,
+        borderRadius: 100,
+
     },
     iconStyle2: {
         backgroundColor: 'gray',
@@ -298,8 +292,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         width: '15%',
         alignItems: 'center',
-        borderTopLeftRadius: 2,
-        borderBottomLeftRadius: 2
+        borderTopRightRadius: 2,
+        borderBottomRightRadius: 2,
+        borderRadius: 100,
+
     },
     iconStyle3: {
         // backgroundColor: 'white',
@@ -319,8 +315,8 @@ const styles = StyleSheet.create({
         borderWidth: 0.6,
         marginBottom: 20,
         paddingVertical: 15,
-        // borderRadius: 100,
-        borderRadius: 2,
+        borderRadius: 100,
+        // borderRadius: 2,
         height: 55,
 
     },
@@ -351,8 +347,8 @@ const styles = StyleSheet.create({
         backgroundColor: default_color.orange,
         paddingVertical: 7,
         alignItems: 'center',
-        // borderRadius: 100,
-        borderRadius: 2,
+        borderRadius: 100,
+        // borderRadius: 2,
         fontFamily: 'RobotoSerif_400Regular',
     },
     buttonText: {
