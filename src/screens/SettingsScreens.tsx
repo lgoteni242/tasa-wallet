@@ -18,6 +18,7 @@ const SettingsScreens = ({ navigation }) => {
     const user = useSelector(state => state.auth.user);
     const isCodeAcces = useSelector(state => state.auth.isCodeAcces);
 
+    // console.error(user.profile_photo_url)
     const [passwordVisible, setPasswordVisible] = useState(false);
 
     let [fontsLoaded] = useFonts({
@@ -49,8 +50,8 @@ const SettingsScreens = ({ navigation }) => {
 
             <View style={styles.container_image}>
                 <View style={styles.container_logo}>
-                    <View style={{ borderColor: 'white', borderWidth: 2, borderRadius: 100 }}>
-                        <Image source={require('../../assets/images/user.jpg')} style={styles.image} />
+                    <View style={{ borderColor: 'white', borderWidth: 2, borderRadius: 100, }}>
+                        {user && <Image source={{ uri: user.profile_photo_url }} style={styles.image} />}
                     </View>
                 </View>
                 <Text style={{ color: 'white', fontSize: 12, fontFamily: 'RobotoSerif_400Regular', marginBottom: 20, textTransform: 'uppercase' }}>{user && user.prenom} {user && user.name}</Text>
@@ -270,8 +271,8 @@ const styles = StyleSheet.create({
 
     },
     image: {
-        width: 50,
-        height: 50,
+        width: 60,
+        height: 60,
         backgroundColor: 'white',
         borderRadius: 100
     },

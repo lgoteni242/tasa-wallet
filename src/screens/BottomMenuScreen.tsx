@@ -5,8 +5,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import HomeScreen from "./DashBoardScreen";
 import SettingsScreen from './SettingsScreens';
 import HistoriqueScreen from './HistoriqueScreen';
-import UserScreen from './UserScreen';
 import default_color from '../styles/color';
+import ScrollViewAnimatedHeader from './SettingScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -16,10 +16,9 @@ const CustomTabIcon = ({ name, size, color, focused }) => {
             flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
-            // backgroundColor,
             borderRadius: 20,
             paddingVertical: 6,
-            paddingHorizontal: 27,
+            paddingHorizontal: 30,
             backgroundColor: focused ? default_color.orange : 'transparent',
         }}>
             <Icon name={name} size={size} color={color} />
@@ -49,14 +48,15 @@ const BottomTabNavigator = () => {
                 tabBarLabel: () => null,
                 tabBarStyle: {
                     position: 'absolute',
-                    // bottom: 13,
-                    // left: 10,
-                    // right: 10,
-                    elevation: 5,
+                    bottom: 5,
+                    left: 10,
+                    right: 10,
+                    // elevation: 5,
                     backgroundColor: '#ffffff',
-                    // borderRadius: 30,
+                    borderRadius: 30,
                     height: 47,
-                    shadowColor: '#7F5DF0',
+                    // shadowColor: '#7F5DF0',
+                    shadowColor: 'rgba(151,34,13,1)',
                     shadowOffset: {
                         width: 0,
                         height: 10,
@@ -69,7 +69,7 @@ const BottomTabNavigator = () => {
             <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
             <Tab.Screen name="Pass" component={HistoriqueScreen} options={{ headerShown: false }} />
             {/* <Tab.Screen name="Profile" component={UserScreen} options={{ headerShown: false }} /> */}
-            <Tab.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
+            <Tab.Screen name="Settings" component={ScrollViewAnimatedHeader} options={{ headerShown: false }} />
         </Tab.Navigator>
     );
 };

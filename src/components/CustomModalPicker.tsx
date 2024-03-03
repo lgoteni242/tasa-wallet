@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import Modal from 'react-native-modal';
-import RadioButton from '../components/RadioButton';
 import default_color from "../styles/color";
 
 
@@ -16,16 +14,14 @@ const CustomModalPicker = ({ options, onSelect, visible, onClose, titre }) => {
 
     const flag = countryCode => String.fromCodePoint(...[...countryCode.toUpperCase()].map(c => 0x1F1A5 + c.charCodeAt()));
 
-
-
     return (
         <Modal
             coverScreen={true} backdropOpacity={0.3} onBackdropPress={onClose} isVisible={visible} animationIn="fadeIn"
             animationOut="fadeOut"
         >
             <View style={styles.modalContainer}>
-                <View style={{ backgroundColor: default_color.orange, borderTopEndRadius: 10, borderTopStartRadius: 10, paddingTop: 5 }}>
-                    <Text style={{ textAlign: 'center', fontSize: 18, paddingBottom: 10, fontWeight: 'bold', color: 'white' }}>{titre}</Text>
+                <View style={{ borderTopEndRadius: 10, borderTopStartRadius: 10, paddingTop: 5, borderBottomWidth: 0.5 }}>
+                    <Text style={{ textAlign: 'center', fontSize: 18, paddingBottom: 10, color: '#7f7f7f', fontFamily: 'RobotoSerif_400Regular' }}>{titre}</Text>
                 </View>
                 <View style={styles.modalContent}>
                     {options.map((option, index) => (
@@ -40,7 +36,7 @@ const CustomModalPicker = ({ options, onSelect, visible, onClose, titre }) => {
                     ))}
                 </View>
             </View>
-        </Modal>
+        </Modal >
     );
 };
 
@@ -48,18 +44,15 @@ const styles = StyleSheet.create({
     modalContainer: {
         backgroundColor: 'white',
         borderRadius: 10,
-        // padding: 20,
+        // padding: 10,
     },
     optionLabel: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
         marginVertical: 5,
-        color: 'gray',
-        paddingHorizontal: 16
+        color: default_color.textGrayColor,
+        paddingHorizontal: 16,
+        fontFamily: 'RobotoSerif_400Regular',
     },
     modalContent: {
-        backgroundColor: 'white',
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
         borderRadius: 10,
@@ -69,11 +62,8 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        // justifyContent: 'space-around',
-        paddingVertical: 2,
-        // borderBottomWidth: 0.5,
         // backgroundColor: '#F8F8F8',
-        marginBottom: 2,
+
     },
     optionText: {
         fontSize: 18,

@@ -27,7 +27,6 @@ import {
 } from "@gorhom/bottom-sheet";
 import {
     ActivityIndicator,
-    ScrollView,
     StatusBar,
     StyleSheet,
     Text,
@@ -35,6 +34,7 @@ import {
     TouchableOpacity,
     View,
     Image,
+    FlatList,
 } from "react-native";
 import default_color from "../styles/color";
 import Modal from "react-native-modal";
@@ -42,68 +42,61 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { logout } from "../store/actions/authActions";
 import { connect, useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
-// import { useDispatch } from 'react-redux';
 import axios from "axios";
 import OTPTextInput from "react-native-otp-textinput";
 import RadioButtonCustom from "../components/RadioButtonCustom";
 import * as SecureStore from "expo-secure-store";
+import DateTimePicker from '@react-native-community/datetimepicker';
+import UserSkeletonLoader from "../components/Skeleton/UserSkeletonLoader";
+import Loader1 from '../components/Loader1';
 
-const dataListe = [
-    {
-        id: 1,
-        name: "Levi Goteni",
-        heure: "13:15",
-        montant: "1200",
-        flag: "cg",
-    },
-    {
-        id: 2,
-        name: "Chris N'gakosso",
-        heure: "17:55",
-        montant: "30000",
-        flag: "sn",
-    },
-    {
-        id: 3,
-        name: "Mik Divin",
-        heure: "20:18",
-        montant: "400",
-        flag: "cg",
-    },
-    {
-        id: 4,
-        name: "Paul Mboungou",
-        heure: "22:45",
-        montant: "5600",
-        flag: "sn",
-    },
-    {
-        id: 5,
-        name: "Delice Kissangou",
-        heure: "00:05",
-        montant: "400",
-        flag: "cg",
-    },
-    {
-        id: 6,
-        name: "Gomez Itoua",
-        heure: "12:19",
-        montant: "1300",
-        flag: "sn",
-    },
-];
+
 
 const DashBoardScreen = ({ navigation }) => {
+
+    const historique = async (mois: any, jour: any, annee: any, token: string) => {
+        setIsLoadingHistorique(true)
+        try {
+            const params = {
+                day: jour,
+                month: mois,
+                year: annee,
+                token: token
+            };
+            const response = await axios.get(
+                'https://walet.tasa.pro/api/history',
+                {
+                    params: params,
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                }
+            );
+            // Traiter la réponse ici
+            const data = response.data.datas;
+            setdataListe(data);
+            setIsLoadingHistorique(false)
+            // return data; // Vous pouvez retourner les données ici si nécessaire
+        } catch (error) {
+            // Gérer les erreurs ici
+            console.error('Erreur lors de la récupération des données:', error);
+            setIsLoading(false); // Assurez-vous de réinitialiser isLoading en cas d'erreur
+            throw error;
+        }
+    };
     // =================Chargement============================
     const user = useSelector((state) => state.auth.user);
     const token = useSelector((state) => state.auth.token);
     const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
     const isCodeAcces = useSelector((state) => state.auth.isCodeAcces);
+    const [dataListe, setdataListe] = useState([])
 
     const otpInputRef = useRef(null);
     const [showOpt, setShowOpt] = useState(false);
+    const [showOptRetirer, setShowOptRetirer] = useState(false);
     const [optCode, setOptCode] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [isLoadingHistorique, setIsLoadingHistorique] = useState(false);
     const [deconnexionConf, setDeconnexionConf] = useState(false);
     // =======================================================
     // ================Verify send money======================
@@ -129,6 +122,7 @@ const DashBoardScreen = ({ navigation }) => {
     const [codePays, setCodePays] = useState("");
     const [modalClock, setModalClock] = useState(true);
 
+
     const dispatch = useDispatch();
     const handleLogout = () => {
         dispatch(logout()); // Déclencher la déconnexion en dispatchant l'action logout
@@ -140,11 +134,11 @@ const DashBoardScreen = ({ navigation }) => {
         navigation.replace("Home");
     };
 
-    useEffect(() => {
-        if (isLoggedIn == false) {
-            handleLogout2()
-        }
-    }, [isLoggedIn])
+    // useEffect(() => {
+    //     if (isLoggedIn == false) {
+    //         handleLogout2()
+    //     }
+    // }, [isLoggedIn])
 
     // Send Money
     // ref
@@ -245,12 +239,13 @@ const DashBoardScreen = ({ navigation }) => {
         return Math.random() < 0.5;
     }
 
-    const flag = (countryCode: string) =>
-        String.fromCodePoint(
-            ...[...countryCode.toUpperCase()].map((c) => {
-                return 0x1f1a5 + c.charCodeAt();
-            })
-        );
+    const flag = (countryCode: string) => String.fromCodePoint(...[...countryCode.toUpperCase()].map(c => 0x1F1A5 + c.charCodeAt()));
+
+    // Utilise useEffect pour charger les transactions initiales lors de la connexion
+    useEffect(() => {
+        historique(month, day, year, token);
+    }, []);
+
 
     const handleSelect = (option: React.SetStateAction<string>) => {
         setSelectedOption(option);
@@ -294,6 +289,8 @@ const DashBoardScreen = ({ navigation }) => {
             </View>
         </Modal>;
     }
+
+
 
     const handleSend = () => {
         setIsLoading(true);
@@ -359,7 +356,7 @@ const DashBoardScreen = ({ navigation }) => {
                     await axios.post(
                         "https://walet.tasa.pro/api/withdrawal",
                         {
-                            montant: montantRetrait,
+                            montant: montantRetrait, code_otp: optCode,
                         },
                         {
                             headers: {
@@ -380,6 +377,28 @@ const DashBoardScreen = ({ navigation }) => {
         };
         sendMoney();
     };
+
+    const handleRetirerOpt = () => {
+        setIsLoading(true);
+        const checkData = async () => {
+            (async () => {
+                try {
+                    await axios.get("https://walet.tasa.pro/api/otp", {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+                    // setSendResumeModal(false);
+                    setIsLoading(false);
+                    handleCloseModalPressRetirer();
+                    setShowOptRetirer(true)
+                } catch (error) {
+                    console.log("levi goteni verification", error);
+                }
+            })();
+        };
+        checkData();
+    }
 
     const handleCrediter = () => {
         setIsLoading(true);
@@ -413,6 +432,8 @@ const DashBoardScreen = ({ navigation }) => {
         sendMoney();
     };
 
+
+
     const handleTextChange = (text: any) => {
         setOptCode(text);
     };
@@ -430,6 +451,7 @@ const DashBoardScreen = ({ navigation }) => {
         setModalClock(false);
     };
 
+
     return (
         <BottomSheetModalProvider>
             <View style={styles.container}>
@@ -443,7 +465,7 @@ const DashBoardScreen = ({ navigation }) => {
                     style={styles.container_image}
                 >
                     <View style={styles.container_logo}>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => navigation.navigate('Log')}>
                             <Icon name="user" size={20} color="white" />
                         </TouchableOpacity>
                         <Text style={styles.welcomMessage}>WALLET</Text>
@@ -582,57 +604,87 @@ const DashBoardScreen = ({ navigation }) => {
                             </Text>
                         </View>
                     </View>
-                    <ScrollView
-                        style={{ marginBottom: 60 }}
-                        showsVerticalScrollIndicator={false}
-                    >
-                        {dataListe.map((item) => (
-                            <View style={styles.transcationListe} key={item.id}>
-                                <View
-                                    style={{
-                                        display: "flex",
-                                        flexDirection: "row",
-                                        marginBottom: 10,
-                                    }}
-                                >
-                                    <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                        <Icon name="user-circle" size={40} color="gray" />
-                                    </TouchableOpacity>
-                                    <View
-                                        style={{ display: "flex", justifyContent: "space-between" }}
-                                    >
-                                        <Text
-                                            style={{
-                                                color: "gray",
-                                                fontFamily: "RobotoSerif_400Regular",
-                                            }}
-                                        >
-                                            {item.name}
-                                        </Text>
-                                        <Text
-                                            style={{
-                                                color: "gray",
-                                                fontFamily: "RobotoSerif_100Thin",
-                                            }}
-                                        >
-                                            {item.heure} PM
-                                        </Text>
-                                    </View>
-                                </View>
-                                <View>
-                                    <Text style={{ textAlign: "right" }}>{flag(item.flag)}</Text>
-                                    <Text
-                                        style={{
-                                            color: "gray",
-                                            fontFamily: "RobotoSerif_100Thin",
-                                        }}
-                                    >
-                                        {item.montant} Fcfa
+                    {isLoadingHistorique ?
+                        <>
+                            <UserSkeletonLoader />
+                            <UserSkeletonLoader />
+                            <UserSkeletonLoader />
+                            <UserSkeletonLoader />
+                            <UserSkeletonLoader />
+                        </> :
+                        <View
+                            style={{ marginBottom: 60 }}
+                        >
+                            {dataListe.length === 0 ? (
+                                <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90%' }}>
+                                    <Text style={{
+                                        textAlign: 'center', marginTop: 20, color: "gray",
+                                        fontFamily: "RobotoSerif_400Regular",
+                                        fontSize: 16
+                                    }}>
+                                        Aucune transaction
                                     </Text>
                                 </View>
-                            </View>
-                        ))}
-                    </ScrollView>
+
+                            ) : (
+                                <FlatList
+                                    data={dataListe}
+                                    renderItem={({ item }) => (
+                                        <View style={styles.transcationListe}>
+                                            <View
+                                                style={{
+                                                    display: "flex",
+                                                    flexDirection: "row",
+                                                    marginBottom: 10,
+                                                }}
+                                            >
+                                                <TouchableOpacity style={styles.iconShowbarTransaction}>
+                                                    <Icon name="user-circle" size={40} color="gray" />
+                                                </TouchableOpacity>
+                                                <View
+                                                    style={{ display: "flex", justifyContent: "space-between" }}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            color: "gray",
+                                                            fontFamily: "RobotoSerif_400Regular",
+                                                        }}
+                                                    >
+                                                        {item.recipient}
+                                                    </Text>
+                                                    <Text
+                                                        style={{
+                                                            color: "gray",
+                                                            fontFamily: "RobotoSerif_100Thin",
+                                                            // fontSize: 13
+                                                        }}
+                                                    >
+                                                        {item.transactionId}
+                                                        {/* {item.heure} PM */}
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                            <View>
+                                                <Text style={{ textAlign: 'right' }}>
+                                                    {flag(item.country_recipient)}
+                                                </Text>
+                                                <Text
+                                                    style={{
+                                                        color: "gray",
+                                                        fontFamily: "RobotoSerif_100Thin",
+                                                    }}
+                                                >
+                                                    {item.montant} Fcfa
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    )}
+                                    keyExtractor={(item, index) => index.toString()}
+                                />
+                            )}
+                        </View>
+                    }
+
                 </View>
                 {/*  =============================OTP CODE=============================== */}
 
@@ -640,6 +692,74 @@ const DashBoardScreen = ({ navigation }) => {
                     coverScreen={true}
                     backdropOpacity={0.3}
                     isVisible={showOpt}
+                    animationIn="fadeIn" // Animation d'entrée du haut
+                    animationOut="fadeOut"
+                >
+                    <View style={styles.modalContainerSend}>
+                        <View
+                            style={{
+                                backgroundColor: 'white',
+                                borderTopEndRadius: 10,
+                                borderTopStartRadius: 10,
+                                paddingTop: 5,
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    textAlign: "center",
+                                    fontSize: 18,
+                                    paddingBottom: 10,
+                                    marginBottom: 5,
+                                    color: "black",
+                                    fontFamily: "RobotoSerif_400Regular",
+                                    borderBottomWidth: 0.5
+                                }}
+                            >
+                                Saisir le code reçu par sms
+                            </Text>
+                        </View>
+                        <View style={styles.modalContentSend}>
+                            <OTPTextInput
+                                ref={otpInputRef}
+                                containerStyle={styles.textInputContainer}
+                                textInputStyle={styles.roundedTextInput}
+                                handleTextChange={handleTextChange}
+                                inputCount={4}
+                                keyboardType="numeric"
+                                tintColor={default_color.orange}
+                            />
+                            <View
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    justifyContent: "space-between",
+                                    paddingTop: 20,
+                                }}
+                            >
+                                <TouchableOpacity
+                                    style={styles.buttonRetourDec2}
+                                    onPress={() => {
+                                        setShowOpt(false);
+                                    }}
+                                >
+                                    <Text style={styles.buttonTextAnnul}>Annuler</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={styles.buttonEnvoieDec}
+                                    onPress={() => {
+                                        handleSendVerif();
+                                    }}
+                                >
+                                    <Text style={styles.buttonText}>Envoyer</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
+                <Modal
+                    coverScreen={true}
+                    backdropOpacity={0.3}
+                    isVisible={showOptRetirer}
                     animationIn="fadeIn" // Animation d'entrée du haut
                     animationOut="fadeOut"
                 >
@@ -687,7 +807,7 @@ const DashBoardScreen = ({ navigation }) => {
                                 <TouchableOpacity
                                     style={styles.buttonRetourDec2}
                                     onPress={() => {
-                                        setShowOpt(false);
+                                        setShowOptRetirer(false);
                                     }}
                                 >
                                     <Text style={styles.buttonTextAnnul}>Annuler</Text>
@@ -695,10 +815,10 @@ const DashBoardScreen = ({ navigation }) => {
                                 <TouchableOpacity
                                     style={styles.buttonEnvoieDec}
                                     onPress={() => {
-                                        handleSendVerif();
+                                        handleRetirer();
                                     }}
                                 >
-                                    <Text style={styles.buttonText}>Envoyer</Text>
+                                    <Text style={styles.buttonText}>Retirer</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -851,19 +971,11 @@ const DashBoardScreen = ({ navigation }) => {
                 >
                     <View style={styles.modalContainerChargement}>
                         <View style={styles.modalContentChargement}>
-                            {/* <Image
-                                source={require("../../assets/images/charger.gif")}
-                                style={{ width: 200, height: 200 }} /> */}
-                            <ActivityIndicator
-                                size={80}
-                                color={default_color.orange}
-                                animating={isLoading}
-                            />
+                            <Loader1 />
                         </View>
                     </View>
                 </Modal>
                 {/* =================================Verifie modal============================== */}
-
 
                 {/* ==================== Modal ro verife lock message =====================*/}
                 {!isCodeAcces &&
@@ -949,7 +1061,7 @@ const DashBoardScreen = ({ navigation }) => {
                 snapPoints={snapPoints}
                 onChange={handleSheetChanges}
             >
-                <BottomSheetScrollView>
+                <BottomSheetScrollView >
                     <View style={styles.modalContent}>
                         <Text
                             style={{
@@ -1123,7 +1235,7 @@ const DashBoardScreen = ({ navigation }) => {
                             </TouchableOpacity> */}
                             <TouchableOpacity
                                 style={styles.button}
-                                onPress={() => handleRetirer()}
+                                onPress={() => handleRetirerOpt()}
                             >
                                 <Text style={styles.buttonText}>Valider</Text>
                             </TouchableOpacity>
@@ -1546,7 +1658,7 @@ const styles = StyleSheet.create({
     buttonRetourDec: {
         backgroundColor: "white",
         alignItems: "center",
-        width: "40%",
+        width: "30%",
         fontFamily: "RobotoSerif_400Regular",
 
 
@@ -1556,7 +1668,7 @@ const styles = StyleSheet.create({
     buttonRetourDec2: {
         backgroundColor: "white",
         alignItems: "center",
-        width: "40%",
+        width: "30%",
         fontFamily: "RobotoSerif_400Regular",
         borderWidth: 0.5,
         borderRadius: 50

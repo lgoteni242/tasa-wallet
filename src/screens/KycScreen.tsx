@@ -40,9 +40,10 @@ const KycScreen = ({ navigation }) => {
             // const token = await getAuthToken();
             const formeData = new FormData();
             const imageName = generateUniqueImageName('tasa');
+            console.error(selfie)
 
             if (selectedOption == "CNI") {
-                formeData.append('tyep_doc', 'image/jpeg');
+                formeData.append('type_doc', selectedOption);
 
                 formeData.append('doc_one', {
                     uri: selfie,
@@ -56,15 +57,13 @@ const KycScreen = ({ navigation }) => {
                     type: 'image/jpeg', // Type de l'image, assurez-vous qu'il correspond au type réel de l'image
                 });
 
-                formeData.append('doc_two', {
+                formeData.append('doc_three', {
                     uri: versoPiece,
-                    name: imageName, // Nom de l'image, vous pouvez personnaliser cela
+                    name: imageName.jpeg, // Nom de l'image, vous pouvez personnaliser cela
                     type: 'image/jpeg', // Type de l'image, assurez-vous qu'il correspond au type réel de l'image
                 });
-
             } else {
-                formeData.append('tyep_doc', 'image/jpeg');
-
+                formeData.append('type_doc', selectedOption);
                 formeData.append('doc_one', {
                     uri: selfie,
                     name: imageName, // Nom de l'image, vous pouvez personnaliser cela
@@ -81,6 +80,7 @@ const KycScreen = ({ navigation }) => {
                 headers: {
                     'Authorization': `Bearer ${token}`, // Assurez-vous que le format de votre token est correct
                     'Content-Type': 'multipart/form-data',
+                    'Accept': 'application/json'
                 },
                 transformRequest: (data: FormData) => {
                     return data;
@@ -336,8 +336,8 @@ const KycScreen = ({ navigation }) => {
                                 <Text style={{ fontFamily: 'RobotoSerif_400Regular', fontSize: 11, color: "gray" }}>Choisir le moyen d'identification</Text>
                                 <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <RadioButtonCustom label="CNI" selected={selectedOption === "CNI"} onSelect={() => handleSelect("CNI")} />
-                                    <RadioButtonCustom label="Passport" selected={selectedOption === 'Passport'} onSelect={() => handleSelect('Passport')} />
-                                    <RadioButtonCustom label="Permis de conduite" selected={selectedOption === 'Permis de conduite'} onSelect={() => handleSelect('Permis de conduite')} />
+                                    <RadioButtonCustom label="PASSPORT" selected={selectedOption === 'PASSPORT'} onSelect={() => handleSelect('PASSPORT')} />
+                                    <RadioButtonCustom label="PERMIS DE CONDUITE" selected={selectedOption === 'DRIVERS'} onSelect={() => handleSelect('DRIVERS')} />
                                 </View>
                             </View>
                             {selectedOption == "CNI" ?

@@ -15,6 +15,9 @@ import CodeDeblockAppScreen from "./src/screens/CodeDeblockAppScreen";
 import { PersistGate } from "redux-persist/integration/react";
 import { AppState } from 'react-native';
 import * as NavigationBar from 'expo-navigation-bar';
+import { HandleChange } from './HandleChange';
+import LoginScree from "./src/screens/SettingScreen";
+import RegistrationForm from "./src/screens/RegistrationForm";
 
 
 const Stack = createStackNavigator();
@@ -22,12 +25,15 @@ const Stack = createStackNavigator();
 const Navigation = () => {
 
   NavigationBar.setBackgroundColorAsync('white');
+
   const isLoggedIn = useSelector((state) => {
     return state.auth.isLoggedIn;
   });
-  const hasPassword = useSelector((state) => {
+
+  const isCodeAcces = useSelector((state) => {
     return state.auth.isCodeAcces;
   });
+
   const isLock = useSelector((state) => {
     return state.auth.isLock;
   });
@@ -38,25 +44,19 @@ const Navigation = () => {
 
   // const _handleAppStateChange = async (nextAppState: string) => {
 
-  //   if (isLoggedIn && hasPassword == false) {
+  //   if (isLoggedIn && isCodeAcces == false) {
   //     if (
   //       appState.current.match(/inactive|background/) &&
   //       nextAppState === 'active'
   //     ) {
-  //       dispatch({ type: 'LOGOUT' });
-  //       clearTimeout(timerRef.current);
-  //     }
-  //     if (
-  //       appState.current.match(/active/) &&
-  //       nextAppState.match(/inactive|background/)
-  //     ) {
   //       timerRef.current = setTimeout(() => {
-  //         setLock(true);
-  //       }, 100); // 300000ms = 5 minutes
+  //         dispatch({ type: 'LOGOUT' });
+  //         clearTimeout(timerRef.current);
+  //       }, 300000);
   //     }
   //   }
 
-  //   if (isLoggedIn && hasPassword) {
+  //   if (isLoggedIn && isCodeAcces) {
   //     if (
   //       appState.current.match(/inactive|background/) &&
   //       nextAppState === 'active'
@@ -86,50 +86,18 @@ const Navigation = () => {
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }} >
-      {isLoggedIn ? (
-        <>
-          {hasPassword ? (
-            <Stack.Screen
-              name="CodeDeblockApp"
-              component={CodeDeblockAppScreen}
-            />
-          ) : (
-            <>
-              <Stack.Screen name="Home" component={HomeScreen} />
-              <Stack.Screen
-                name="MotPasseOublier"
-                component={MotPasseOublier}
-              />
-              {/* <Stack.Screen name="Menu" component={BottomMenuScreen} /> */}
-            </>
-          )}
-          {!isLock && ( // Vérifier si l'application n'est pas verrouillée
-            <>
-              <Stack.Screen name="Dash" component={DashBoardScreen} />
-              <Stack.Screen name="Menu" component={BottomMenuScreen} />
-              <Stack.Screen name="CodeAcces" component={CodeAccesScreen} />
-              <Stack.Screen name="Kyc" component={KycScreen} />
-              <Stack.Screen name="CodeVerif" component={CodeAccesVerifScreen} />
-              <Stack.Screen
-                name="CodeAccesConfig"
-                component={CodeAccesConfigScreen}
-              />
-            </>
-          )}
-          {isLock && ( // Vérifier si l'application n'est pas verrouillée
-            <Stack.Screen
-              name="CodeDeblockApp"
-              component={CodeDeblockAppScreen}
-            />
-          )}
-        </>
-      ) : (
-        <>
-          <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="MotPasseOublier" component={MotPasseOublier} />
-          <Stack.Screen name="Menu" component={BottomMenuScreen} />
-        </>
-      )}
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="CodeDeblockApp" component={CodeDeblockAppScreen} />
+      <Stack.Screen name="Dash" component={DashBoardScreen} />
+      <Stack.Screen name="Log" component={LoginScree} />
+      <Stack.Screen name="Menu" component={BottomMenuScreen} />
+      <Stack.Screen name="CodeAcces" component={CodeAccesScreen} />
+      <Stack.Screen name="Kyc" component={KycScreen} />
+      <Stack.Screen name="register" component={RegistrationForm} />
+      <Stack.Screen name="CodeVerif" component={CodeAccesVerifScreen} />
+      <Stack.Screen name="CodeAccesConfig" component={CodeAccesConfigScreen}
+      />
+      <Stack.Screen name="MotPasseOublier" component={MotPasseOublier} />
     </Stack.Navigator>
   );
 };
@@ -139,7 +107,9 @@ const App = () => {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <NavigationContainer>
+          {/* <HandleChange> */}
           <Navigation />
+          {/* </HandleChange> */}
         </NavigationContainer>
       </PersistGate>
     </Provider>

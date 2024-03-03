@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, StatusBar, TextInput, TouchableOpacity, ActivityIndicator, ScrollView, Image, ToastAndroid } from 'react-native';
+import { View, StyleSheet, Text, StatusBar, TextInput, TouchableOpacity, ActivityIndicator, Image, ToastAndroid } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
 import default_color from '../styles/color';
 import {
@@ -9,69 +9,38 @@ import {
 } from "@expo-google-fonts/roboto-serif";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import CustomModalPicker from '../components/CustomModalPicker';
-// import authStore from '../../store/authStore';
 import { connect, useSelector } from 'react-redux';
 import { login } from '../store/actions/authActions';
 import { bindActionCreators } from 'redux';
 import NetInfo from '@react-native-community/netinfo';
 import Modal from "react-native-modal";
+import Loader1 from '../components/Loader1';
 
 
 const HomeScreen = ({ navigation, login }) => {
-
-
 
     const flag = countryCode => String.fromCodePoint(...[...countryCode.toUpperCase()].map(c => 0x1F1A5 + c.charCodeAt()));
 
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedOption, setSelectedOption] = useState('');
     const [passwordVisible, setPasswordVisible] = useState(false);
-    const [passwordVisible2, setPasswordVisible2] = useState(false);
-    const [verifInscription, setVerifInscription] = useState(true);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [codePays, setCodePays] = useState('');
     const [isConnected, setIsConnected] = useState(false);
     const [isLoading, setIsLoading] = useState(false)
-
-
     const loginError = useSelector(state => state.auth.error);
     const isLogged = useSelector(state => state.auth.isLoggedIn);
-    const loading = useSelector(state => state.auth.loading);
 
-    // useEffect(() => {
-    //     if (isLogged) {
-    //         navigation.reset({
-    //             index: 0,
-    //             routes: [{ name: 'Menu' }],
-    //         });
-    //     } else {
-    //         navigation.navigate('Home');
-    //     }
-    // }, [isLogged]);
-
-    useEffect(() => {
-        if (isLogged) {
-            navigation.dispatch(
-                CommonActions.reset({
-                    index: 0,
-                    routes: [{ name: 'Menu' }],
-                })
-            );
-        } else {
-            navigation.navigate('Home');
-        }
-    }, [isLogged, navigation]);
 
     useEffect(() => {
         const unsubscribe = NetInfo.addEventListener(state => {
             setIsConnected(state.isConnected);
         });
         return () => {
-            unsubscribe(); // Nettoyer l'écouteur lorsque le composant est démonté
+            unsubscribe();
         };
     }, []);
-
 
     const handleLogin = async () => {
 
@@ -81,7 +50,19 @@ const HomeScreen = ({ navigation, login }) => {
                 try {
                     // Dispatch login action
                     setIsLoading(true)
-                    await login(username, password, codePays);
+                    await login(username, password, codePays).then((result: any) => {
+                        if (result) {
+                            // if (isLogged) {
+                            navigation.dispatch(
+                                CommonActions.reset({
+                                    index: 0,
+                                    routes: [{ name: 'Menu' }],
+                                })
+                            );
+                            // }
+                        }
+                    });
+                    // dispa
                     setIsLoading(false)
                     // Si la connexion réussit, naviguez vers l'écran de tableau de bord
                     if (!isLogged) {
@@ -150,14 +131,23 @@ const HomeScreen = ({ navigation, login }) => {
                     {loginError && <Text style={{ color: 'red', fontSize: 7.5, fontFamily: 'RobotoSerif_400Regular', textAlign: 'center', marginBottom: 10 }}>Les donnees d'authentification sont invalides, veillez recommencer</Text>}
                     <View style={styles.inputContainer2}>
                         {selectedOption == "" ?
-                            <Icon name="globe" size={15} color="grey" style={styles.iconStyle} />
+                            // <Icon name="globe" size={15} color="grey" style={styles.iconStyle} />
+                            <View style={styles.iconStyle2}>
+                                <Icon name="globe" size={25} color="white" />
+                            </View>
                             :
                             selectedOption == "Republique du Congo" ?
-                                <Text style={styles.iconStyle}>{flag('cg')}</Text> :
-                                <Text style={styles.iconStyle}>{flag('sn')}</Text>
+                                <View style={styles.iconStyle3}>
+                                    <Text >{flag('cg')}</Text>
+                                </View>
+                                :
+                                <View style={styles.iconStyle3}>
+                                    <Text>{flag('sn')}</Text>
+                                </View>
+
                         }
                         <TouchableOpacity onPress={() => setModalVisible(true)} style={{ width: "100%" }}>
-                            {selectedOption == "" ? (<Text style={{ color: 'grey' }}>Pays de residence</Text>) : <Text>{selectedOption}</Text>}
+                            {selectedOption == "" ? (<Text style={{ color: '#7f7f7f', marginLeft: 10, fontFamily: 'RobotoSerif_400Regular' }}>Pays de residence</Text>) : <Text style={{ color: 'black', marginLeft: 10, fontFamily: 'RobotoSerif_400Regular' }}>{selectedOption}</Text>}
                         </TouchableOpacity>
                         <CustomModalPicker
                             options={options}
@@ -168,7 +158,10 @@ const HomeScreen = ({ navigation, login }) => {
                         />
                     </View>
                     <View style={styles.inputContainer}>
-                        <Icon name="phone" size={15} color="grey" style={styles.iconStyle} />
+                        <View style={styles.iconStyle}>
+                            <Icon name="phone" size={25} color="white" />
+                        </View>
+                        {/* <Icon name="phone" size={15} color="grey" style={styles.iconStyle} /> */}
                         <TextInput
                             style={styles.input}
                             placeholder="Numero de telephone"
@@ -176,11 +169,15 @@ const HomeScreen = ({ navigation, login }) => {
                             autoCapitalize="none"
                             value={username}
                             onChangeText={(text) => setUsername(text)}
+                            placeholderTextColor='#7f7f7f'
                         />
                     </View>
 
-                    <View style={styles.inputContainer3}>
-                        <Icon name="lock" size={20} color="grey" style={styles.iconStyle} />
+                    <View style={styles.inputContainer}>
+                        {/* <Icon name="lock" size={20} color="grey" style={styles.iconStyle} /> */}
+                        <View style={styles.iconStyle}>
+                            <Icon name="lock" size={25} color="white" />
+                        </View>
                         <TextInput
                             style={styles.input}
                             placeholder="Mot de passe"
@@ -188,6 +185,8 @@ const HomeScreen = ({ navigation, login }) => {
                             secureTextEntry={!passwordVisible}
                             value={password}
                             onChangeText={(text) => setPassword(text)}
+                            placeholderTextColor='#7f7f7f'
+
                         />
                         <TouchableOpacity
                             style={styles.eyeIcon}
@@ -197,20 +196,23 @@ const HomeScreen = ({ navigation, login }) => {
                         </TouchableOpacity>
                     </View>
 
-                    <Text style={styles.mdp} onPress={() => navigation.navigate('MotPasseOublier')}>
-                        Mot de passe oublier
-                    </Text>
                     <TouchableOpacity style={styles.button} onPress={() => handleLogin()}>
                         <Text style={styles.buttonText}>Se connecter</Text>
                     </TouchableOpacity>
-                    <Text style={styles.signupText} onPress={() => setVerifInscription(false)}>
-                        Vous n'avez pas de compte ? Inscrivez-vous
-                    </Text>
+                    <View style={{ justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', marginTop: 10 }}>
+                        <Text style={styles.mdp} onPress={() => navigation.navigate('MotPasseOublier')}>
+                            Mot de passe oublier
+                        </Text>
+                        <Text style={[styles.mdp]} onPress={() => navigation.navigate('register')}>
+                            Creer un compte Tasa Wallet
+                        </Text>
+                    </View>
+
                     <View>
                         <Text style={styles.slogan}>Tasa, the power of your money is in your hands</Text>
                     </View>
                     <Modal
-                        coverScreen={fontsLoaded}
+                        // coverScreen={fontsLoaded}
                         backdropOpacity={0.3}
                         isVisible={isLoading}
                         animationIn="fadeIn"
@@ -218,11 +220,7 @@ const HomeScreen = ({ navigation, login }) => {
                     >
                         <View style={styles.modalContainerChargement}>
                             <View style={styles.modalContentChargement}>
-                                <ActivityIndicator
-                                    size={80}
-                                    color={default_color.orange}
-                                    animating={isLoading}
-                                />
+                                <Loader1 />
                             </View>
                         </View>
                     </Modal>
@@ -266,13 +264,52 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         // padding: 20
     },
+    // inputContainer: {
+    //     flexDirection: 'row',
+    //     alignItems: 'center',
+    //     borderColor: 'gray',
+    //     borderWidth: 0.6,
+    //     marginBottom: 20,
+    //     borderRadius: 100,
+    // },
+
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         borderColor: 'gray',
         borderWidth: 0.6,
         marginBottom: 20,
-        borderRadius: 100,
+        height: 55,
+        width: '100%',
+        // borderRadius: 100,
+    },
+    iconStyle: {
+        backgroundColor: '#7f7f7f',
+        height: '105%',
+        justifyContent: 'center',
+        width: '15%',
+        alignItems: 'center',
+        borderTopLeftRadius: 2,
+        borderBottomLeftRadius: 2
+    },
+    iconStyle2: {
+        backgroundColor: 'gray',
+        height: '230%',
+        justifyContent: 'center',
+        width: '15%',
+        alignItems: 'center',
+        borderTopLeftRadius: 2,
+        borderBottomLeftRadius: 2
+    },
+    iconStyle3: {
+        // backgroundColor: 'white',
+        height: '230%',
+        justifyContent: 'center',
+        width: '15%',
+        alignItems: 'center',
+        borderTopLeftRadius: 2,
+        borderBottomLeftRadius: 2,
+        // borderRightWidth: 0.5
     },
 
     inputContainer2: {
@@ -282,7 +319,10 @@ const styles = StyleSheet.create({
         borderWidth: 0.6,
         marginBottom: 20,
         paddingVertical: 15,
-        borderRadius: 100,
+        // borderRadius: 100,
+        borderRadius: 2,
+        height: 55,
+
     },
     inputContainer3: {
         flexDirection: 'row',
@@ -292,15 +332,16 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         borderRadius: 100,
     },
-    iconStyle: {
-        paddingHorizontal: 10,
-        color: 'grey'
-    },
+    // iconStyle: {
+    //     paddingHorizontal: 10,
+    //     color: 'grey'
+    // },
     input: {
         flex: 1,
         height: 50,
         paddingHorizontal: 10,
         fontFamily: 'RobotoSerif_400Regular',
+        // color: '#7f7f7f'
 
     },
     eyeIcon: {
@@ -310,10 +351,9 @@ const styles = StyleSheet.create({
         backgroundColor: default_color.orange,
         paddingVertical: 7,
         alignItems: 'center',
-        borderRadius: 100,
+        // borderRadius: 100,
+        borderRadius: 2,
         fontFamily: 'RobotoSerif_400Regular',
-
-
     },
     buttonText: {
         color: default_color.white,
@@ -342,7 +382,7 @@ const styles = StyleSheet.create({
         marginTop: 15,
         fontSize: 10,
         fontFamily: 'RobotoSerif_100Thin',
-        color: 'gray'
+        color: default_color.orange
     },
 
     modalContainerChargement: {

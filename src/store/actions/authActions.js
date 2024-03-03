@@ -6,6 +6,7 @@ export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 export const LOGOUT = 'LOGOUT';
 export const SET_ACCESS_CODE = 'SET_ACCESS_CODE';
 export const SET_VERIF_ACCESS_CODE = 'SET_VERIF_ACCESS_CODE';
+export const LOCK_APP = 'LOCK_APP';
 
 // Action creator
 export const logout = () => ({
@@ -40,6 +41,12 @@ export const setVerifAccesCode = () => {
     };
 };
 
+export const lockApp = () => {
+    return {
+        type: LOCK_APP,
+    };
+};
+
 // Async action to handle login
 export const login = (username, password, codePays) => {
     return async (dispatch) => {
@@ -49,9 +56,11 @@ export const login = (username, password, codePays) => {
             const response = await axios.post('https://walet.tasa.pro/api/auth', { country_code: codePays, phone: username, pin: password });
             // Dispatch login success action with user data
             dispatch(loginSuccess(response.data));
+            return response
         } catch (error) {
             // Dispatch login failure action with error message
             dispatch(loginFailure(error.message));
+
         }
     };
 };

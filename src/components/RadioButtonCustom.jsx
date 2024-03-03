@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     },
     radioLabel: {
         marginLeft: 5,
-        fontSize: 11,
+        fontSize: 10,
         color: 'gray',
         fontFamily: 'RobotoSerif_400Regular'
     },

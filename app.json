@@ -21,7 +21,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#96220d"
-      }
+      },
+      "package": "com.anonymous.Tasa_walet"
     },
     "web": {
       "favicon": "./assets/favicon.png"

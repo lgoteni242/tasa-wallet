@@ -24,7 +24,7 @@ const PassWordScreen = ({ navigation }) => {
             <View style={styles.container_image}>
                 <View style={styles.container_logo}>
                     <TouchableOpacity
-                        onPress={() => navigation.navigate('Home')}
+                        onPress={() => navigation.goBack()}
                         style={styles.iconStyleRetour}
 
                     >
