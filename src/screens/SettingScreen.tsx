@@ -89,7 +89,6 @@ export default function ScrollViewAnimatedHeader({ navigation }) {
                     <View style={styles.transcationListe}>
                         <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 10, alignItems: "center" }}>
                             <Icon name="phone" color="grey" size={20} style={{ marginRight: 18 }} />
-
                             <View style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Text style={{ fontFamily: "RobotoSerif_400Regular", }}>{user && user.phone}</Text>
                                 <Text style={{ color: 'gray', fontSize: 8, fontFamily: "RobotoSerif_400Regular" }}>Numero de telephone</Text>

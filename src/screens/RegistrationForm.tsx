@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet, TouchableOpacity, StatusBar, Image, ToastAndroid } from 'react-native';
+import { View, TextInput, Button, Text, StyleSheet, TouchableOpacity, StatusBar, Image, ToastAndroid, Vibration } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import default_color from '../styles/color';
 import CustomModalPicker from '../components/CustomModalPicker';
+import axios from 'axios';
+import Loader1 from '../components/Loader1';
+import Modal from "react-native-modal";
+import * as Clipboard from 'expo-clipboard';
 
 const options = [{
     label: 'Republique du Congo',
@@ -45,34 +49,114 @@ const RegistrationForm = ({ navigation }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [modalVisible2, setModalVisible2] = useState(false);
     const [codePays, setCodePays] = useState('');
+    const [isLoading, setIsLoading] = useState(false)
+    const [modalClock, setModalClock] = useState(false);
+    const [erreur, setErreur] = useState('')
+    const [key, setKey] = useState('')
 
+
+
+    const copyResetKeyToClipboard = () => {
+        Clipboard.setString('resetKey');
+        ToastAndroid.show('Clé de réinitialisation copiée dans le presse-papiers !', ToastAndroid.SHORT);
+    };
 
 
     const iconeTaille = 20
 
-
-    const handleNextStep = () => {
+    const handleNextStep1 = () => {
         // Vérifier si le numéro de téléphone ne contient que des chiffres
         const isPhoneNumberValid = /^\d+$/.test(telephone);
 
-        // Vérifier si l'e-mail est au format valide
-        const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-        // Vérifier si tous les champs sont remplis et si le numéro de téléphone et l'e-mail sont valides
-        if (step === 1 && nom && prenom && telephone && isPhoneNumberValid) {
-            setStep(step + 1);
-        } else if (step === 2 && email && selectedOption && genre && isEmailValid) {
-            setStep(step + 1);
-        } else {
-            // Afficher le toast en fonction des champs manquants ou des données invalides
+        if (step === 1 && nom && prenom) {
             if (!isPhoneNumberValid) {
                 ToastAndroid.show('Le numéro de téléphone ne doit contenir que des chiffres', ToastAndroid.SHORT);
-            } else if (!isEmailValid) {
-                ToastAndroid.show('Veuillez saisir une adresse e-mail valide.', ToastAndroid.SHORT);
             } else {
-                ToastAndroid.show('Veuillez remplir tous les champs avant de continuer', ToastAndroid.SHORT);
+                setStep(step + 1);
+                // Durée de la vibration en millisecondes
+                const DURATION = 100;
+                // Déclenche la vibration
+                Vibration.vibrate(DURATION);
+            }
+        } else {
+            ToastAndroid.show('Veuillez remplir tous les champs avant de continuer', ToastAndroid.SHORT);
+        }
+    };
+
+    const handleNextStep2 = () => {
+
+        // Vérifier si l'e-mail est au format valide
+        // const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+        // Vérifier si tous les champs sont remplis et si le numéro de téléphone et l'e-mail sont valides
+        if (step === 2 && selectedOption && genre) {
+            // if (!isEmailValid) {
+            //     ToastAndroid.show('Veuillez saisir une adresse e-mail valide.', ToastAndroid.SHORT);
+            // } else {
+            setStep(step + 1);
+            // Durée de la vibration en millisecondes
+            const DURATION = 100;
+            // Déclenche la vibration
+            Vibration.vibrate(DURATION);
+            // }
+        } else {
+            ToastAndroid.show('Veuillez remplir tous les champs avant de continuer', ToastAndroid.SHORT);
+        }
+    };
+
+    const login = async () => {
+        setIsLoading(true)
+        try {
+            // Make API call to authenticate user
+            const response = await axios.post('https://walet.tasa.pro/api/create_user', {
+                name: nom,
+                prenom: prenom,
+                email: email,
+                genre: genre,
+                code: codePays,
+                phone: telephone,
+                country: pays,
+                pin: motDePasse,
+                pin_confirmation: confirmationMotDePasse,
+            });
+            // Dispatch login success action with user data
+            setIsLoading(false)
+            setModalClock(true)
+            console.warn(response)
+            return response
+        } catch (error) {
+            setIsLoading(false)
+            if (error.response && error.response.data && error.response.data.errors) {
+                const errorDetails = error.response.data.errors;
+                // Traiter les erreurs spécifiques
+                if (errorDetails.email) {
+                    console.error('Erreurs Email:', errorDetails.email);
+                    // Afficher le message d'erreur d'email
+                }
+                if (errorDetails.phone) {
+                    // console.error('Erreurs Phone:', errorDetails.phone);
+                    setErreur(errorDetails.phone)
+                    // Afficher le message d'erreur de téléphone
+                }
+                // Autres traitements d'erreur si nécessaire
+            } else {
+                console.error('Erreur inattendue:', error.message);
+                // Gérer les erreurs inattendues
             }
         }
+    };
+
+    const handleLockModal = () => {
+        setModalClock(false);
+        setEmail('')
+        setGenre('')
+        setMotDePasse('')
+        setNom('')
+        setPays('')
+        setPrenom('')
+        setTelephone('')
+        setConfirmationMotDePasse('')
+        navigation.goBack()
     };
 
 
@@ -82,12 +166,13 @@ const RegistrationForm = ({ navigation }) => {
 
     const handleSelect = (option: React.SetStateAction<string>) => {
         setSelectedOption(option);
+        setPays(option)
         if (option == 'Republique du Congo') {
             setCodePays("CG")
-
         } else {
             setCodePays("SN")
         }
+
     };
 
     const handleSelectGenre = (option: React.SetStateAction<string>) => {
@@ -100,7 +185,9 @@ const RegistrationForm = ({ navigation }) => {
     const handleTerminer = () => {
         if (!isPasswordMatch) {
             ToastAndroid.show('Les mots de ne correspondent pas', ToastAndroid.SHORT);
-
+        } else {
+            console.error(pays)
+            login()
         }
     }
 
@@ -152,7 +239,7 @@ const RegistrationForm = ({ navigation }) => {
                             <TouchableOpacity style={{ backgroundColor: 'gray', width: '20%', justifyContent: 'center', alignItems: 'center', paddingVertical: 16, borderRadius: 100 }} onPress={() => navigation.goBack()}>
                                 <Icon name="arrow-left" size={15} color="white" />
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.button} onPress={handleNextStep}  >
+                            <TouchableOpacity style={styles.button} onPress={handleNextStep1}  >
                                 <Text style={styles.buttonText}>Continuer</Text>
                             </TouchableOpacity>
                         </View>
@@ -211,7 +298,7 @@ const RegistrationForm = ({ navigation }) => {
                             <TouchableOpacity style={{ backgroundColor: 'gray', width: '20%', justifyContent: 'center', alignItems: 'center', paddingVertical: 16, borderRadius: 100 }} onPress={handlePreviousStep}>
                                 <Icon name="arrow-left" size={15} color="white" />
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.button} onPress={handleNextStep} >
+                            <TouchableOpacity style={styles.button} onPress={handleNextStep2} >
                                 <Text style={styles.buttonText}>Continuer</Text>
                             </TouchableOpacity>
                         </View>
@@ -248,8 +335,10 @@ const RegistrationForm = ({ navigation }) => {
                                 onChangeText={setConfirmationMotDePasse}
                                 secureTextEntry={true}
                             />
-
                         </View>
+                        <Text style={{ color: default_color.orange, fontSize: 10, marginBottom: 10, textAlign: 'center', fontFamily: 'RobotoSerif_400Regular', textTransform: 'capitalize' }}>
+                            {erreur}
+                        </Text>
                         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: 'center' }}>
                             <TouchableOpacity style={{ backgroundColor: 'gray', width: '20%', justifyContent: 'center', alignItems: 'center', paddingVertical: 16, borderRadius: 100 }} onPress={handlePreviousStep}>
                                 <Icon name="arrow-left" size={15} color="white" />
@@ -269,8 +358,6 @@ const RegistrationForm = ({ navigation }) => {
         <View style={styles.container1}>
             <StatusBar translucent backgroundColor="transparent" />
             <StatusBar barStyle="dark-content" />
-
-
             <View style={styles.containerInput}>
                 <View style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', height: "50%" }}>
                     <Image source={require('../../assets/images/register.png')} style={styles.image} resizeMode="cover" />
@@ -295,6 +382,68 @@ const RegistrationForm = ({ navigation }) => {
                     <Text style={styles.slogan}>Tasa, the power of your money is in your hands</Text>
                 </View>
             </View>
+            <Modal
+                // coverScreen={fontsLoaded}
+                backdropOpacity={0.3}
+                isVisible={isLoading}
+                animationIn="fadeIn"
+                animationOut="fadeOut"
+            >
+                <View style={styles.modalContainerChargement}>
+                    <View style={styles.modalContentChargement}>
+                        <Loader1 />
+                    </View>
+                </View>
+            </Modal>
+            <Modal
+                coverScreen={true}
+                backdropOpacity={0.3}
+                isVisible={modalClock}
+                // isVisible={true}
+                animationIn="fadeIn" // Animation d'entrée du haut
+                animationOut="fadeOut"
+            >
+                <View style={styles.modalContainerSend}>
+                    <View style={styles.modalContentSend2}>
+                        <Text
+                            style={{
+                                fontSize: 12,
+                                color: "rgba(16,17,17,0.84)",
+                                fontFamily: "RobotoSerif_400Regular",
+                                textAlign: 'justify'
+                            }}
+                        >
+                            Votre compte a été créé avec succès. Vous pouvez vous connecter en utilisant votre numéro de téléphone et votre code d'accès.
+                        </Text>
+                        <Text style={{ fontFamily: "RobotoSerif_400Regular", fontSize: 13 }}>Clef de reinitialisation du code pin</Text>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: default_color.black, padding: 10, marginTop: 10, borderRadius: 10, alignItems: 'center', }}>
+                            <Text style={{ fontFamily: "RobotoSerif_400Regular", fontSize: 13, color: 'white' }}>
+                                lsdkslkdskssxcxxcxccxx
+                            </Text>
+                            <TouchableOpacity style={{ backgroundColor: 'gray', padding: 5, borderRadius: 10 }} onPress={copyResetKeyToClipboard}>
+                                <Text style={{ color: 'white' }}>Copier</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View
+                            style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "flex-end",
+                                borderTopColor: "gray",
+                                marginTop: 5,
+                            }}
+                        >
+                            <TouchableOpacity
+                                style={styles.buttonEnvoie}
+                                onPress={() => handleLockModal()}
+                                disabled={isLoading}
+                            >
+                                <Text style={styles.buttonText2}>Connexion</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 };
@@ -441,6 +590,65 @@ const styles = StyleSheet.create({
     },
     inputErrorB: {
         backgroundColor: default_color.orange,
+    },
+    modalContainerChargement: {
+        backgroundColor: "transparent",
+        // borderRadius: 10,
+        width: "100%",
+        height: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    modalContentChargement: {
+        backgroundColor: "transparent",
+        // padding: 23,
+        // borderRadius: 10,
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    modalContainerSend: {
+        backgroundColor: "white.orange",
+        borderRadius: 10,
+        // padding: 20,
+    },
+    buttonRetour: {
+        backgroundColor: "white",
+        paddingVertical: 3,
+        alignItems: "center",
+        borderRadius: 100,
+        width: "40%",
+        fontFamily: "RobotoSerif_400Regular",
+    },
+    buttonTextAnnul: {
+        color: "black",
+        fontSize: 15,
+        paddingVertical: 4,
+        width: "100%",
+        textAlign: "center",
+        fontFamily: "RobotoSerif_400Regular",
+    },
+    modalContentSend2: {
+        backgroundColor: "white",
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 10,
+    },
+
+    buttonEnvoie: {
+        // backgroundColor: default_color.orange,
+        paddingVertical: 3,
+        alignItems: "center",
+        borderRadius: 100,
+        width: "40%",
+    },
+    buttonText2: {
+        color: "black",
+        fontSize: 15,
+        paddingVertical: 4,
+        width: "100%",
+        textAlign: "center",
+        fontFamily: "RobotoSerif_400Regular",
     },
 });
 

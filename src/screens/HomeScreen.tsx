@@ -15,6 +15,7 @@ import { bindActionCreators } from 'redux';
 import NetInfo from '@react-native-community/netinfo';
 import Modal from "react-native-modal";
 import Loader1 from '../components/Loader1';
+import axios from 'axios';
 
 
 const HomeScreen = ({ navigation, login }) => {
@@ -31,7 +32,7 @@ const HomeScreen = ({ navigation, login }) => {
     const [isLoading, setIsLoading] = useState(false)
     const loginError = useSelector(state => state.auth.error);
     const isLogged = useSelector(state => state.auth.isLoggedIn);
-
+    const [options, setOptions] = useState([])
 
     useEffect(() => {
         const unsubscribe = NetInfo.addEventListener(state => {
@@ -87,17 +88,34 @@ const HomeScreen = ({ navigation, login }) => {
         ToastAndroid.show('Vous n\'etes pas connecte a internet', ToastAndroid.SHORT);
     }
 
+    useEffect(() => {
+        if (options.length == 0) {
+            (async () => {
+                try {
+                    // Make API call to authenticate user
+                    const response = await axios.get('https://walet.tasa.pro/api/country');
+                    // setModalClock(true)
+                    setOptions(response.data.data)
+                    console.error(response.data.data)
+                } catch (error) {
+                    // Gérer les erreurs inattendues
+                    console.error(error.response)
+                }
+            })()
+        }
 
-    const options = [{
-        label: 'Republique du Congo',
-        value: 242,
-        flag: 'cg'
-    },
-    {
-        label: 'Senegal',
-        value: 221,
-        flag: 'sn'
-    }];
+    }, [options.length == 0])
+
+    // const options = [{
+    //     label: 'Republique du Congo',
+    //     value: 242,
+    //     flag: 'cg'
+    // },
+    // {
+    //     label: 'Senegal',
+    //     value: 221,
+    //     flag: 'sn'
+    // }];
 
     let [fontsLoaded] = useFonts({
         RobotoSerif_400Regular,
@@ -107,7 +125,7 @@ const HomeScreen = ({ navigation, login }) => {
 
     const handleSelect = (option: React.SetStateAction<string>) => {
         setSelectedOption(option);
-        if (option == 'Republique du Congo') {
+        if (option == 'Congo') {
             setCodePays("CG")
 
         } else {
@@ -118,6 +136,7 @@ const HomeScreen = ({ navigation, login }) => {
     if (!fontsLoaded) {
         return <ActivityIndicator size="large" />;
     }
+
     return (
         <View style={styles.container}>
             <StatusBar translucent backgroundColor="transparent" />
@@ -131,12 +150,11 @@ const HomeScreen = ({ navigation, login }) => {
                     {loginError && <Text style={{ color: 'red', fontSize: 7.5, fontFamily: 'RobotoSerif_400Regular', textAlign: 'center', marginBottom: 10 }}>Les donnees d'authentification sont invalides, veillez recommencer</Text>}
                     <View style={styles.inputContainer2}>
                         {selectedOption == "" ?
-                            // <Icon name="globe" size={15} color="grey" style={styles.iconStyle} />
                             <View style={styles.iconStyle2}>
                                 <Icon name="globe" size={25} color="white" />
                             </View>
                             :
-                            selectedOption == "Republique du Congo" ?
+                            selectedOption == "Congo" ?
                                 <View style={styles.iconStyle3}>
                                     <Text >{flag('cg')}</Text>
                                 </View>

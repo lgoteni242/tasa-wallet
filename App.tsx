@@ -49,7 +49,7 @@ const Navigation = () => {
   //       appState.current.match(/inactive|background/) &&
   //       nextAppState === 'active'
   //     ) {
-  //       timerRef.current = setTimeout(() => {
+  //       timerRef.current = setTimeout(() => {  
   //         dispatch({ type: 'LOGOUT' });
   //         clearTimeout(timerRef.current);
   //       }, 300000);

@@ -16,7 +16,8 @@ const default_color = {
     green: '#00b33c',
     success: 'rgba(24,206,63,0.93)',
     danger: 'rgba(206,43,24,0.59)',
-    textGrayColor: '#7f7f7f'
+    textGrayColor: '#7f7f7f',
+    black: '#03040c63'
 
 };
 

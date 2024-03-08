@@ -121,6 +121,7 @@ const DashBoardScreen = ({ navigation }) => {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [codePays, setCodePays] = useState("");
     const [modalClock, setModalClock] = useState(true);
+    const [optionCrediter, setOptionCrediter] = useState([])
 
 
     const dispatch = useDispatch();
@@ -144,7 +145,7 @@ const DashBoardScreen = ({ navigation }) => {
     // ref
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
     // variables
-    const snapPoints = useMemo(() => ["17%", "60%"], []);
+    const snapPoints = useMemo(() => ["17%", "62%", "100%"], []);
     // callbacks
     const handlePresentModalPress = useCallback(() => {
         // handleCloseModalPressRetirer()
@@ -170,7 +171,7 @@ const DashBoardScreen = ({ navigation }) => {
     // ref
     const bottomSheetModalRefRetirer = useRef<BottomSheetModal>(null);
     // variables
-    const snapPointsRetirer = useMemo(() => ["17%", "60%"], []);
+    const snapPointsRetirer = useMemo(() => ["17%", "62%", "100%"], []);
     // callbacks
     const handlePresentModalPressRetirer = useCallback(() => {
         // handleCloseModalPress()
@@ -195,7 +196,7 @@ const DashBoardScreen = ({ navigation }) => {
     // ref
     const bottomSheetModalRefCrediter = useRef<BottomSheetModal>(null);
     // variables
-    const snapPointsCrediter = useMemo(() => ["17%", "60%"], []);
+    const snapPointsCrediter = useMemo(() => ["17%", "62%", "100%"], []);
     // callbacks
     const handlePresentModalPressCrediter = useCallback(() => {
         // handleCloseModalPressRetirer()
@@ -204,8 +205,8 @@ const DashBoardScreen = ({ navigation }) => {
             if (!user.etat) {
                 bottomSheetModalRefCrediter.current?.present();
             } else {
-                navigation.navigate('Kyc')
-                // bottomSheetModalRefCrediter.current?.present();
+                // navigation.navigate('Kyc')
+                bottomSheetModalRefCrediter.current?.present();
             }
         }
     }, []);
@@ -289,8 +290,6 @@ const DashBoardScreen = ({ navigation }) => {
             </View>
         </Modal>;
     }
-
-
 
     const handleSend = () => {
         setIsLoading(true);
@@ -399,6 +398,27 @@ const DashBoardScreen = ({ navigation }) => {
         };
         checkData();
     }
+    // if (optionCrediter[0] == null) {
+    (async () => {
+        try {
+            const response = await axios.get("https://walet.tasa.pro/api/payment_mode", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            const datas = response.data.datas
+            setOptionCrediter(datas)
+            return response.data.datas
+
+        } catch (error) {
+            console.log("levi goteni verification", error);
+        }
+    })();
+    // }
+
+
+    console.log(optionCrediter)
+
 
     const handleCrediter = () => {
         setIsLoading(true);
@@ -557,7 +577,7 @@ const DashBoardScreen = ({ navigation }) => {
                     <View style={styles.optionContainer}>
                         <View style={styles.option}>
                             <TouchableOpacity
-                                style={styles.iconShowbar}
+                                style={styles.iconShowbarEnvoyer}
                                 onPress={handlePresentModalPress}
                             >
                                 <Icon name="send" size={25} color="gray" />
@@ -566,7 +586,7 @@ const DashBoardScreen = ({ navigation }) => {
                         </View>
                         <View style={styles.option}>
                             <TouchableOpacity
-                                style={styles.iconShowbar}
+                                style={styles.iconShowbarRetirer}
                                 onPress={handlePresentModalPressRetirer}
                             >
                                 <Icon name="money" size={25} color="gray" />
@@ -575,11 +595,11 @@ const DashBoardScreen = ({ navigation }) => {
                         </View>
                         <View style={styles.option}>
                             <TouchableOpacity
-                                style={styles.iconShowbar}
+                                style={styles.iconShowbarCrediter}
                                 onPress={handlePresentModalPressCrediter}
                             >
                                 <View style={{ paddingHorizontal: 2.4 }}>
-                                    <Icon name="plus" size={25} color="gray" />
+                                    <Icon name="plus" size={25} color={default_color.green} />
                                 </View>
                             </TouchableOpacity>
                             <Text style={styles.textShowbar}>Crediter</Text>
@@ -1322,18 +1342,20 @@ const DashBoardScreen = ({ navigation }) => {
                                     width: "100%",
                                 }}
                             >
-                                <TouchableOpacity onPress={() => setChoixPayement("1")}>
-                                    <Image
-                                        source={require("../../assets/images/mtn.png")}
-                                        style={{ width: 100, height: 70, borderRadius: 10 }}
-                                    />
-                                </TouchableOpacity>
-                                <TouchableOpacity>
+                                {optionCrediter.map(item => (
+                                    <TouchableOpacity onPress={() => setChoixPayement("1")} key={item.id}>
+                                        <Image
+                                            source={require("../../assets/images/mtn.png")}
+                                            style={{ width: 100, height: 70, borderRadius: 10 }}
+                                        />
+                                    </TouchableOpacity>
+                                ))}
+                                {/* <TouchableOpacity>
                                     <Image
                                         source={require("../../assets/images/airtel.png")}
                                         style={{ width: 100, height: 70, borderRadius: 10 }}
                                     />
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
                             </View>
                         </>
                     ) : choixpayement == "1" ? (
@@ -1504,8 +1526,24 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
     },
-    iconShowbar: {
-        backgroundColor: "white",
+    iconShowbarEnvoyer: {
+        backgroundColor: 'white',
+        borderRadius: 100,
+        padding: 22,
+        elevation: 10,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+    },
+    iconShowbarRetirer: {
+        backgroundColor: 'white',
+        borderRadius: 100,
+        padding: 22,
+        elevation: 10,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+    },
+    iconShowbarCrediter: {
+        backgroundColor: '#3a8c4d',
         borderRadius: 100,
         padding: 22,
         elevation: 10,
