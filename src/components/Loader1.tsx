@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { Animated, Easing, StyleSheet, View } from 'react-native';
 
-const size = 20;
-const dim = 85;
+const size = 15;
+const dim = 50;
 
 export default class Loader1 extends Component {
     animation = new Animated.Value(0);
     componentDidMount = () => {
         Animated.loop(Animated.timing(this.animation, {
             toValue: 1,
-            duration: 3000,
+            duration: 3500,
             easing: Easing.linear,
             useNativeDriver: true
         })).start();
@@ -43,7 +43,7 @@ export default class Loader1 extends Component {
         const angleValue = this.animation.interpolate({
             inputRange: [0, 1], outputRange: ['0deg', '720deg']
         })
-        const backgroundColor = 'rgba(151,34,13,1)'
+        const backgroundColor = 'gray'
         return (
             <View style={styles.container}>
                 <View style={{ width: dim, height: dim }}>
@@ -59,5 +59,5 @@ export default class Loader1 extends Component {
 
 const styles = StyleSheet.create({
     container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-    item: { width: size, height: size, position: 'absolute' }
+    item: { width: size, height: size, position: 'absolute', borderRadius: 50 }
 })

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Text, StatusBar, TextInput, TouchableOpacity, ActivityIndicator, ScrollView, ToastAndroid } from 'react-native';
 import default_color from '../styles/color';
-import { Pacifico_400Regular, useFonts } from '@expo-google-fonts/pacifico';
+// import { Pacifico_400Regular, useFonts } from '@expo-google-fonts/pacifico';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import Modal from "react-native-modal";
@@ -22,13 +22,13 @@ const PassWordScreen = ({ navigation }) => {
     const iconeTaille = 20
 
 
-    let [fontsLoaded] = useFonts({
-        Pacifico_400Regular
-    });
+    // let [fontsLoaded] = useFonts({
+    //     Pacifico_400Regular
+    // });
 
-    if (!fontsLoaded) {
-        return <ActivityIndicator size="large" />;
-    }
+    // if (!fontsLoaded) {
+    //     return <ActivityIndicator size="large" />;
+    // }
 
     const handleSendCode = () => {
         if (code.length < 14) {
@@ -98,7 +98,11 @@ const PassWordScreen = ({ navigation }) => {
                 return (
                     <View style={styles.container_form}>
                         <View style={styles.inputContainer}>
-                            <Icon name="key" size={25} color="grey" style={styles.iconStyle} />
+
+                            {/* <Icon name="key" size={25} color="grey" style={styles.iconStyle} /> */}
+                            <View style={styles.iconStyle2}>
+                                <Icon name="key" size={25} color="white" />
+                            </View>
                             <TextInput
                                 style={styles.input}
                                 placeholder="Saisir votre clé de reinitialisation"
@@ -282,6 +286,8 @@ const styles = StyleSheet.create({
         borderColor: 'gray',
         borderWidth: 0.6,
         marginBottom: 20,
+        height: 55,
+        width: '100%',
         borderRadius: 100,
     },
     inputContainer2: {
@@ -312,7 +318,7 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: default_color.white,
-        fontSize: 17,
+        fontSize: 15,
         fontFamily: 'RobotoSerif_400Regular',
 
     },
@@ -356,7 +362,7 @@ const styles = StyleSheet.create({
     },
     buttonText2: {
         color: "black",
-        fontSize: 15,
+        fontSize: 12,
         paddingVertical: 4,
         width: "100%",
         textAlign: "center",
@@ -379,6 +385,17 @@ const styles = StyleSheet.create({
         alignItems: "center",
         borderRadius: 100,
         width: "40%",
+    },
+    iconStyle2: {
+        backgroundColor: '#7f7f7f',
+        height: '105%',
+        justifyContent: 'center',
+        width: '15%',
+        alignItems: 'center',
+        borderTopRightRadius: 2,
+        borderBottomRightRadius: 2,
+        borderRadius: 100,
+
     },
 });
 

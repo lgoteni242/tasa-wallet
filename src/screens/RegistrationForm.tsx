@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { View, TextInput, Button, Text, StyleSheet, TouchableOpacity, StatusBar, Image, ToastAndroid, Vibration } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import default_color from '../styles/color';
@@ -7,6 +7,8 @@ import axios from 'axios';
 import Loader1 from '../components/Loader1';
 import Modal from "react-native-modal";
 import * as Clipboard from 'expo-clipboard';
+import LottieView from 'lottie-react-native';
+
 
 const options = [{
     label: 'Republique du Congo',
@@ -53,6 +55,13 @@ const RegistrationForm = ({ navigation }) => {
     const [modalClock, setModalClock] = useState(false);
     const [erreur, setErreur] = useState('')
     const [key, setKey] = useState('')
+
+    const animation = useRef(null);
+    const animation2 = useRef(null);
+
+    const playAnimation = () => {
+        animation.current?.play();
+    };
 
 
 
@@ -313,7 +322,7 @@ const RegistrationForm = ({ navigation }) => {
                             </View>
                             <TextInput
                                 style={styles.input}
-                                placeholder="Saisir votre mot de passe"
+                                placeholder="Saisir le code pin"
                                 keyboardType="phone-pad"
                                 autoCapitalize="none"
                                 value={motDePasse}
@@ -328,7 +337,7 @@ const RegistrationForm = ({ navigation }) => {
                             </View>
                             <TextInput
                                 style={[styles.input]}
-                                placeholder="Confirmer le mot de passe"
+                                placeholder="Confirmer le code pin"
                                 keyboardType="phone-pad"
                                 autoCapitalize="none"
                                 value={confirmationMotDePasse}
@@ -359,8 +368,23 @@ const RegistrationForm = ({ navigation }) => {
             <StatusBar translucent backgroundColor="transparent" />
             <StatusBar barStyle="dark-content" />
             <View style={styles.containerInput}>
-                <View style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', height: "50%" }}>
-                    <Image source={require('../../assets/images/register.png')} style={styles.image} resizeMode="cover" />
+                <View style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', height: "40%" }}>
+                    {/* <Image source={require('../../assets/images/register.png')} style={styles.image} resizeMode="cover" /> */}
+                    <TouchableOpacity onPress={playAnimation} activeOpacity={1}>
+                        <LottieView
+                            ref={animation}
+                            loop={false}
+                            style={{
+                                width: 300,
+                                // height: 350,
+                                // backgroundColor: '#eee',
+
+                            }}
+
+                            // Find more Lottie files at https://lottiefiles.com/featured
+                            source={require('../animations/lotties/hello.json')}
+                        />
+                    </TouchableOpacity>
                 </View>
                 <View style={{ justifyContent: 'center', alignItems: 'center', width: '100%', marginVertical: 40 }}>
                     <View style={styles.buttons}>
@@ -384,14 +408,27 @@ const RegistrationForm = ({ navigation }) => {
             </View>
             <Modal
                 // coverScreen={fontsLoaded}
-                backdropOpacity={0.3}
+                backdropOpacity={0.1}
                 isVisible={isLoading}
                 animationIn="fadeIn"
                 animationOut="fadeOut"
             >
                 <View style={styles.modalContainerChargement}>
                     <View style={styles.modalContentChargement}>
-                        <Loader1 />
+                        {/* <Loader1 /> */}
+                        <LottieView
+                            autoPlay
+                            ref={animation}
+                            loop={false}
+                            style={{
+                                width: 300,
+                                height: 350,
+                                // backgroundColor: '#eee',
+
+                            }}
+                            // Find more Lottie files at https://lottiefiles.com/featured
+                            source={require('../animations/lotties/chargement3.json')}
+                        />
                     </View>
                 </View>
             </Modal>
@@ -463,7 +500,8 @@ const styles = StyleSheet.create({
     },
     container1: {
         flex: 1,
-        padding: 15,
+        // padding: 15,
+        paddingHorizontal: 5,
         width: '100%'
     },
     buttons: {

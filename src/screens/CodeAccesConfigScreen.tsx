@@ -2,29 +2,29 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import React, { useEffect, useState } from 'react';
 import { View, Image, StyleSheet, Text, StatusBar, TextInput, TouchableOpacity, ImageBackground, ActivityIndicator, ScrollView } from 'react-native';
 import default_color from '../styles/color';
-import { Roboto_700Bold, Roboto_100Thin, Roboto_400Regular, useFonts } from "@expo-google-fonts/roboto";
-import {
-    RobotoSerif_400Regular,
-    RobotoSerif_700Bold,
-    RobotoSerif_100Thin,
-} from "@expo-google-fonts/roboto-serif";
+// import { Roboto_700Bold, Roboto_100Thin, Roboto_400Regular, useFonts } from "@expo-google-fonts/roboto";
+// import {
+//     RobotoSerif_400Regular,
+//     RobotoSerif_700Bold,
+//     RobotoSerif_100Thin,
+// } from "@expo-google-fonts/roboto-serif";
 
 
 const CodeAccesConfigScreen = ({ navigation }) => {
-    let [fontsLoaded] = useFonts({
-        RobotoSerif_400Regular,
-        RobotoSerif_100Thin,
-        RobotoSerif_700Bold,
-    });
-    if (!fontsLoaded) {
-        return <ActivityIndicator size="large" />;
-    }
+    // let [fontsLoaded] = useFonts({
+    //     RobotoSerif_400Regular,
+    //     RobotoSerif_100Thin,
+    //     RobotoSerif_700Bold,
+    // });
+    // if (!fontsLoaded) {
+    //     return <ActivityIndicator size="large" />;
+    // }
     return (
         <View style={styles.container}>
             <StatusBar translucent backgroundColor="transparent" />
             <StatusBar barStyle="light-content" />
             <View style={styles.container_image}>
-                <TouchableOpacity onPress={() => navigation.goBack()} >
+                <TouchableOpacity onPress={() => navigation.popToTop()} >
                     <Icon name="arrow-left" size={10} color="white" style={{ fontSize: 15, fontWeight: '100', marginRight: 30 }} />
                 </TouchableOpacity>
                 <Text style={{ color: 'white', fontSize: 12, fontFamily: 'RobotoSerif_400Regular' }}>Code d'accès</Text>

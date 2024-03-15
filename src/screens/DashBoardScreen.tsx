@@ -35,6 +35,7 @@ import {
     View,
     Image,
     FlatList,
+    ToastAndroid,
 } from "react-native";
 import default_color from "../styles/color";
 import Modal from "react-native-modal";
@@ -44,9 +45,7 @@ import { connect, useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import axios from "axios";
 import OTPTextInput from "react-native-otp-textinput";
-import RadioButtonCustom from "../components/RadioButtonCustom";
 import * as SecureStore from "expo-secure-store";
-import DateTimePicker from '@react-native-community/datetimepicker';
 import UserSkeletonLoader from "../components/Skeleton/UserSkeletonLoader";
 import Loader1 from '../components/Loader1';
 
@@ -81,11 +80,18 @@ const DashBoardScreen = ({ navigation }) => {
             // Gérer les erreurs ici
             console.error('Erreur lors de la récupération des données:', error);
             setIsLoading(false); // Assurez-vous de réinitialiser isLoading en cas d'erreur
+            setIsLoadingHistorique(false)
             throw error;
+        } finally {
+            setIsLoadingHistorique(false)
         }
     };
     // =================Chargement============================
     const user = useSelector((state) => state.auth.user);
+    const mode = useSelector((state) => state.auth.mode);
+    const pourcentage = useSelector((state) => state.auth.pourcentage);
+
+
     const token = useSelector((state) => state.auth.token);
     const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
     const isCodeAcces = useSelector((state) => state.auth.isCodeAcces);
@@ -105,15 +111,17 @@ const DashBoardScreen = ({ navigation }) => {
     // ======================================================
     const [soldeVisible, setSoldeVisible] = useState(false);
     const [selectedOption, setSelectedOption] = useState("");
+    const [selectedOptionPaiement, setSelectedOptionPaiement] = useState("");
     const [selectedOptionSenegal, setSelectedOptionSenegal] = useState("");
     const [modalVisible, setModalVisible2] = useState(false);
+    const [modalVisible3, setModalVisible3] = useState(false);
     const [sendResumeModal, setSendResumeModal] = useState(false);
     // ==================Send money===================================
     // const [solde, setSolde] = useState(user.balance);
     const [numero, setNumero] = useState("");
-    const [montant, setMontant] = useState("500");
-    const [montantRetrait, setMontantRetrait] = useState("500");
-    const [montantCrediter, setMontantCrediter] = useState("500");
+    const [montant, setMontant] = useState("");
+    const [montantRetrait, setMontantRetrait] = useState("");
+    const [montantCrediter, setMontantCrediter] = useState("");
     const [choixpayement, setChoixPayement] = useState("");
     // ================================================================
 
@@ -122,6 +130,18 @@ const DashBoardScreen = ({ navigation }) => {
     const [codePays, setCodePays] = useState("");
     const [modalClock, setModalClock] = useState(true);
     const [optionCrediter, setOptionCrediter] = useState([])
+    const animation = useRef(null);
+
+    const pourcentageEnvoi = pourcentage[0].cost
+    const pourcentageRetrait = pourcentage[0].cost_retrait
+
+    const fraisEnvoi = (parseInt(montant, 10) * pourcentageEnvoi) / 100
+    const fraisRetrait = (parseInt(montant, 10) * pourcentageRetrait) / 100
+
+    console.log(typeof pourcentageEnvoi)
+
+    const coutEnvoie = fraisEnvoi + parseInt(montant, 10)
+    const coutRetrait = fraisRetrait + parseInt(montant, 10)
 
 
     const dispatch = useDispatch();
@@ -131,6 +151,7 @@ const DashBoardScreen = ({ navigation }) => {
         // Rediriger l'utilisateur vers l'écran de connexion ou la page d'accueil
         navigation.replace("Home");
     };
+
     const handleLogout2 = () => {
         navigation.replace("Home");
     };
@@ -145,7 +166,7 @@ const DashBoardScreen = ({ navigation }) => {
     // ref
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
     // variables
-    const snapPoints = useMemo(() => ["17%", "62%", "100%"], []);
+    const snapPoints = useMemo(() => ["17%", "62%", "80%"], []);
     // callbacks
     const handlePresentModalPress = useCallback(() => {
         // handleCloseModalPressRetirer()
@@ -171,7 +192,7 @@ const DashBoardScreen = ({ navigation }) => {
     // ref
     const bottomSheetModalRefRetirer = useRef<BottomSheetModal>(null);
     // variables
-    const snapPointsRetirer = useMemo(() => ["17%", "62%", "100%"], []);
+    const snapPointsRetirer = useMemo(() => ["17%", "62%", "80%"], []);
     // callbacks
     const handlePresentModalPressRetirer = useCallback(() => {
         // handleCloseModalPress()
@@ -196,7 +217,7 @@ const DashBoardScreen = ({ navigation }) => {
     // ref
     const bottomSheetModalRefCrediter = useRef<BottomSheetModal>(null);
     // variables
-    const snapPointsCrediter = useMemo(() => ["17%", "62%", "100%"], []);
+    const snapPointsCrediter = useMemo(() => ["17%", "62%", "80%"], []);
     // callbacks
     const handlePresentModalPressCrediter = useCallback(() => {
         // handleCloseModalPressRetirer()
@@ -236,6 +257,19 @@ const DashBoardScreen = ({ navigation }) => {
         },
     ];
 
+    const optionPaiment = [
+        {
+            label: "Orange",
+            // value: 242,
+            // flag: "cg",
+        },
+        {
+            label: "Wave",
+            // value: 221,
+            // flag: "sn",
+        },
+    ];
+
     function randomTrueOrFalse() {
         return Math.random() < 0.5;
     }
@@ -255,6 +289,11 @@ const DashBoardScreen = ({ navigation }) => {
         } else {
             setCodePays("SN");
         }
+    };
+
+    const handleSelectPaiement = (option: React.SetStateAction<string>) => {
+        setSelectedOptionPaiement(option);
+
     };
 
     let [fontsLoaded] = useFonts({
@@ -307,6 +346,9 @@ const DashBoardScreen = ({ navigation }) => {
                     setShowOpt(true);
                 } catch (error) {
                     console.log("levi goteni verification", error);
+                } finally {
+                    setIsLoading(false);
+
                 }
             })();
         };
@@ -340,6 +382,10 @@ const DashBoardScreen = ({ navigation }) => {
                     setShowOpt(false);
                     setNotSendMoney(true);
                     // console.error('Argent non envoye', error)
+                } finally {
+                    setIsLoading(false);
+                    // setShowOpt(false);
+                    // setNotSendMoney(true);
                 }
             })();
         };
@@ -371,6 +417,8 @@ const DashBoardScreen = ({ navigation }) => {
                     handleCloseModalPressCrediter();
                     setNotSendMoney(true);
                     // console.error('Argent non envoye', error)
+                } finally {
+                    setIsLoading(false);
                 }
             })();
         };
@@ -393,32 +441,13 @@ const DashBoardScreen = ({ navigation }) => {
                     setShowOptRetirer(true)
                 } catch (error) {
                     console.log("levi goteni verification", error);
+                } finally {
+                    setIsLoading(false);
                 }
             })();
         };
         checkData();
     }
-    // if (optionCrediter[0] == null) {
-    (async () => {
-        try {
-            const response = await axios.get("https://walet.tasa.pro/api/payment_mode", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            })
-            const datas = response.data.datas
-            setOptionCrediter(datas)
-            return response.data.datas
-
-        } catch (error) {
-            console.log("levi goteni verification", error);
-        }
-    })();
-    // }
-
-
-    console.log(optionCrediter)
-
 
     const handleCrediter = () => {
         setIsLoading(true);
@@ -446,6 +475,8 @@ const DashBoardScreen = ({ navigation }) => {
                     // handleCloseModalPressRetirer()
                     setNotSendMoney(true);
                     // console.error('Argent non envoye', error)
+                } finally {
+                    setIsLoading(false);
                 }
             })();
         };
@@ -471,6 +502,22 @@ const DashBoardScreen = ({ navigation }) => {
         setModalClock(false);
     };
 
+    const handleSendVerifSold = () => {
+        if (user.balance <= coutEnvoie) {
+            ToastAndroid.show("Vous n'avez pas suffisamment de fonds pour effectuer cet envoi. Veuillez recharger votre compte.", ToastAndroid.SHORT);
+        } else {
+            setSendResumeModal(true)
+        }
+    }
+
+    const handleSendVerifSoldRetrait = () => {
+        if (user.balance <= coutRetrait) {
+            ToastAndroid.show("Votre solde est insuffisant pour ce retrait. Veuillez recharger votre compte.", ToastAndroid.SHORT);
+        } else {
+            handleRetirerOpt()
+        }
+    }
+
 
     return (
         <BottomSheetModalProvider>
@@ -479,21 +526,21 @@ const DashBoardScreen = ({ navigation }) => {
                 {/* <StatusBar barStyle="light-content" /> */}
 
                 <LinearGradient
-                    colors={[default_color.orange, "gray"]}
+                    colors={[default_color.orange, default_color.grayColor]}
                     start={{ x: 0, y: 0.3 }}
-                    end={{ x: 0, y: 0.5 }}
+                    end={{ x: 0, y: 0.7 }}
                     style={styles.container_image}
                 >
                     <View style={styles.container_logo}>
                         <TouchableOpacity onPress={() => navigation.navigate('Log')}>
-                            <Icon name="user" size={20} color="white" />
+                            <Icon name="user" size={18} color="white" />
                         </TouchableOpacity>
-                        <Text style={styles.welcomMessage}>WALLET</Text>
+                        <Text style={styles.welcomMessage}>Tasa wallet</Text>
                         <TouchableOpacity
                             onPress={() => setDeconnexionConf(!deconnexionConf)}
                             style={{ padding: 0 }}
                         >
-                            <Icon name="sign-out" size={20} color="white" />
+                            <Icon name="sign-out" size={18} color="white" />
                         </TouchableOpacity>
                     </View>
                     <View style={styles.barShow}>
@@ -515,7 +562,7 @@ const DashBoardScreen = ({ navigation }) => {
                                     <Text
                                         style={{
                                             fontFamily: "Roboto_700Bold",
-                                            color: "gray",
+                                            color: default_color.grayColor,
                                             fontSize: 28,
                                         }}
                                     >
@@ -580,7 +627,7 @@ const DashBoardScreen = ({ navigation }) => {
                                 style={styles.iconShowbarEnvoyer}
                                 onPress={handlePresentModalPress}
                             >
-                                <Icon name="send" size={25} color="gray" />
+                                <Icon name="send" size={25} color={default_color.grayColor} />
                             </TouchableOpacity>
                             <Text style={styles.textShowbar}>Envoyer</Text>
                         </View>
@@ -589,7 +636,7 @@ const DashBoardScreen = ({ navigation }) => {
                                 style={styles.iconShowbarRetirer}
                                 onPress={handlePresentModalPressRetirer}
                             >
-                                <Icon name="money" size={25} color="gray" />
+                                <Icon name="money" size={25} color={default_color.grayColor} />
                             </TouchableOpacity>
                             <Text style={styles.textShowbar}>Retirer</Text>
                         </View>
@@ -599,7 +646,7 @@ const DashBoardScreen = ({ navigation }) => {
                                 onPress={handlePresentModalPressCrediter}
                             >
                                 <View style={{ paddingHorizontal: 2.4 }}>
-                                    <Icon name="plus" size={25} color={default_color.green} />
+                                    <Icon name="plus" size={25} color={default_color.grayColor} />
                                 </View>
                             </TouchableOpacity>
                             <Text style={styles.textShowbar}>Crediter</Text>
@@ -984,7 +1031,7 @@ const DashBoardScreen = ({ navigation }) => {
                 {/* =================================Chargement modal============================== */}
                 <Modal
                     coverScreen={true}
-                    backdropOpacity={0.3}
+                    backdropOpacity={0.2}
                     isVisible={isLoading}
                     animationIn="fadeIn" // Animation d'entrée du haut
                     animationOut="fadeOut"
@@ -992,13 +1039,26 @@ const DashBoardScreen = ({ navigation }) => {
                     <View style={styles.modalContainerChargement}>
                         <View style={styles.modalContentChargement}>
                             <Loader1 />
+                            {/* <LottieView
+                                autoPlay
+                                // ref={animation}
+                                loop={false}
+                                style={{
+                                    width: 300,
+                                    height: 350,
+                                    // backgroundColor: '#eee',
+
+                                }}
+                                // Find more Lottie files at https://lottiefiles.com/featured
+                                source={require('../animations/lotties/chargement3.json')}
+                            /> */}
                         </View>
                     </View>
                 </Modal>
                 {/* =================================Verifie modal============================== */}
 
                 {/* ==================== Modal ro verife lock message =====================*/}
-                {!isCodeAcces &&
+                {/* {!isCodeAcces &&
 
 
                     <Modal
@@ -1047,7 +1107,7 @@ const DashBoardScreen = ({ navigation }) => {
                             </View>
                         </View>
                     </Modal>
-                }
+                } */}
 
                 {/* ==================== Modal ro verife lock message =====================*/}
                 <Modal
@@ -1132,35 +1192,37 @@ const DashBoardScreen = ({ navigation }) => {
                             />
                         </View>
                         {selectedOption == "Senegal" && (
-                            <View style={{ width: "100%", paddingHorizontal: 10 }}>
-                                <Text
-                                    style={{
-                                        fontFamily: "RobotoSerif_400Regular",
-                                        fontSize: 11,
-                                        color: "gray",
-                                    }}
+                            <View style={styles.inputContainer3}>
+                                <Icon
+                                    name="toggle-on"
+                                    size={15}
+                                    color="grey"
+                                    style={styles.iconStyle}
+                                />
+                                <TouchableOpacity
+                                    onPress={() => setModalVisible3(true)}
+                                    style={{ width: "88%" }}
                                 >
-                                    Choisir votre option d'envoie vers le senegal
-                                </Text>
-                                <View
-                                    style={{
-                                        width: "100%",
-                                        display: "flex",
-                                        flexDirection: "row",
-                                        justifyContent: "space-around",
-                                    }}
-                                >
-                                    <RadioButtonCustom
-                                        label="Orange money"
-                                        selected={selectedOptionSenegal === "orange"}
-                                        onSelect={() => handleSelectOption("orange")}
-                                    />
-                                    <RadioButtonCustom
-                                        label="Wave"
-                                        selected={selectedOptionSenegal === "wave"}
-                                        onSelect={() => handleSelectOption("wave")}
-                                    />
-                                </View>
+                                    {selectedOptionPaiement == "" ? (
+                                        <Text
+                                            style={{
+                                                color: "grey",
+                                                fontFamily: "RobotoSerif_400Regular",
+                                            }}
+                                        >
+                                            Moyen de paiement
+                                        </Text>
+                                    ) : (
+                                        <Text>{selectedOptionPaiement}</Text>
+                                    )}
+                                </TouchableOpacity>
+                                <CustomModalPicker
+                                    options={optionPaiment}
+                                    onSelect={handleSelectPaiement}
+                                    visible={modalVisible3}
+                                    onClose={() => setModalVisible3(false)}
+                                    titre="Choisir le moyen de paiement"
+                                />
                             </View>
                         )}
 
@@ -1205,7 +1267,10 @@ const DashBoardScreen = ({ navigation }) => {
                         </View>
                         <TouchableOpacity
                             style={styles.button}
-                            onPress={() => setSendResumeModal(true)}
+                            onPress={() =>
+
+                                handleSendVerifSold()
+                            }
                         >
                             <Text style={styles.buttonText}>Envoyer</Text>
                         </TouchableOpacity>
@@ -1255,7 +1320,7 @@ const DashBoardScreen = ({ navigation }) => {
                             </TouchableOpacity> */}
                             <TouchableOpacity
                                 style={styles.button}
-                                onPress={() => handleRetirerOpt()}
+                                onPress={() => handleSendVerifSoldRetrait()}
                             >
                                 <Text style={styles.buttonText}>Valider</Text>
                             </TouchableOpacity>
@@ -1342,20 +1407,16 @@ const DashBoardScreen = ({ navigation }) => {
                                     width: "100%",
                                 }}
                             >
-                                {optionCrediter.map(item => (
-                                    <TouchableOpacity onPress={() => setChoixPayement("1")} key={item.id}>
+                                {mode.map((item) => (
+                                    <TouchableOpacity style={{ marginTop: 10 }} onPress={() => setChoixPayement("1")} key={item.id}>
                                         <Image
-                                            source={require("../../assets/images/mtn.png")}
+                                            // source={require("../../assets/images/mtn.png")}
+                                            source={{ uri: 'https://walet.tasa.pro/assets/img/' + item.img_name }}
                                             style={{ width: 100, height: 70, borderRadius: 10 }}
                                         />
+                                        {/* <Text style={{ fontFamily: "RobotoSerif_400Regular" }}>{item.mode}</Text> */}
                                     </TouchableOpacity>
                                 ))}
-                                {/* <TouchableOpacity>
-                                    <Image
-                                        source={require("../../assets/images/airtel.png")}
-                                        style={{ width: 100, height: 70, borderRadius: 10 }}
-                                    />
-                                </TouchableOpacity> */}
                             </View>
                         </>
                     ) : choixpayement == "1" ? (
@@ -1473,7 +1534,7 @@ const styles = StyleSheet.create({
     },
     container_image: {
         // flex: 0.6,
-        height: "53%",
+        height: "52%",
         justifyContent: "flex-start",
         alignItems: "center",
         padding: 20,
@@ -1495,12 +1556,15 @@ const styles = StyleSheet.create({
         // paddingBottom: 230
     },
     basBarShow: {
+        position: 'absolute',
+        width: '100%',
+        bottom: -2,
         flex: 0.3,
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "flex-end",
         padding: 10,
-        backgroundColor: "gray",
+        backgroundColor: default_color.grayColor,
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
     },
@@ -1543,7 +1607,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
     },
     iconShowbarCrediter: {
-        backgroundColor: '#3a8c4d',
+        backgroundColor: '#95AB63',
         borderRadius: 100,
         padding: 22,
         elevation: 10,

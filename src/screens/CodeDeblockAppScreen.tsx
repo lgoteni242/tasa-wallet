@@ -1,19 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, StatusBar, TextInput, Vibration, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, StatusBar, TextInput, Vibration } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import colorDefault from '../styles/color';
-// import * as NavigationBar from 'expo-navigation-bar';
-// import { useAuth } from '../../AuthContext';
 import * as Animatable from 'react-native-animatable';
-import * as SecureStore from 'expo-secure-store';
 import {
     RobotoSerif_400Regular,
     RobotoSerif_700Bold,
     RobotoSerif_100Thin,
     useFonts
 } from "@expo-google-fonts/roboto-serif";
-import { retrieveValue } from '../../utils/utils.js'
 import { useSelector } from 'react-redux';
+import { CommonActions } from '@react-navigation/native';
 
 
 
@@ -25,28 +21,14 @@ const CodeDeblockAppScreen = ({ navigation }) => {
     const accessCode = useSelector(state => state.auth.accessCode);
 
     const [inputText, setInputText] = useState('');
-    const [inputText2, setInputText2] = useState('');
     const [hidenText, setHidenText] = useState('')
     const [nombreDeCaracteres, setNombreDeCaracteres] = useState(0);
-    const elementRef = useRef(null);
     const elementRef2 = useRef(null);
-    const otpInputRef = useRef(null);
 
-    // const { setLock } = useAuth();
-
-    let [fontsLoaded] = useFonts({
-        RobotoSerif_400Regular,
-        RobotoSerif_100Thin,
-        RobotoSerif_700Bold,
-    });
-    if (!fontsLoaded) {
-        return <ActivityIndicator size="large" />;
-    }
     const handleButtonClick = (value: string) => {
         if (nombreDeCaracteres < 3) {
             setInputText(inputText + value);
             setNombreDeCaracteres(inputText.length);
-            // Vibration.vibrate(100);
         }
     }
 
@@ -67,29 +49,25 @@ const CodeDeblockAppScreen = ({ navigation }) => {
     useEffect(() => {
         if (nombreDeCaracteres == 3) {
             if (inputText == accessCode) {
-                navigation.navigate("Menu")
+                navigation.dispatch(
+                    CommonActions.reset({
+                        index: 0,
+                        routes: [{ name: 'Menu' }],
+                    })
+                );
                 setInputText('')
             } else {
                 setInputText('')
                 setNombreDeCaracteres(0)
                 handlePress2()
                 onButtonPress()
-                setHidenText("Les codes d'acces ne correspondent pas, veuillez ressayer")
+                setHidenText("Le code d'acces ne correspond pas, veuillez ressayer")
                 setTimeout(() => {
                     setHidenText('');
                 }, 1500);
             }
         }
     }, [nombreDeCaracteres])
-
-
-    // (async () => {
-    //     try {
-
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // })()
 
     const handleClear = () => {
         setInputText('');
@@ -111,9 +89,9 @@ const CodeDeblockAppScreen = ({ navigation }) => {
                 </View>
                 <View style={styles.container3}>
                     <Animatable.View ref={elementRef2}>
-                        <Text style={{ color: 'black', marginBottom: 10, fontFamily: 'RobotoSerif_700Bold', fontSize: 12 }}>Entrez votre code d'accès tasa wallet</Text>
+                        <Text style={{ color: 'black', marginBottom: 10, fontSize: 12 }}>Entrez votre code d'accès tasa wallet</Text>
                     </Animatable.View>
-                    <Text style={{ color: 'gray', textAlign: 'center', fontFamily: 'RobotoSerif_400Regular', fontSize: 10 }}>Réinitialisez votre application en cas d'oubli de mot de passe.</Text>
+                    <Text style={{ color: 'gray', textAlign: 'center', fontSize: 10 }}>Réinitialisez votre application en cas d'oubli de mot de passe.</Text>
                     <View style={styles.inputContainer}>
                         <TextInput
                             value={inputText}
@@ -125,7 +103,7 @@ const CodeDeblockAppScreen = ({ navigation }) => {
                             secureTextEntry={true}
                         />
                     </View>
-                    <Text style={{ color: 'red', fontSize: 8, fontFamily: 'RobotoSerif_400Regular' }}>{hidenText}</Text>
+                    <Text style={{ color: 'red', fontSize: 8 }}>{hidenText}</Text>
                 </View>
                 <View style={styles.container2}>
                     {[[1, 2, 3], [4, 5, 6], [7, 8, 9], ['c', '0', 'x']].map((row, rowIndex) => (
@@ -170,7 +148,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         borderBottomColor: 'gray',
         borderBottomWidth: 0.5,
-        fontFamily: 'RobotoSerif_400Regular'
+        // fontFamily: 'RobotoSerif_400Regular'
 
 
     },
@@ -194,7 +172,7 @@ const styles = StyleSheet.create({
         color: 'gray',
         borderColor: 'white',
         backgroundColor: '#ecece9b0',
-        fontFamily: 'RobotoSerif_400Regular'
+        // fontFamily: 'RobotoSerif_400Regular'
 
 
     },

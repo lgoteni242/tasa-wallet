@@ -1,17 +1,15 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import {
     Animated,
     Dimensions,
-    Image,
     ScrollView,
     StyleSheet,
-    View
-    , Text, TextInput, TouchableOpacity
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity
 } from 'react-native';
-// Import
-// import Icon from 'react-native-vector-icons/FontAwesome';
 import default_color from '../styles/color';
-
 import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -120,39 +118,88 @@ export default function ScrollViewAnimatedHeader({ navigation }) {
                                 <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 10, justifyContent: 'space-between', alignItems: "center", width: "90%" }}>
                                     <View style={{ display: 'flex', justifyContent: 'space-between' }}>
                                         <Text style={{ fontFamily: "RobotoSerif_400Regular", }}>Définir un code de sécurité.</Text>
-                                        <Text style={{ color: 'gray', fontSize: 8, fontFamily: "RobotoSerif_400Regular" }}>Le code de sécurité protege votre application.</Text>
+                                        <Text style={{ color: 'gray', fontSize: 8, fontFamily: "RobotoSerif_400Regular" }}>Le code de sécurité protege votre application</Text>
                                     </View>
                                     <Icon name="chevron-right" color="grey" size={12} />
                                 </View>
                             </View>
                         </TouchableOpacity>
                     }
+                    <TouchableOpacity onPress={() => navigation.navigate('CodeVerif')}>
+                        <View style={styles.transcationListe}>
+                            <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 10, alignItems: "center" }}>
+                                <Icon name="key" color="grey" size={18} style={{ marginRight: 18 }} />
+                                <View style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <Text style={{ fontFamily: "RobotoSerif_400Regular", }}>Voir sa clé de sécurité</Text>
+                                    <Text style={{ color: 'gray', fontSize: 8, fontFamily: "RobotoSerif_400Regular" }}>La clé de sécurité permet de reinitialiser le mot de passe</Text>
+                                </View>
+                            </View>
+                        </View>
+                    </TouchableOpacity>
 
+                    <TouchableOpacity onPress={() => navigation.navigate('Kyc')}>
+                        <View style={styles.transcationListe}>
+                            <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 10, alignItems: "center" }}>
+                                <Icon name="money" color="grey" size={18} style={{ marginRight: 18 }} />
+                                <View style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <Text style={{ fontFamily: "RobotoSerif_400Regular", }}>Augmenter votre seuil</Text>
+                                    <Text style={{ color: 'gray', fontSize: 8, fontFamily: "RobotoSerif_400Regular" }}>Votre present seuil est de 500.000 Fcfa</Text>
+                                </View>
+                            </View>
+                        </View>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.aujourdhui}>
-                    <Text style={{ marginBottom: 14, color: default_color.orange, fontSize: 13, fontFamily: "RobotoSerif_700Bold", }}>Mettre a jour le mot de passe</Text>
+                    <Text style={{ marginBottom: 14, color: default_color.orange, fontSize: 13, fontFamily: "RobotoSerif_700Bold", }}>Mettre a jour le code pin</Text>
                     {/* <View style={styles.transcationListe}> */}
-                    <Text style={{ color: 'gray', fontSize: 10, marginBottom: 10, textAlign: 'justify', fontFamily: "RobotoSerif_400Regular" }}>Assurez-vous que votre compte utilise un mot de passe long et aléatoire pour rester sécurisé.</Text>
+                    {/* <Text style={{ color: 'gray', fontSize: 10, marginBottom: 10, textAlign: 'justify', fontFamily: "RobotoSerif_400Regular" }}>Assurez-vous que votre compte utilise un mot de passe long et aléatoire pour rester sécurisé.</Text> */}
 
                     <View style={styles.inputContainer}>
+                        <Icon
+                            name="lock"
+                            size={15}
+                            color="grey"
+                            style={styles.iconStyle}
+                        />
                         <TextInput
                             style={styles.input}
-                            placeholder="Mot de passe actuel"
-                        // secureTextEntry={!passwordVisible}
+                            placeholder="Code pin actuel"
+                            keyboardType="numeric"
+                            autoCapitalize="none"
+                        // value={montant}
+                        // onChangeText={setMontant}
                         />
                     </View>
                     <View style={styles.inputContainer}>
+                        <Icon
+                            name="lock"
+                            size={15}
+                            color="grey"
+                            style={styles.iconStyle}
+                        />
                         <TextInput
                             style={styles.input}
-                            placeholder="Nouveau mot de passe"
-                        // secureTextEntry={!passwordVisible}
+                            placeholder="Nouveau code pin"
+                            keyboardType="numeric"
+                            autoCapitalize="none"
+                        // value={montant}
+                        // onChangeText={setMontant}
                         />
                     </View>
                     <View style={styles.inputContainer}>
+                        <Icon
+                            name="lock"
+                            size={15}
+                            color="grey"
+                            style={styles.iconStyle}
+                        />
                         <TextInput
                             style={styles.input}
-                            placeholder="Confirmez le mot de passe"
-                        // secureTextEntry={!passwordVisible}
+                            placeholder="Confirmer le code pin"
+                            keyboardType="numeric"
+                            autoCapitalize="none"
+                        // value={montant}
+                        // onChangeText={setMontant}
                         />
                     </View>
                     <TouchableOpacity style={styles.button}>
@@ -283,20 +330,25 @@ const styles = StyleSheet.create({
     },
 
     inputContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderColor: 'gray',
-        borderWidth: 1,
+        flexDirection: "row",
+        alignItems: "center",
+        borderColor: "gray",
+        borderWidth: 0.6,
         marginBottom: 20,
         borderRadius: 100,
+        width: "100%",
     },
 
     input: {
+        // flex: 1,
+        // height: 50,
+        // paddingHorizontal: 10,
+        // fontSize: 10,
+        // fontFamily: 'RobotoSerif_400Regular'
         flex: 1,
-        height: 50,
-        paddingHorizontal: 10,
-        fontSize: 10,
-        fontFamily: 'RobotoSerif_400Regular'
+        height: 45,
+        // paddingHorizontal: 10,
+        fontFamily: "RobotoSerif_400Regular",
 
     },
     button: {
@@ -346,7 +398,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderBottomWidth: 0.3,
         borderColor: '#ccc',
-
-
+    },
+    iconStyle: {
+        paddingHorizontal: 10,
+        color: "grey",
     },
 });

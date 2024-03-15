@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import { createStackNavigator, CardStyleInterpolators } from "@react-navigation/stack";
 import HomeScreen from "./src/screens/HomeScreen";
 import MotPasseOublier from "./src/screens/PassWordScreen";
 import DashBoardScreen from "./src/screens/DashBoardScreen";
@@ -18,13 +18,14 @@ import * as NavigationBar from 'expo-navigation-bar';
 import { HandleChange } from './HandleChange';
 import LoginScree from "./src/screens/SettingScreen";
 import RegistrationForm from "./src/screens/RegistrationForm";
+import PresentationPage from "./src/screens/PresentationPage";
 
 
 const Stack = createStackNavigator();
 
 const Navigation = () => {
 
-  NavigationBar.setBackgroundColorAsync('white');
+  // NavigationBar.setBackgroundColorAsync('white');
 
   const isLoggedIn = useSelector((state) => {
     return state.auth.isLoggedIn;
@@ -34,72 +35,58 @@ const Navigation = () => {
     return state.auth.isCodeAcces;
   });
 
-  const isLock = useSelector((state) => {
-    return state.auth.isLock;
-  });
-
   const dispatch = useDispatch();
   const appState = useRef(AppState.currentState);
   const timerRef = useRef(null);
 
-  // const _handleAppStateChange = async (nextAppState: string) => {
+  // Si l'utilisateur est déjà connecté et l'application est verrouillée, affichez l'écran de déverrouillage
+  if (isLoggedIn && isCodeAcces) {
+    return (
+      <Stack.Navigator initialRouteName="CodeDeblockApp" screenOptions={{ headerShown: false, cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS }}>
+        <Stack.Screen name="CodeDeblockApp" component={CodeDeblockAppScreen} />
+        <Stack.Screen name="Log" component={LoginScree} />
+        <Stack.Screen name="Dash" component={DashBoardScreen} />
+        <Stack.Screen name="CodeAcces" component={CodeAccesScreen} />
+        <Stack.Screen name="CodeVerif" component={CodeAccesVerifScreen} />
+        <Stack.Screen name="Kyc" component={KycScreen} />
+        <Stack.Screen name="CodeAccesConfig" component={CodeAccesConfigScreen} />
+        <Stack.Screen name="Menu" component={BottomMenuScreen} />
+        <Stack.Screen name="Home" component={HomeScreen} />
+      </Stack.Navigator>
+    );
+  }
 
-  //   if (isLoggedIn && isCodeAcces == false) {
-  //     if (
-  //       appState.current.match(/inactive|background/) &&
-  //       nextAppState === 'active'
-  //     ) {
-  //       timerRef.current = setTimeout(() => {  
-  //         dispatch({ type: 'LOGOUT' });
-  //         clearTimeout(timerRef.current);
-  //       }, 300000);
-  //     }
-  //   }
+  // Si l'utilisateur est déjà connecté mais l'application n'est pas verrouillée, affichez les écrans normaux
+  if (isLoggedIn && !isCodeAcces) {
+    return (
+      <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false, cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS }} >
+        {/* <Stack.Screen name="Presentation" component={PresentationPage} /> */}
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="register" component={RegistrationForm} />
+        <Stack.Screen name="MotPasseOublier" component={MotPasseOublier} />
+        <Stack.Screen name="Menu" component={BottomMenuScreen} />
+        <Stack.Screen name="CodeDeblockApp" component={CodeDeblockAppScreen} />
+        <Stack.Screen name="Log" component={LoginScree} />
+        <Stack.Screen name="Dash" component={DashBoardScreen} />
+        <Stack.Screen name="CodeAcces" component={CodeAccesScreen} />
+        <Stack.Screen name="CodeVerif" component={CodeAccesVerifScreen} />
+        <Stack.Screen name="Kyc" component={KycScreen} />
+        <Stack.Screen name="CodeAccesConfig" component={CodeAccesConfigScreen} />
+      </Stack.Navigator>
+    );
+  }
 
-  //   if (isLoggedIn && isCodeAcces) {
-  //     if (
-  //       appState.current.match(/inactive|background/) &&
-  //       nextAppState === 'active'
-  //     ) {
-  //       dispatch({ type: 'LOCK_APP' });
-  //       clearTimeout(timerRef.current);
-  //     }
-  //     if (
-  //       appState.current.match(/active/) &&
-  //       nextAppState.match(/inactive|background/)
-  //     ) {
-  //       timerRef.current = setTimeout(() => {
-  //         setLock(true);
-  //       }, 100); // 300000ms = 5 minutes
-  //     }
-  //   }
-  //   appState.current = nextAppState;
-  // };
-
-  // useEffect(() => {
-  //   const subscription = AppState.addEventListener('change', _handleAppStateChange);
-  //   return () => {
-  //     subscription.remove();
-  //   };
-  // }, []);
-
-
+  // Si l'utilisateur n'est pas connecté, affichez les écrans de connexion
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }} >
+    <Stack.Navigator screenOptions={{ headerShown: false, cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS }}>
+      <Stack.Screen name="Presentation" component={PresentationPage} />
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="CodeDeblockApp" component={CodeDeblockAppScreen} />
-      <Stack.Screen name="Dash" component={DashBoardScreen} />
-      <Stack.Screen name="Log" component={LoginScree} />
-      <Stack.Screen name="Menu" component={BottomMenuScreen} />
-      <Stack.Screen name="CodeAcces" component={CodeAccesScreen} />
-      <Stack.Screen name="Kyc" component={KycScreen} />
       <Stack.Screen name="register" component={RegistrationForm} />
-      <Stack.Screen name="CodeVerif" component={CodeAccesVerifScreen} />
-      <Stack.Screen name="CodeAccesConfig" component={CodeAccesConfigScreen}
-      />
       <Stack.Screen name="MotPasseOublier" component={MotPasseOublier} />
     </Stack.Navigator>
   );
+
 };
 
 const App = () => {

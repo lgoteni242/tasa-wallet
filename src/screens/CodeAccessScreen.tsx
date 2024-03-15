@@ -1,19 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, StatusBar, TextInput, Vibration, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import colorDefault from '../styles/color';
-// import * as NavigationBar from 'expo-navigation-bar';
-// import { useAuth } from '../../AuthContext';
 import * as Animatable from 'react-native-animatable';
-import * as SecureStore from 'expo-secure-store';
-import {
-    RobotoSerif_400Regular,
-    RobotoSerif_700Bold,
-    RobotoSerif_100Thin,
-    useFonts
-} from "@expo-google-fonts/roboto-serif";
+// import {
+//     RobotoSerif_400Regular,
+//     RobotoSerif_700Bold,
+//     RobotoSerif_100Thin,
+//     useFonts
+// } from "@expo-google-fonts/roboto-serif";
 import { setVerifAccesCode, setAccessCode } from '../store/actions/authActions';
-import { connect, useSelector, useDispatch } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 
@@ -30,14 +26,14 @@ const CodeAccesScreen = ({ navigation }) => {
     const elementRef2 = useRef(null);
     // const { setLock } = useAuth();
 
-    let [fontsLoaded] = useFonts({
-        RobotoSerif_400Regular,
-        RobotoSerif_100Thin,
-        RobotoSerif_700Bold,
-    });
-    if (!fontsLoaded) {
-        return <ActivityIndicator size="large" />;
-    }
+    // let [fontsLoaded] = useFonts({
+    //     RobotoSerif_400Regular,
+    //     RobotoSerif_100Thin,
+    //     RobotoSerif_700Bold,
+    // });
+    // if (!fontsLoaded) {
+    //     return <ActivityIndicator size="large" />;
+    // }
     const handleButtonClick = (value: string) => {
         if (isVisible) {
             if (nombreDeCaracteres < 3) {
@@ -116,7 +112,7 @@ const CodeAccesScreen = ({ navigation }) => {
             </TouchableOpacity>
             <View style={styles.container3}>
                 <View style={{ position: 'absolute', top: 5 }}>
-                    <Icon name="key" size={50} color="gray" />
+                    <Icon name="lock" size={50} color="gray" />
                 </View>
                 {isVisible && (
                     <Animatable.View ref={elementRef} style={styles.container3}>

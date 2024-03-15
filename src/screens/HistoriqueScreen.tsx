@@ -74,6 +74,7 @@ const HistoriqueScreen = ({ navigation }) => {
             const data = response.data.datas;
             setdataListe(data);
             setIsLoading(false);
+            // console.warn(data)
             // return data; // Vous pouvez retourner les données ici si nécessaire
         } catch (error) {
             // Gérer les erreurs ici
@@ -89,32 +90,6 @@ const HistoriqueScreen = ({ navigation }) => {
     const showDateTimePicker = () => {
         setShowPicker(true);
     };
-    const scaleValue = new Animated.Value(1);
-    const pulseDuration = 1500; // Durée totale d'une impulsion (en millisecondes)
-    const pulseDelay = 600; // Délai avant de démarrer la prochaine impulsion (en millisecondes)
-    const pulseRepetitions = 1; // Nombre de répétitions de l'animation
-
-    useEffect(() => {
-        let repetitions = 0;
-
-        const pulseAnimation = () => {
-            Animated.sequence([
-                Animated.timing(scaleValue, { toValue: 1.1, duration: pulseDuration / 2, useNativeDriver: true }),
-                Animated.timing(scaleValue, { toValue: 1, duration: pulseDuration / 2, useNativeDriver: true }),
-            ]).start(() => {
-                repetitions++;
-                if (repetitions < pulseRepetitions) {
-                    setTimeout(() => pulseAnimation(), pulseDelay);
-                }
-            });
-        };
-
-        pulseAnimation(); // Démarre la première impulsion lors du chargement du composant
-
-        return () => scaleValue.stopAnimation();
-    }, [scaleValue]);
-
-
 
     // Utilise useEffect pour charger les transactions initiales lors de la connexion
     useEffect(() => {
@@ -139,9 +114,7 @@ const HistoriqueScreen = ({ navigation }) => {
                             Transactions
                         </Text>
                         <TouchableOpacity onPress={() => showDateTimePicker()}>
-                            <Animated.View style={[styles.transactionPillule, {
-                                transform: [{ scale: scaleValue }]
-                            }
+                            <Animated.View style={[styles.transactionPillule
                             ]} >
                                 <Text
                                     style={{
@@ -153,6 +126,7 @@ const HistoriqueScreen = ({ navigation }) => {
                                 >
                                     Filtrer
                                 </Text>
+
                             </Animated.View>
                         </TouchableOpacity>
                         {showPicker && (
@@ -196,60 +170,80 @@ const HistoriqueScreen = ({ navigation }) => {
                     <UserSkeletonLoader />
                 </>
                 :
-                <FlatList
-                    data={dataListe}
-                    renderItem={({ item }) => (
-                        <View style={styles.transcationListe}>
-                            <View
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "row",
-                                    marginBottom: 10,
-                                }}
-                            >
-                                <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                    <Icon name="user-circle" size={40} color="gray" />
-                                </TouchableOpacity>
-                                <View
-                                    style={{ display: "flex", justifyContent: "space-between" }}
-                                >
-                                    <Text
-                                        style={{
-                                            color: "gray",
-                                            fontFamily: "RobotoSerif_400Regular",
-                                        }}
-                                    >
-                                        {item.recipient}
-                                    </Text>
-                                    <Text
-                                        style={{
-                                            color: "gray",
-                                            fontFamily: "RobotoSerif_100Thin",
-                                            // fontSize: 13
-                                        }}
-                                    >
-                                        {item.transactionId}
-                                        {/* {item.heure} PM */}
-                                    </Text>
-                                </View>
-                            </View>
-                            <View>
-                                <Text style={{ textAlign: 'right' }}>
-                                    {flag(item.country_recipient)}
-                                </Text>
-                                <Text
-                                    style={{
-                                        color: "gray",
-                                        fontFamily: "RobotoSerif_100Thin",
-                                    }}
-                                >
-                                    {item.montant} Fcfa
+                <View
+                    style={{ marginBottom: 60 }}
+                >
+
+                    {
+                        dataListe.length === 0 ? (
+                            <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '40%' }}>
+                                <Text style={{
+                                    textAlign: 'center', marginTop: 20, color: "gray",
+                                    fontFamily: "RobotoSerif_400Regular",
+                                    fontSize: 16
+                                }}>
+                                    Aucune transaction
                                 </Text>
                             </View>
-                        </View>
-                    )}
-                    keyExtractor={(item, index) => index.toString()}
-                />
+
+                        ) : (
+                            <FlatList
+                                data={dataListe}
+                                renderItem={({ item }) => (
+                                    <View style={styles.transcationListe}>
+                                        <View
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "row",
+                                                marginBottom: 10,
+                                            }}
+                                        >
+                                            <TouchableOpacity style={styles.iconShowbarTransaction}>
+                                                <Icon name="money" size={40} color="gray" />
+                                            </TouchableOpacity>
+                                            <View
+                                                style={{ display: "flex", justifyContent: "space-between" }}
+                                            >
+                                                <Text
+                                                    style={{
+                                                        color: "gray",
+                                                        fontFamily: "RobotoSerif_400Regular",
+                                                    }}
+                                                >
+                                                    {item.recipient}
+                                                </Text>
+                                                <Text
+                                                    style={{
+                                                        color: "gray",
+                                                        fontFamily: "RobotoSerif_100Thin",
+                                                        // fontSize: 13
+                                                    }}
+                                                >
+                                                    {item.transactionId}
+                                                    {/* {item.heure} PM */}
+                                                </Text>
+                                            </View>
+                                        </View>
+                                        <View>
+                                            <Text style={{ textAlign: 'right' }}>
+                                                {flag(item.country_recipient)}
+                                            </Text>
+                                            <Text
+                                                style={{
+                                                    color: "gray",
+                                                    fontFamily: "RobotoSerif_100Thin",
+                                                }}
+                                            >
+                                                {item.montant} Fcfa
+                                            </Text>
+                                        </View>
+                                    </View>
+                                )}
+                                keyExtractor={(item, index) => index.toString()}
+                            />
+                        )
+                    }
+                </View>
             }
 
             {/* <Modal

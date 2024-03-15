@@ -1,4 +1,4 @@
-import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT, SET_ACCESS_CODE, SET_VERIF_ACCESS_CODE, LOCK_APP } from '../actions/authActions';
+import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT, SET_ACCESS_CODE, SET_VERIF_ACCESS_CODE, LOCK_APP, MODE_REQUEST, POURCENTAGE_REQUEST } from '../actions/authActions';
 
 const initialState = {
     loading: false,
@@ -8,7 +8,9 @@ const initialState = {
     token: null,
     isCodeAcces: false,
     accessCode: null,
-    isLock: false
+    isLock: false,
+    mode: null,
+    pourcentage: null
 };
 
 const authReducers = (state = initialState, action) => {
@@ -46,8 +48,9 @@ const authReducers = (state = initialState, action) => {
                 user: null,
                 error: null,
                 token: null,
-                // isCodeAcces: false,
-                // accessCode: null
+                isCodeAcces: false,
+                accessCode: null,
+                // isLock: false
             }
         case SET_ACCESS_CODE:
             return {
@@ -63,6 +66,17 @@ const authReducers = (state = initialState, action) => {
             return {
                 ...state,
                 isLock: true
+            };
+        case MODE_REQUEST:
+            return {
+                ...state,
+                mode: action.payload,
+
+            };
+        case POURCENTAGE_REQUEST:
+            return {
+                ...state,
+                pourcentage: action.payload,
             };
         default:
             return state;

@@ -1,6 +1,8 @@
 import axios from 'axios';
 // Action types
 export const LOGIN_REQUEST = 'LOGIN_REQUEST';
+export const MODE_REQUEST = 'MODE_REQUEST';
+export const POURCENTAGE_REQUEST = 'POURCENTAGE_REQUEST';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 export const LOGOUT = 'LOGOUT';
@@ -21,6 +23,16 @@ export const loginRequest = () => ({
 export const loginSuccess = (user) => ({
     type: LOGIN_SUCCESS,
     payload: user,
+});
+
+export const modePayment = (mode) => ({
+    type: MODE_REQUEST,
+    payload: mode,
+});
+
+export const modePourcentage = (pourcentage) => ({
+    type: POURCENTAGE_REQUEST,
+    payload: pourcentage,
 });
 
 export const loginFailure = (error) => ({
@@ -55,7 +67,11 @@ export const login = (username, password, codePays) => {
             // Make API call to authenticate user
             const response = await axios.post('https://walet.tasa.pro/api/auth', { country_code: codePays, phone: username, pin: password });
             // Dispatch login success action with user data
+
             dispatch(loginSuccess(response.data));
+            // console.error(response.data.pourcentage, 'levi')
+            dispatch(modePayment(response.data.payment_mode));
+            dispatch(modePourcentage(response.data.pourcentage));
             return response
         } catch (error) {
             // Dispatch login failure action with error message

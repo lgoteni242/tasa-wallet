@@ -2,12 +2,12 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import React, { useEffect, useState } from 'react';
 import { View, Image, StyleSheet, Text, StatusBar, TextInput, TouchableOpacity, ImageBackground, ActivityIndicator, ScrollView } from 'react-native';
 import default_color from '../styles/color';
-import { Roboto_700Bold, Roboto_100Thin, Roboto_400Regular, useFonts } from "@expo-google-fonts/roboto";
-import {
-    RobotoSerif_400Regular,
-    RobotoSerif_700Bold,
-    RobotoSerif_100Thin,
-} from "@expo-google-fonts/roboto-serif";
+// import { Roboto_700Bold, Roboto_100Thin, Roboto_400Regular, useFonts } from "@expo-google-fonts/roboto";
+// import {
+//     RobotoSerif_400Regular,
+//     RobotoSerif_700Bold,
+//     RobotoSerif_100Thin,
+// } from "@expo-google-fonts/roboto-serif";
 import { useSelector } from 'react-redux';
 import * as SecureStore from 'expo-secure-store';
 import { retrieveValue } from '../../utils/utils.js'
@@ -21,18 +21,18 @@ const SettingsScreens = ({ navigation }) => {
     // console.error(user.profile_photo_url)
     const [passwordVisible, setPasswordVisible] = useState(false);
 
-    let [fontsLoaded] = useFonts({
-        Roboto_700Bold,
-        Roboto_100Thin,
-        RobotoSerif_400Regular,
-        RobotoSerif_100Thin,
-        RobotoSerif_700Bold,
-        Roboto_400Regular
-    });
+    // let [fontsLoaded] = useFonts({
+    //     Roboto_700Bold,
+    //     Roboto_100Thin,
+    //     RobotoSerif_400Regular,
+    //     RobotoSerif_100Thin,
+    //     RobotoSerif_700Bold,
+    //     Roboto_400Regular
+    // });
 
-    if (!fontsLoaded) {
-        return <ActivityIndicator size="large" />;
-    }
+    // if (!fontsLoaded) {
+    //     return <ActivityIndicator size="large" />;
+    // }
 
     const handleSignIn = () => {
         // Logique de connexion ici

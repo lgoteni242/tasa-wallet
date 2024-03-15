@@ -1,12 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, StyleSheet, Text, StatusBar, TextInput, TouchableOpacity, ActivityIndicator, Image, ToastAndroid } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
 import default_color from '../styles/color';
-import {
-    RobotoSerif_400Regular,
-    RobotoSerif_100Thin,
-    useFonts,
-} from "@expo-google-fonts/roboto-serif";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import CustomModalPicker from '../components/CustomModalPicker';
 import { connect, useSelector } from 'react-redux';
@@ -14,11 +9,23 @@ import { login } from '../store/actions/authActions';
 import { bindActionCreators } from 'redux';
 import NetInfo from '@react-native-community/netinfo';
 import Modal from "react-native-modal";
+import LottieView from 'lottie-react-native';
 import Loader1 from '../components/Loader1';
-import axios from 'axios';
+import {
+    RobotoSerif_400Regular,
+    RobotoSerif_700Bold,
+    RobotoSerif_300Light,
+    RobotoSerif_100Thin,
+    useFonts,
+} from "@expo-google-fonts/roboto-serif";
+import * as NavigationBar from 'expo-navigation-bar';
+
+
 
 
 const HomeScreen = ({ navigation, login }) => {
+
+    NavigationBar.setBackgroundColorAsync('white');
 
     const flag = countryCode => String.fromCodePoint(...[...countryCode.toUpperCase()].map(c => 0x1F1A5 + c.charCodeAt()));
 
@@ -30,9 +37,13 @@ const HomeScreen = ({ navigation, login }) => {
     const [codePays, setCodePays] = useState('');
     const [isConnected, setIsConnected] = useState(false);
     const [isLoading, setIsLoading] = useState(false)
+    const animation = useRef(null);
+
+
     const loginError = useSelector(state => state.auth.error);
     const isLogged = useSelector(state => state.auth.isLoggedIn);
-    const [options, setOptions] = useState([])
+
+    // const [options, setOptions] = useState([])
 
     useEffect(() => {
         const unsubscribe = NetInfo.addEventListener(state => {
@@ -88,40 +99,27 @@ const HomeScreen = ({ navigation, login }) => {
         ToastAndroid.show('Vous n\'etes pas connecte a internet', ToastAndroid.SHORT);
     }
 
-    useEffect(() => {
-        if (options.length == 0) {
-            (async () => {
-                try {
-                    // Make API call to authenticate user
-                    const response = await axios.get('https://walet.tasa.pro/api/country');
-                    // setModalClock(true)
-                    setOptions(response.data.data)
-                    console.error(response.data.data)
-                } catch (error) {
-                    // Gérer les erreurs inattendues
-                    console.error(error.response)
-                }
-            })()
-        }
-
-    }, [options.length == 0])
-
-    // const options = [{
-    //     label: 'Republique du Congo',
-    //     value: 242,
-    //     flag: 'cg'
-    // },
-    // {
-    //     label: 'Senegal',
-    //     value: 221,
-    //     flag: 'sn'
-    // }];
-
     let [fontsLoaded] = useFonts({
         RobotoSerif_400Regular,
+        RobotoSerif_300Light,
         RobotoSerif_100Thin,
-
     });
+
+    if (!fontsLoaded) {
+        return <ActivityIndicator size="large" />;
+    }
+
+    const options = [{
+        label: 'Congo',
+        value: 242,
+        flag: 'cg'
+    },
+    {
+        label: 'Senegal',
+        value: 221,
+        flag: 'sn'
+    }];
+
 
     const handleSelect = (option: React.SetStateAction<string>) => {
         setSelectedOption(option);
@@ -133,9 +131,11 @@ const HomeScreen = ({ navigation, login }) => {
         }
     };
 
-    if (!fontsLoaded) {
-        return <ActivityIndicator size="large" />;
-    }
+
+    const playAnimation = () => {
+        animation.current?.play();
+    };
+
 
     return (
         <View style={styles.container}>
@@ -143,8 +143,22 @@ const HomeScreen = ({ navigation, login }) => {
             <StatusBar barStyle="dark-content" />
             <View style={styles.container_form}>
                 <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: "50%" }}>
-                    <Image source={require('../../assets/images/login.png')} style={styles.image} />
+                    {/* <Image source={require('../../assets/images/login.png')} style={styles.image} /> */}
+                    <TouchableOpacity onPress={playAnimation} activeOpacity={1}>
+                        <LottieView
+                            ref={animation}
+                            loop={false}
+                            style={{
+                                width: 300,
+
+                            }}
+
+                            // Find more Lottie files at https://lottiefiles.com/featured
+                            source={require('../animations/lotties/hello.json')}
+                        />
+                    </TouchableOpacity>
                 </View>
+                <Text style={{ textAlign: 'center', fontFamily: 'RobotoSerif_400Regular', marginBottom: 15, color: '#7f7f7f', fontSize: 12 }}>CONNEXION AU COMPTE TASA WALLET</Text>
                 {/* </View> */}
                 <View style={{ paddingHorizontal: 20 }}>
                     {loginError && <Text style={{ color: 'red', fontSize: 7.5, fontFamily: 'RobotoSerif_400Regular', textAlign: 'center', marginBottom: 10 }}>Les donnees d'authentification sont invalides, veillez recommencer</Text>}
@@ -231,7 +245,7 @@ const HomeScreen = ({ navigation, login }) => {
                     </View>
                     <Modal
                         // coverScreen={fontsLoaded}
-                        backdropOpacity={0.3}
+                        backdropOpacity={0.2}
                         isVisible={isLoading}
                         animationIn="fadeIn"
                         animationOut="fadeOut"
@@ -239,6 +253,19 @@ const HomeScreen = ({ navigation, login }) => {
                         <View style={styles.modalContainerChargement}>
                             <View style={styles.modalContentChargement}>
                                 <Loader1 />
+                                {/* <LottieView
+                                    autoPlay
+                                    ref={animation}
+                                    loop={false}
+                                    style={{
+                                        width: 300,
+                                        height: 350,
+                                        // backgroundColor: '#eee',
+
+                                    }}
+                                    // Find more Lottie files at https://lottiefiles.com/featured
+                                    source={require('../animations/lotties/chargement3.json')}
+                                /> */}
                             </View>
                         </View>
                     </Modal>
@@ -267,7 +294,7 @@ const styles = StyleSheet.create({
         height: '100%',
         width: '100%',
         resizeMode: 'cover',
-        marginBottom: 30
+        // marginBottom: 30
     },
     connexion: {
         textAlign: 'center',
@@ -400,6 +427,7 @@ const styles = StyleSheet.create({
     },
 
     modalContainerChargement: {
+        // position: 'absolute',
         backgroundColor: "transparent",
         // borderRadius: 10,
         width: "100%",

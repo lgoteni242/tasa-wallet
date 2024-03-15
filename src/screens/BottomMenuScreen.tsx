@@ -6,11 +6,15 @@ import HomeScreen from "./DashBoardScreen";
 import SettingsScreen from './SettingsScreens';
 import HistoriqueScreen from './HistoriqueScreen';
 import default_color from '../styles/color';
-import ScrollViewAnimatedHeader from './SettingScreen';
+import ScrollViewAnimatedHeader from './SettingScreen'
+import * as NavigationBar from 'expo-navigation-bar';
+;
 
 const Tab = createBottomTabNavigator();
 
 const CustomTabIcon = ({ name, size, color, focused }) => {
+    NavigationBar.setBackgroundColorAsync('black');
+
     return (
         <View style={{
             flexDirection: 'row',
@@ -39,24 +43,24 @@ const BottomTabNavigator = () => {
                     } else if (route.name === 'Profile') {
                         iconName = focused ? 'user' : 'user';
                     } else if (route.name === 'Pass') {
-                        iconName = focused ? 'exchange' : 'exchange';
+                        iconName = focused ? 'book' : 'book';
                     }
                     return <CustomTabIcon name={iconName} size={size} color={color} focused={focused} />;
                 },
                 tabBarActiveTintColor: 'white',
-                tabBarInactiveTintColor: 'gray',
+                tabBarInactiveTintColor: default_color.grayColor,
                 tabBarLabel: () => null,
                 tabBarStyle: {
                     position: 'absolute',
-                    bottom: 5,
-                    left: 10,
-                    right: 10,
+                    // bottom: 5,
+                    // left: 10,
+                    // right: 10,
                     // elevation: 5,
                     backgroundColor: '#ffffff',
-                    borderRadius: 30,
+                    // borderRadius: 30,
                     height: 47,
                     // shadowColor: '#7F5DF0',
-                    shadowColor: 'rgba(151,34,13,1)',
+                    // shadowColor: 'rgba(151,34,13,1)',
                     shadowOffset: {
                         width: 0,
                         height: 10,
