@@ -48,6 +48,7 @@ import OTPTextInput from "react-native-otp-textinput";
 import * as SecureStore from "expo-secure-store";
 import UserSkeletonLoader from "../components/Skeleton/UserSkeletonLoader";
 import Loader1 from '../components/Loader1';
+import LottieView from 'lottie-react-native';
 
 
 
@@ -86,6 +87,11 @@ const DashBoardScreen = ({ navigation }) => {
             setIsLoadingHistorique(false)
         }
     };
+    // =================Recharge du compte====================
+    const [optOrangeRecharge, setOptOrangeRecharge] = useState('')
+    const [montantRechargeOrange, setMontantRechargeOrange] = useState('')
+    const [modeEnvoi, setModeEnvoi] = useState('')
+
     // =================Chargement============================
     const user = useSelector((state) => state.auth.user);
     const mode = useSelector((state) => state.auth.mode);
@@ -96,7 +102,7 @@ const DashBoardScreen = ({ navigation }) => {
     const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
     const isCodeAcces = useSelector((state) => state.auth.isCodeAcces);
     const [dataListe, setdataListe] = useState([])
-
+    // Opt code
     const otpInputRef = useRef(null);
     const [showOpt, setShowOpt] = useState(false);
     const [showOptRetirer, setShowOptRetirer] = useState(false);
@@ -131,17 +137,20 @@ const DashBoardScreen = ({ navigation }) => {
     const [modalClock, setModalClock] = useState(true);
     const [optionCrediter, setOptionCrediter] = useState([])
     const animation = useRef(null);
+    const [selectedItem, setSelectedItem] = useState(null);
+
 
     const pourcentageEnvoi = pourcentage[0].cost
     const pourcentageRetrait = pourcentage[0].cost_retrait
 
+
     const fraisEnvoi = (parseInt(montant, 10) * pourcentageEnvoi) / 100
-    const fraisRetrait = (parseInt(montant, 10) * pourcentageRetrait) / 100
+    const fraisRetrait = (parseInt(montantRetrait, 10) * pourcentageRetrait) / 100
 
     console.log(typeof pourcentageEnvoi)
 
     const coutEnvoie = fraisEnvoi + parseInt(montant, 10)
-    const coutRetrait = fraisRetrait + parseInt(montant, 10)
+    const coutRetrait = fraisRetrait + parseInt(montantRetrait, 10)
 
 
     const dispatch = useDispatch();
@@ -355,6 +364,37 @@ const DashBoardScreen = ({ navigation }) => {
         checkData();
     };
 
+    const handleSendVerifiInput = () => {
+        setIsLoading(true);
+        const checkData = async () => {
+            (async () => {
+                try {
+                    await axios.post(
+                        "https://walet.tasa.pro/api/verif_send",
+                        {
+                            country_code: codePays,
+                            phone: numero,
+                            montant: montant,
+                            // code_otp: optCode,
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        });
+                    // setIsLoading(false);
+                    handleSend()
+                } catch (error) {
+                    // console.error("Erreur de verification", error.response.data.errors.phone[0]);
+                    setIsLoading(false);
+                    ToastAndroid.show(error.response.data.errors.phone[0], ToastAndroid.SHORT);
+
+                }
+            })();
+        };
+        checkData();
+    };
+
     const handleSendVerif = () => {
         setIsLoading(true);
         const sendMoney = async () => {
@@ -382,10 +422,6 @@ const DashBoardScreen = ({ navigation }) => {
                     setShowOpt(false);
                     setNotSendMoney(true);
                     // console.error('Argent non envoye', error)
-                } finally {
-                    setIsLoading(false);
-                    // setShowOpt(false);
-                    // setNotSendMoney(true);
                 }
             })();
         };
@@ -449,9 +485,31 @@ const DashBoardScreen = ({ navigation }) => {
         checkData();
     }
 
+    const handleChoixCretider = (choix: any, operateur: any) => {
+        // alert(choix)
+        switch (choix) {
+            case 'Mtn Momo':
+                setModeEnvoi(operateur)
+                setChoixPayement('Mtn Momo')
+                break;
+            case 'Airtel Momo':
+                ToastAndroid.show("Service indisponible", ToastAndroid.SHORT);
+                break;
+            case 'Orange Money':
+                setModeEnvoi(operateur)
+                setChoixPayement('Orange Money')
+                break;
+            case 'Wave':
+                setModeEnvoi(operateur)
+                setChoixPayement('Wave')
+                break;
+            default:
+                break;
+        }
+    }
+
     const handleCrediter = () => {
         setIsLoading(true);
-        console.error(montantCrediter, token);
         const sendMoney = async () => {
             (async () => {
                 try {
@@ -482,8 +540,6 @@ const DashBoardScreen = ({ navigation }) => {
         };
         sendMoney();
     };
-
-
 
     const handleTextChange = (text: any) => {
         setOptCode(text);
@@ -518,6 +574,52 @@ const DashBoardScreen = ({ navigation }) => {
         }
     }
 
+    const handleSendRechageOrange = () => {
+        if (optOrangeRecharge == '' && montantRechargeOrange == '') {
+            ToastAndroid.show("Veillez remplir tous les champs avant de crediter", ToastAndroid.SHORT);
+        } else {
+            setIsLoading(true);
+            const rechargeMoney = async () => {
+
+                // console.error(modeEnvoi, montantRechargeOrange, optOrangeRecharge)
+
+                (async () => {
+                    try {
+                        const data = await axios.post(
+                            "https://walet.tasa.pro/api/recharge",
+                            {
+                                modeP: modeEnvoi,
+                                montant: montantRechargeOrange,
+                                otp_code: optOrangeRecharge,
+                            },
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${token}`,
+                                },
+                            }
+                        );
+                        console.error('Donnnee', data)
+
+
+                        setIsLoading(false);
+                        handleCloseModalPressCrediter();
+                        setSendMoney(true);
+                    } catch (error) {
+                        setIsLoading(false);
+                        // handleCloseModalPressRetirer()
+                        // setNotSendMoney(true);
+                        console.error('Argent non envoye', error.message)
+                    } finally {
+                        setIsLoading(false);
+                    }
+                })();
+            };
+            rechargeMoney();
+        }
+    }
+
+
+
 
     return (
         <BottomSheetModalProvider>
@@ -532,15 +634,23 @@ const DashBoardScreen = ({ navigation }) => {
                     style={styles.container_image}
                 >
                     <View style={styles.container_logo}>
-                        <TouchableOpacity onPress={() => navigation.navigate('Log')}>
-                            <Icon name="user" size={18} color="white" />
-                        </TouchableOpacity>
-                        <Text style={styles.welcomMessage}>Tasa wallet</Text>
+                        <View style={{ backgroundColor: default_color.secondeRouge, width: '70%', height: 30, borderRadius: 20, flexDirection: 'row', alignItems: 'center' }}>
+                            <View style={{ borderWidth: 3, height: '100%', justifyContent: 'center', alignItems: 'center', width: '30%', borderRadius: 20, borderColor: default_color.secondeRouge, backgroundColor: 'white' }}>
+                                <Text style={{ color: 'gray', fontSize: 13, fontFamily: 'Roboto_400Regular' }}>
+                                    {user && user.prenom[0]}{user && user.name[0]}
+                                </Text>
+                            </View>
+                            <Text style={{ color: 'white', paddingHorizontal: 6, fontFamily: 'Roboto_400Regular', fontSize: 10 }}>Bienvenu sur tasa wallet</Text>
+                            {/* <TouchableOpacity onPress={() => navigation.navigate('Log')}>
+                                <Icon name="user" size={18} color="white" />
+                            </TouchableOpacity> */}
+                        </View>
+                        {/* <Text style={styles.welcomMessage}>Tasa wallet</Text> */}
                         <TouchableOpacity
                             onPress={() => setDeconnexionConf(!deconnexionConf)}
                             style={{ padding: 0 }}
                         >
-                            <Icon name="sign-out" size={18} color="white" />
+                            <Icon name="sign-out" size={15} color="white" />
                         </TouchableOpacity>
                     </View>
                     <View style={styles.barShow}>
@@ -566,7 +676,7 @@ const DashBoardScreen = ({ navigation }) => {
                                             fontSize: 28,
                                         }}
                                     >
-                                        $ {user && user.balance}
+                                        {user && user.balance}
                                     </Text>
                                 ) : (
                                     <Text
@@ -576,7 +686,7 @@ const DashBoardScreen = ({ navigation }) => {
                                             fontSize: 28,
                                         }}
                                     >
-                                        $ XXXXXXX
+                                        XXXXXXX
                                     </Text>
                                 )}
                                 <TouchableOpacity
@@ -608,6 +718,7 @@ const DashBoardScreen = ({ navigation }) => {
                                     }}
                                 >
                                     {user && user.name}
+
                                 </Text>
                             </View>
                             <Text
@@ -697,56 +808,141 @@ const DashBoardScreen = ({ navigation }) => {
                                 <FlatList
                                     data={dataListe}
                                     renderItem={({ item }) => (
-                                        <View style={styles.transcationListe}>
-                                            <View
-                                                style={{
-                                                    display: "flex",
-                                                    flexDirection: "row",
-                                                    marginBottom: 10,
-                                                }}
-                                            >
-                                                <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                                    <Icon name="user-circle" size={40} color="gray" />
-                                                </TouchableOpacity>
+                                        <TouchableOpacity
+                                            onPress={() => setSelectedItem(item)}
+                                        >
+
+                                            <View style={[
+                                                styles.transcationListe,
+                                                selectedItem === item && { backgroundColor: 'lightgray' } // Mettre en surbrillance si sélectionné
+                                            ]}>
                                                 <View
-                                                    style={{ display: "flex", justifyContent: "space-between" }}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            color: "gray",
-                                                            fontFamily: "RobotoSerif_400Regular",
-                                                        }}
-                                                    >
-                                                        {item.recipient}
-                                                    </Text>
-                                                    <Text
-                                                        style={{
-                                                            color: "gray",
-                                                            fontFamily: "RobotoSerif_100Thin",
-                                                            // fontSize: 13
-                                                        }}
-                                                    >
-                                                        {item.transactionId}
-                                                        {/* {item.heure} PM */}
-                                                    </Text>
-                                                </View>
-                                            </View>
-                                            <View>
-                                                <Text style={{ textAlign: 'right' }}>
-                                                    {flag(item.country_recipient)}
-                                                </Text>
-                                                <Text
                                                     style={{
-                                                        color: "gray",
-                                                        fontFamily: "RobotoSerif_100Thin",
+                                                        display: "flex",
+                                                        flexDirection: "row",
+                                                        marginBottom: 10,
+                                                        // alignContent: 'center'
                                                     }}
                                                 >
-                                                    {item.montant} Fcfa
-                                                </Text>
+                                                    {item.country_recipient ?
+
+                                                        <Text style={{
+                                                            fontSize: 20, marginRight: 20,
+                                                        }}>
+                                                            {flag(item.country_recipient)}
+                                                        </Text>
+                                                        :
+                                                        <Text style={{
+                                                            fontSize: 20, marginRight: 20,
+                                                        }}>
+                                                            {user && flag(user.country_code)}
+                                                        </Text>
+                                                    }
+
+                                                    <View
+                                                        style={{ display: "flex", justifyContent: "space-between" }}
+                                                    >
+                                                        {item.recipient ?
+                                                            <>
+                                                                <Text
+                                                                    style={{
+                                                                        color: default_color.grayColor,
+                                                                        fontFamily: "RobotoSerif_400Regular",
+                                                                    }}
+                                                                >
+                                                                    Envoi de {item.montant} F
+                                                                </Text>
+                                                                <Text
+                                                                    style={{
+                                                                        color: 'black',
+                                                                        fontFamily: "RobotoSerif_100Thin",
+                                                                        fontSize: 10
+                                                                    }}
+                                                                >
+
+                                                                    vers {item.recipient}
+                                                                </Text>
+                                                            </>
+                                                            :
+                                                            <>
+                                                                <Text
+                                                                    style={{
+                                                                        color: default_color.grayColor,
+                                                                        fontFamily: "RobotoSerif_400Regular",
+                                                                        // fontSize: 20
+                                                                    }}
+                                                                >
+                                                                    Dépot
+                                                                    {/* {user && flag(user.country_code)} */}
+                                                                </Text>
+                                                                <Text
+                                                                    style={{
+                                                                        color: 'black',
+                                                                        fontFamily: "RobotoSerif_100Thin",
+                                                                        fontSize: 10,
+                                                                        textTransform: 'lowercase'
+                                                                    }}
+                                                                >
+
+                                                                    via {item.mode_payment}
+                                                                </Text>
+                                                            </>
+                                                        }
+                                                    </View>
+                                                </View>
+                                                <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'center' }}>
+                                                    {/* <Text style={{ textAlign: 'center' }}>
+                                                        {item.action == "add" && <Icon name="plus" size={20} color={default_color.green} />}
+                                                        {item.action == "minus" && <Icon name="moins" size={20} color={default_color.orange} />}
+
+                                                    </Text> */}
+                                                    {item.action == "add" && <Text
+                                                        style={{
+                                                            color: default_color.green,
+                                                            fontFamily: "RobotoSerif_400Regular",
+                                                            fontSize: 15,
+
+                                                        }}
+                                                    >
+                                                        + {item.montant} F
+                                                    </Text>}
+                                                    {item.action == "minus" && <Text
+                                                        style={{
+                                                            color: default_color.orange,
+                                                            fontFamily: "RobotoSerif_400Regular",
+                                                            fontSize: 15,
+
+                                                        }}
+                                                    >
+                                                        - {item.total} F
+                                                    </Text>}
+
+                                                </View>
                                             </View>
-                                        </View>
+                                            {selectedItem === item && (
+                                                <>
+                                                    {item.action == 'minus' && <View style={styles.detailsContainer}>
+                                                        {/* Contenu des détails */}
+                                                        <Text style={{ fontFamily: 'RobotoSerif_300Light', fontSize: 12, color: 'gray' }}>Montant : {item.montant}</Text>
+
+                                                        <Text style={{ fontFamily: 'RobotoSerif_300Light', fontSize: 12, color: 'gray' }}>Frais : {item.cost}</Text>
+                                                        <Text style={{ fontFamily: 'RobotoSerif_300Light', fontSize: 12, color: 'gray' }}>Total : {item.total}</Text>
+                                                    </View>}
+
+                                                    {item.action == 'add' && <View style={styles.detailsContainer}>
+                                                        {/* Contenu des détails */}
+                                                        <Text style={{ fontFamily: 'RobotoSerif_300Light', fontSize: 12, color: 'gray' }}>Solde avant : {item.balance_before}</Text>
+                                                        <Text style={{ fontFamily: 'RobotoSerif_300Light', fontSize: 12, color: 'gray' }}>Solde après : {item.balance_after}</Text>
+                                                    </View>}
+
+                                                </>
+
+                                            )}
+                                        </TouchableOpacity>
                                     )}
                                     keyExtractor={(item, index) => index.toString()}
+                                    contentContainerStyle={{ paddingBottom: 20 }}
+                                    showsVerticalScrollIndicator={false}
                                 />
                             )}
                         </View>
@@ -976,15 +1172,7 @@ const DashBoardScreen = ({ navigation }) => {
                             >
                                 Pays: {selectedOption}
                             </Text>
-                            <Text
-                                style={{
-                                    fontSize: 19,
-                                    color: "rgba(16,17,17,0.84)",
-                                    fontFamily: "RobotoSerif_400Regular",
-                                }}
-                            >
-                                Beneficiare : GOTENI
-                            </Text>
+
                             <Text
                                 style={{
                                     fontSize: 19,
@@ -996,13 +1184,33 @@ const DashBoardScreen = ({ navigation }) => {
                             </Text>
                             <Text
                                 style={{
-                                    marginBottom: 19,
+                                    // marginBottom: 19,
                                     fontSize: 20,
                                     color: "rgba(16,17,17,0.84)",
                                     fontFamily: "RobotoSerif_400Regular",
                                 }}
                             >
                                 Montant : {montant}
+                            </Text>
+                            <Text
+                                style={{
+                                    // marginBottom: 19,
+                                    fontSize: 20,
+                                    color: "rgba(16,17,17,0.84)",
+                                    fontFamily: "RobotoSerif_400Regular",
+                                }}
+                            >
+                                Frais : {fraisEnvoi}
+                            </Text>
+                            <Text
+                                style={{
+                                    marginBottom: 19,
+                                    fontSize: 20,
+                                    color: "rgba(16,17,17,0.84)",
+                                    fontFamily: "RobotoSerif_400Regular",
+                                }}
+                            >
+                                Total : {coutEnvoie}
                             </Text>
                             <View
                                 style={{
@@ -1019,7 +1227,7 @@ const DashBoardScreen = ({ navigation }) => {
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     style={styles.buttonEnvoie}
-                                    onPress={() => handleSend()}
+                                    onPress={() => handleSendVerifiInput()}
                                     disabled={isLoading}
                                 >
                                     <Text style={styles.buttonText2}>Envoyer</Text>
@@ -1039,19 +1247,6 @@ const DashBoardScreen = ({ navigation }) => {
                     <View style={styles.modalContainerChargement}>
                         <View style={styles.modalContentChargement}>
                             <Loader1 />
-                            {/* <LottieView
-                                autoPlay
-                                // ref={animation}
-                                loop={false}
-                                style={{
-                                    width: 300,
-                                    height: 350,
-                                    // backgroundColor: '#eee',
-
-                                }}
-                                // Find more Lottie files at https://lottiefiles.com/featured
-                                source={require('../animations/lotties/chargement3.json')}
-                            /> */}
                         </View>
                     </View>
                 </Modal>
@@ -1119,18 +1314,74 @@ const DashBoardScreen = ({ navigation }) => {
                     animationOut="fadeOut"
                 >
                     <LinearGradient
-                        colors={["white", "gray"]}
+                        colors={["white", "white"]}
                         start={{ x: 0.8, y: 0 }}
                         end={{ x: 0.8, y: 9 }}
-                        style={styles.modalContainer}
+                        style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: 'transparent', borderRadius: 10, padding: 5 }}
                     >
-                        <View style={styles.checkmarkContainer}>
+                        {/* <View style={styles.checkmarkContainer}>
                             <View style={styles.checkmark}>
                                 <Icon name="exclamation-circle" size={100} color="#bf1717" />
                             </View>
-                        </View>
+                        </View> */}
+
+                        <LottieView
+                            autoPlay
+                            // ref={animation}
+                            loop={false}
+                            style={{
+                                width: 300,
+                                height: 250,
+                                // backgroundColor: '#eee',
+
+                            }}
+                            // Find more Lottie files at https://lottiefiles.com/featured
+                            source={require('../animations/lotties/true_requete.json')}
+                        />
                         <Text style={styles.modalText3}>
                             Oups une erreur est arrivee, veillez recommencer
+                        </Text>
+                    </LinearGradient>
+                </Modal>
+
+                {/* ==================== Modal ro verife lock message =====================*/}
+                <Modal
+                    isVisible={sendMoney}
+                    coverScreen={true}
+                    backdropOpacity={0.4}
+                    onBackdropPress={() => setSendMoney(false)}
+                    animationIn="fadeIn" // Animation d'entrée du haut
+                    animationOut="fadeOut"
+                >
+                    <LinearGradient
+                        colors={["white", "white"]}
+                        start={{ x: 0.8, y: 0 }}
+                        end={{ x: 0.8, y: 9 }}
+                        style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: 'transparent', borderRadius: 10, padding: 5 }}
+                    >
+                        {/* <View style={styles.checkmarkContainer}>
+                            <View style={styles.checkmark}>
+                                <Icon name="exclamation-circle" size={100} color="#bf1717" />
+                            </View>
+                        </View> */}
+                        {/* <Text style={styles.modalText3}>
+                            Oups une erreur est arrivee, veillez recommencer
+                        </Text> */}
+                        <LottieView
+                            autoPlay
+                            // ref={animation}
+                            loop={false}
+                            style={{
+                                width: 300,
+                                height: 250,
+                                // backgroundColor: '#eee',
+
+                            }}
+                            // Find more Lottie files at https://lottiefiles.com/featured
+                            source={require('../animations/lotties/false_requete.json')}
+                        />
+                        <Text style={styles.modalText2}>
+                            Transaction effectuée avec success
                         </Text>
                     </LinearGradient>
                 </Modal>
@@ -1401,35 +1652,54 @@ const DashBoardScreen = ({ navigation }) => {
                             <View
                                 style={{
                                     display: "flex",
-                                    justifyContent: "space-evenly",
-                                    alignItems: "center",
-                                    flexDirection: "row",
+                                    flexDirection: "column",
                                     width: "100%",
                                 }}
                             >
-                                {mode.map((item) => (
-                                    <TouchableOpacity style={{ marginTop: 10 }} onPress={() => setChoixPayement("1")} key={item.id}>
-                                        <Image
-                                            // source={require("../../assets/images/mtn.png")}
-                                            source={{ uri: 'https://walet.tasa.pro/assets/img/' + item.img_name }}
-                                            style={{ width: 100, height: 70, borderRadius: 10 }}
-                                        />
-                                        {/* <Text style={{ fontFamily: "RobotoSerif_400Regular" }}>{item.mode}</Text> */}
-                                    </TouchableOpacity>
+                                {mode.reduce((rows: any[][], item: any, index: number) => {
+                                    if (index % 2 === 0) {
+                                        rows.push([item]);
+                                    } else {
+                                        rows[rows.length - 1].push(item);
+                                    }
+                                    return rows;
+                                }, []).map((row: any[], rowIndex: React.Key | null | undefined) => (
+                                    <View
+                                        key={rowIndex}
+                                        style={{
+                                            display: "flex",
+                                            justifyContent: "space-evenly",
+                                            alignItems: "center",
+                                            flexDirection: "row",
+                                            width: "100%",
+                                        }}
+                                    >
+                                        {row.map((item) => (
+                                            <TouchableOpacity style={{ marginTop: 10 }} onPress={() => handleChoixCretider(item.mode, item.operateur)} key={item.id}>
+                                                <Image
+                                                    // source={require("../../assets/images/mtn.png")}
+                                                    source={{ uri: 'https://walet.tasa.pro/assets/img/' + item.img_name }}
+                                                    style={{ width: 100, height: 70, borderRadius: 10 }}
+                                                />
+                                                <Text style={{ fontFamily: "RobotoSerif_400Regular", textAlign: 'center', fontSize: 12, color: default_color.grayColor }}>{item.mode}</Text>
+                                            </TouchableOpacity>
+                                        ))}
+                                    </View>
                                 ))}
                             </View>
+
                         </>
-                    ) : choixpayement == "1" ? (
+                    ) : choixpayement == "Mtn Momo" ? (
                         <>
                             <Text
                                 style={{
-                                    fontSize: 17,
+                                    fontSize: 12,
                                     paddingBottom: 10,
                                     color: "gray",
                                     fontFamily: "RobotoSerif_400Regular",
                                 }}
                             >
-                                EFFECTUEZ UN DEPOT
+                                EFFECTUEZ UN DEPOT MTN MOMO
                             </Text>
                             <Text
                                 style={{
@@ -1493,9 +1763,144 @@ const DashBoardScreen = ({ navigation }) => {
                                 </TouchableOpacity>
                             </View>
                         </>
+                    ) : choixpayement == "Orange Money" ? (
+                        <>
+                            <Text
+                                style={{
+                                    fontSize: 13,
+                                    paddingBottom: 10,
+                                    color: "gray",
+                                    fontFamily: "RobotoSerif_400Regular",
+                                    fontWeight: "bold",
+
+                                }}
+                            >
+                                EFFECTUEZ UN DEPOT ORANGE MONEY
+                            </Text>
+                            <Text
+                                style={{
+                                    fontSize: 11,
+                                    paddingBottom: 12,
+                                    // fontWeight: "bold",
+                                    color: "gray",
+                                    textAlign: "center",
+                                    fontFamily: "RobotoSerif_400Regular",
+                                }}
+                            >
+                                Assurez-vous d'avoir un compte au préalable avec le même numéro
+                                de téléphone ou la transaction sera impossible.
+                            </Text>
+                            <View>
+                                <Text style={{ fontFamily: 'RobotoSerif_400Regular', textAlign: 'center' }}>
+                                    Composez <Text style={{ fontWeight: 'bold' }}>#144#391#</Text> pour generer votre code OTP Orange money
+                                </Text>
+                            </View>
+                            <View
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "space-evenly",
+                                    alignItems: "center",
+                                    flexDirection: "row",
+                                    width: "100%",
+                                    marginTop: 15
+                                }}
+                            >
+                                <View style={styles.inputContainer}>
+                                    <Icon
+                                        name="shield"
+                                        size={15}
+                                        color="grey"
+                                        style={styles.iconStyle}
+                                    />
+                                    <TextInput
+                                        style={styles.input2}
+                                        placeholder="Saisir le code opt"
+                                        keyboardType="numeric"
+                                        autoCapitalize="none"
+                                        value={optOrangeRecharge}
+                                        onChangeText={setOptOrangeRecharge}
+                                    />
+                                </View>
+                            </View>
+                            <View
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "space-evenly",
+                                    alignItems: "center",
+                                    flexDirection: "row",
+                                    width: "100%",
+                                }}
+                            >
+                                <View style={styles.inputContainer}>
+                                    <Icon
+                                        name="money"
+                                        size={15}
+                                        color="grey"
+                                        style={styles.iconStyle}
+                                    />
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder="Saisir le montant"
+                                        keyboardType="numeric"
+                                        autoCapitalize="none"
+                                        value={montantRechargeOrange}
+                                        onChangeText={setMontantRechargeOrange}
+                                    />
+                                </View>
+                            </View>
+                            <View
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    width: "100%",
+                                }}
+                            >
+                                <TouchableOpacity
+                                    style={styles.buttonAnnul}
+                                    onPress={() => setChoixPayement("")}
+                                >
+                                    <Text style={styles.buttonTextAnnul}>Retour</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={styles.buttonRetirer}
+                                    onPress={() => handleSendRechageOrange()}
+                                >
+                                    <Text style={styles.buttonText}>Crediter</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </>
                     ) : (
-                        <></>
-                    )}
+                        <>
+                            <Text>Lorem ipsum dolor sit amet consectetur adipisicing elit. Error doloribus repellendus incidunt. Nam numquam, tempora veritatis voluptates iusto asperiores libero qui aliquid harum mollitia cupiditate quos est doloremque voluptate excepturi</Text>
+
+                            <View
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    width: "100%",
+                                }}
+                            >
+                                <TouchableOpacity
+                                    style={styles.buttonAnnul}
+                                    onPress={() => setChoixPayement("")}
+                                >
+                                    <Text style={styles.buttonTextAnnul}>Retour</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={styles.buttonRetirer}
+                                    onPress={() => handleCrediter()}
+                                >
+                                    <Text style={styles.buttonText}>Valider</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </>
+                    )
+
+                    }
                     <View></View>
                 </View>
             </BottomSheetModal>
@@ -1547,7 +1952,7 @@ const styles = StyleSheet.create({
         width: "100%",
         backgroundColor: "white",
         // bottom: -30,
-        marginTop: 30,
+        marginTop: 15,
         borderRadius: 20,
         elevation: 5, // pour Android
         shadowColor: "#000", // pour iOS
@@ -1650,15 +2055,15 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     transcationListe: {
-        marginTop: 10,
-        // marginBottom: 5,
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
+        marginTop: 5,
+        marginBottom: 5,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         borderBottomWidth: 0.3,
-        borderColor: "#ccc",
-        marginHorizontal: 20,
+        borderColor: '#ccc',
+        paddingHorizontal: 20
     },
     modal: {
         justifyContent: "flex-end",
@@ -1709,6 +2114,12 @@ const styles = StyleSheet.create({
         flex: 1,
         height: 50,
         // paddingHorizontal: 10,
+        fontFamily: "RobotoSerif_400Regular",
+    },
+    input2: {
+        flex: 1,
+        height: 50,
+        // paddingHorizontal: 20,
         fontFamily: "RobotoSerif_400Regular",
     },
     button: {
@@ -1900,6 +2311,12 @@ const styles = StyleSheet.create({
         borderColor: "gray",
         textAlign: "center",
         fontSize: 20,
+    },
+    detailsContainer: {
+        paddingHorizontal: 20,
+        backgroundColor: 'lightgray',
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     },
 });
 
