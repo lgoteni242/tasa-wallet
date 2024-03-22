@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import HomeScreen from "./DashBoardScreen";
-import SettingsScreen from './SettingsScreens';
+// import SettingsScreen from './StatScreen';
 import HistoriqueScreen from './HistoriqueScreen';
 import default_color from '../styles/color';
 import ScrollViewAnimatedHeader from './SettingScreen'
@@ -41,9 +41,9 @@ const BottomTabNavigator = () => {
                     } else if (route.name === 'Settings') {
                         iconName = focused ? 'cog' : 'cog';
                     } else if (route.name === 'Profile') {
-                        iconName = focused ? 'user' : 'user';
+                        iconName = focused ? 'bar-chart' : 'bar-chart';
                     } else if (route.name === 'Pass') {
-                        iconName = focused ? 'book' : 'book';
+                        iconName = focused ? 'history' : 'history';
                     }
                     return <CustomTabIcon name={iconName} size={size} color={color} focused={focused} />;
                 },
@@ -72,7 +72,7 @@ const BottomTabNavigator = () => {
         >
             <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
             <Tab.Screen name="Pass" component={HistoriqueScreen} options={{ headerShown: false }} />
-            {/* <Tab.Screen name="Profile" component={UserScreen} options={{ headerShown: false }} /> */}
+            {/* <Tab.Screen name="Profile" component={SettingsScreen} options={{ headerShown: false }} /> */}
             <Tab.Screen name="Settings" component={ScrollViewAnimatedHeader} options={{ headerShown: false }} />
         </Tab.Navigator>
     );

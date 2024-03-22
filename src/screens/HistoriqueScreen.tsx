@@ -10,10 +10,13 @@ import UserSkeletonLoader from '../components/Skeleton/UserSkeletonLoader';
 
 const HistoriqueScreen = ({ navigation }) => {
 
+    const user = useSelector((state) => state.auth.user);
+
     const token = useSelector((state) => state.auth.token);
     const [isLoading, setIsLoading] = useState(false)
 
     const [dataListe, setdataListe] = useState([])
+    const [montantListe, setMontantListe] = useState([])
     const [dateS, setDateS] = useState(new Date());
     const [showPicker, setShowPicker] = useState(false);
     const fullDate = dateS; // Votre date récupérée
@@ -27,10 +30,15 @@ const HistoriqueScreen = ({ navigation }) => {
     const month = dateObject.getMonth() + 1; // Les mois sont indexés à partir de 0, donc nous ajoutons 1
     const day = dateObject.getDate();
     const [mois, setMois] = useState(month)
+    const [selectedItem, setSelectedItem] = useState(null);
+
 
     const date = new Date(year, month - 1, day); // mois - 1 car les mois commencent à partir de 0
     const options = { weekday: 'long' };
     const nomJour = date.toLocaleDateString('fr-FR', options);
+
+    const addTotalAmount = montantListe.filter(item => item.action === "add")[0]?.total_amount;
+    const minusTotalAmount = montantListe.filter(item => item.action === "minus")[0]?.total_amount;
 
     // Utilisation de la fonction
     const onChange = async (event: any, selectedDate: any) => {
@@ -72,7 +80,9 @@ const HistoriqueScreen = ({ navigation }) => {
             );
             // Traiter la réponse ici
             const data = response.data.datas;
+            const dataMontant = response.data.detail;
             setdataListe(data);
+            setMontantListe(dataMontant)
             setIsLoading(false);
             // console.warn(data)
             // return data; // Vous pouvez retourner les données ici si nécessaire
@@ -104,6 +114,8 @@ const HistoriqueScreen = ({ navigation }) => {
 
             <View style={styles.container_image}>
                 <View style={styles.container_logo}>
+                    {/* <Icon name="arrow-circle-down" size={150} color='#8b1f09' style={{ position: 'absolute', zIndex: -4, left: -10, top: -80 }} />
+                    <Icon name="arrow-circle-up" size={150} color='#8b1f09' style={{ position: 'absolute', zIndex: -4, right: -10, top: -80 }} /> */}
                     <Text style={styles.welcomMessage}>Historique</Text>
                 </View>
                 <View style={styles.aujourdhui3}>
@@ -173,7 +185,6 @@ const HistoriqueScreen = ({ navigation }) => {
                 <View
                     style={{ marginBottom: 60 }}
                 >
-
                     {
                         dataListe.length === 0 ? (
                             <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '40%' }}>
@@ -187,78 +198,170 @@ const HistoriqueScreen = ({ navigation }) => {
                             </View>
 
                         ) : (
-                            <FlatList
-                                data={dataListe}
-                                renderItem={({ item }) => (
-                                    <View style={styles.transcationListe}>
-                                        <View
-                                            style={{
-                                                display: "flex",
-                                                flexDirection: "row",
-                                                marginBottom: 10,
-                                            }}
+                            <>
+                                <FlatList
+                                    data={dataListe}
+                                    renderItem={({ item }) => (
+                                        <TouchableOpacity
+                                            onPress={() => setSelectedItem(item)}
                                         >
-                                            <TouchableOpacity style={styles.iconShowbarTransaction}>
-                                                <Icon name="money" size={40} color="gray" />
-                                            </TouchableOpacity>
-                                            <View
-                                                style={{ display: "flex", justifyContent: "space-between" }}
-                                            >
-                                                <Text
+
+                                            <View style={[
+                                                styles.transcationListe,
+                                                selectedItem === item && { backgroundColor: 'lightgray' } // Mettre en surbrillance si sélectionné
+                                            ]}>
+                                                <View
                                                     style={{
-                                                        color: "gray",
-                                                        fontFamily: "RobotoSerif_400Regular",
+                                                        display: "flex",
+                                                        flexDirection: "row",
+                                                        marginBottom: 10,
+                                                        // alignContent: 'center'
                                                     }}
                                                 >
-                                                    {item.recipient}
-                                                </Text>
-                                                <Text
-                                                    style={{
-                                                        color: "gray",
-                                                        fontFamily: "RobotoSerif_100Thin",
-                                                        // fontSize: 13
-                                                    }}
-                                                >
-                                                    {item.transactionId}
-                                                    {/* {item.heure} PM */}
-                                                </Text>
+                                                    {item.country_recipient ?
+
+                                                        <Text style={{
+                                                            fontSize: 20, marginRight: 20,
+                                                        }}>
+                                                            {flag(item.country_recipient)}
+                                                        </Text>
+                                                        :
+                                                        <Text style={{
+                                                            fontSize: 20, marginRight: 20,
+                                                        }}>
+                                                            {user && flag(user.country_code)}
+                                                        </Text>
+                                                    }
+
+                                                    <View
+                                                        style={{ display: "flex", justifyContent: "space-between" }}
+                                                    >
+                                                        {item.recipient ?
+                                                            <>
+                                                                <Text
+                                                                    style={{
+                                                                        color: default_color.grayColor,
+                                                                        fontFamily: "RobotoSerif_400Regular",
+                                                                    }}
+                                                                >
+                                                                    Envoi de {item.montant} F
+                                                                </Text>
+                                                                <Text
+                                                                    style={{
+                                                                        color: 'black',
+                                                                        fontFamily: "RobotoSerif_100Thin",
+                                                                        fontSize: 10
+                                                                    }}
+                                                                >
+
+                                                                    vers {item.recipient}
+                                                                </Text>
+                                                            </>
+                                                            :
+                                                            <>
+                                                                <Text
+                                                                    style={{
+                                                                        color: default_color.grayColor,
+                                                                        fontFamily: "RobotoSerif_400Regular",
+                                                                        // fontSize: 20
+                                                                    }}
+                                                                >
+                                                                    Dépot
+                                                                    {/* {user && flag(user.country_code)} */}
+                                                                </Text>
+                                                                <Text
+                                                                    style={{
+                                                                        color: 'black',
+                                                                        fontFamily: "RobotoSerif_100Thin",
+                                                                        fontSize: 10,
+                                                                        textTransform: 'lowercase'
+                                                                    }}
+                                                                >
+
+                                                                    via {item.mode_payment}
+                                                                </Text>
+                                                            </>
+                                                        }
+                                                    </View>
+                                                </View>
+                                                <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'center' }}>
+                                                    {/* <Text style={{ textAlign: 'center' }}>
+                                                        {item.action == "add" && <Icon name="plus" size={20} color={default_color.green} />}
+                                                        {item.action == "minus" && <Icon name="moins" size={20} color={default_color.orange} />}
+
+                                                    </Text> */}
+                                                    {item.action == "add" && <Text
+                                                        style={{
+                                                            color: default_color.green,
+                                                            fontFamily: "RobotoSerif_400Regular",
+                                                            fontSize: 15,
+
+                                                        }}
+                                                    >
+                                                        + {item.montant} F
+                                                    </Text>}
+                                                    {item.action == "minus" && <Text
+                                                        style={{
+                                                            color: default_color.orange,
+                                                            fontFamily: "RobotoSerif_400Regular",
+                                                            fontSize: 15,
+
+                                                        }}
+                                                    >
+                                                        - {item.total} F
+                                                    </Text>}
+
+                                                </View>
                                             </View>
-                                        </View>
-                                        <View>
-                                            <Text style={{ textAlign: 'right' }}>
-                                                {flag(item.country_recipient)}
-                                            </Text>
-                                            <Text
-                                                style={{
-                                                    color: "gray",
-                                                    fontFamily: "RobotoSerif_100Thin",
-                                                }}
-                                            >
-                                                {item.montant} Fcfa
-                                            </Text>
-                                        </View>
-                                    </View>
-                                )}
-                                keyExtractor={(item, index) => index.toString()}
-                            />
+                                            {selectedItem === item && (
+                                                <>
+                                                    {item.action == 'minus' && <View style={styles.detailsContainer}>
+                                                        {/* Contenu des détails */}
+                                                        <Text style={{ fontFamily: 'RobotoSerif_300Light', fontSize: 12, color: 'gray' }}>Montant : {item.montant}</Text>
+
+                                                        <Text style={{ fontFamily: 'RobotoSerif_300Light', fontSize: 12, color: 'gray' }}>Frais : {item.cost}</Text>
+                                                        <Text style={{ fontFamily: 'RobotoSerif_300Light', fontSize: 12, color: 'gray' }}>Total : {item.total}</Text>
+                                                    </View>}
+
+                                                    {item.action == 'add' && <View style={styles.detailsContainer}>
+                                                        {/* Contenu des détails */}
+                                                        <Text style={{ fontFamily: 'RobotoSerif_300Light', fontSize: 12, color: 'gray' }}>Solde avant : {item.balance_before}</Text>
+                                                        <Text style={{ fontFamily: 'RobotoSerif_300Light', fontSize: 12, color: 'gray' }}>Solde après : {item.balance_after}</Text>
+                                                    </View>}
+
+                                                </>
+
+                                            )}
+                                        </TouchableOpacity>
+
+                                    )}
+                                    keyExtractor={(item, index) => index.toString()}
+                                    contentContainerStyle={{ paddingBottom: 20 }}
+                                    showsVerticalScrollIndicator={false}
+                                />
+
+                            </>
+
                         )
                     }
                 </View>
             }
-
-            {/* <Modal
-                // coverScreen={fontsLoaded}
-                backdropOpacity={0.3}
-                isVisible={isLoading}
-                animationIn="fadeIn"
-                animationOut="fadeOut"
-            >
-                <View style={styles.modalContainerChargement}>
-                    <View style={styles.modalContentChargement}>
-                        <Loader1 />
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingLeft: 5, position: 'absolute', bottom: 50 }}>
+                <View style={{ height: 50, backgroundColor: '#95AB63', width: '49%', borderRadius: 5, padding: 10, position: 'relative', overflow: 'hidden', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row' }}>
+                    <Icon name="plus-circle" size={30} color='white' />
+                    <View style={{ zIndex: 10 }}>
+                        <Text style={{ color: 'white', fontFamily: 'RobotoSerif_400Regular', fontSize: 18 }}> {addTotalAmount} F</Text>
                     </View>
+                    <Icon name="plus-circle" size={150} color={default_color.vertSecondaire} style={{ position: 'absolute', zIndex: 5, right: -50 }} />
                 </View>
-            </Modal> */}
+                <View style={{ height: 50, backgroundColor: default_color.orange, width: '49%', borderRadius: 5, padding: 10, position: 'relative', overflow: 'hidden', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row' }}>
+                    <Icon name="minus-circle" size={30} color='white' />
+                    <View style={{ zIndex: 10 }}>
+                        <Text style={{ color: 'white', fontFamily: 'RobotoSerif_400Regular', fontSize: 18 }}>{minusTotalAmount} F</Text>
+                    </View>
+                    <Icon name="minus-circle" size={150} color='#8b1f09' style={{ position: 'absolute', zIndex: 5, right: -50 }} />
+                </View>
+            </View>
         </View>
 
     );
@@ -360,7 +463,7 @@ const styles = StyleSheet.create({
         paddingBottom: 40
     },
     transcationListe: {
-        // marginTop: 5,
+        marginTop: 5,
         marginBottom: 5,
         display: 'flex',
         flexDirection: 'row',
@@ -370,6 +473,12 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         paddingHorizontal: 20
 
+    },
+    detailsContainer: {
+        paddingHorizontal: 20,
+        backgroundColor: 'lightgray',
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     },
     iconShowbarTransaction: {
         marginRight: 20,

@@ -233,6 +233,8 @@ export default function ScrollViewAnimatedHeader({ navigation }) {
             <Animated.View
                 pointerEvents='none'
                 style={[styles.header, { transform: [{ translateY: translateHeader }] }]}>
+                <Icon name="money" size={150} color='#8b1f09' style={{ position: 'absolute', zIndex: -4, left: -50, top: 0 }} />
+                <Icon name="money" size={150} color='#8b1f09' style={{ position: 'absolute', zIndex: -4, right: -50, top: 0 }} />
                 <Animated.View
                     style={[
                         styles.image,
@@ -245,6 +247,7 @@ export default function ScrollViewAnimatedHeader({ navigation }) {
                         },
                     ]}>
                     <Text style={{ color: default_color.orange, fontSize: 40 }}>{user && user.name[0]}</Text>
+
                 </Animated.View>
                 <Animated.Text
                     onTextLayout={e => setTextWidth(e.nativeEvent.lines[0].width)}
@@ -260,6 +263,7 @@ export default function ScrollViewAnimatedHeader({ navigation }) {
 
                     ]}>
                     {user && user.prenom} {user && user.name}
+
                 </Animated.Text>
             </Animated.View>
         </View >

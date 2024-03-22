@@ -18,8 +18,56 @@ const default_color = {
     danger: 'rgba(206,43,24,0.59)',
     textGrayColor: '#7f7f7f',
     black: '#03040c63',
-    grayColor: '#585859'
+    grayColor: '#585859',
+    secondeRouge: '#8b1f09',
+    vertPrincipal: '#95AB63',
+    vertSecondaire: '#829e4286',
 
 };
 
 export default default_color;
+
+// { 
+//   "build" : { 
+//     "preview" : { 
+//       "android" : { 
+//         "buildType" : "apk"
+//        } 
+//     }, 
+//     "preview2" : { 
+//       "android" : { 
+//         "gradleCommand" : ":app:assembleRelease"
+//        } 
+//     }, 
+//     " preview3" : { 
+//       "developmentClient" : true
+//      }, 
+//     "production" : {} 
+//   } 
+// }
+
+// {
+//   "cli": {
+//     "version": ">= 7.6.0"
+//   },
+//   "build": {
+//     "development": {
+//       "developmentClient": true,
+//       "distribution": "internal"
+//     },
+//     "preview": {
+//       "distribution": "internal"
+//     },
+//     "production": {}
+//   },
+//   "submit": {
+//     "production": {}
+//   }
+// }
+
+
+
+// Expo cli
+// "expo-cli": "^6.3.10",
+
+// react-native-reanimated
