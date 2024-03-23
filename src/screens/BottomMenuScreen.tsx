@@ -12,7 +12,7 @@ import * as NavigationBar from 'expo-navigation-bar';
 
 const Tab = createBottomTabNavigator();
 
-const CustomTabIcon = ({ name, size, color, focused }) => {
+const CustomTabIcon = ({ name, size, color, focused }: { name: any, size: number, color: string, focused: boolean }) => {
     NavigationBar.setBackgroundColorAsync('black');
 
     return (

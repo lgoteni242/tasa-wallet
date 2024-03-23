@@ -8,7 +8,7 @@ import Modal from "react-native-modal";
 import Loader1 from '../components/Loader1';
 
 
-const PassWordScreen = ({ navigation }) => {
+const PassWordScreen = ({ navigation }: { navigation: any }) => {
 
     const [code, setCode] = useState('')
     const [isLoading, setIsLoading] = useState(false)

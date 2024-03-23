@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, StatusBar, TextInput, Vibration, ActivityIndicator } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, StatusBar, TextInput, Vibration } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as Animatable from 'react-native-animatable';
 // import {
@@ -14,7 +14,7 @@ import { bindActionCreators } from 'redux';
 
 
 
-const CodeAccesScreen = ({ navigation }) => {
+const CodeAccesScreen = ({ navigation }: { navigation: any }) => {
 
 
     const [inputText, setInputText] = useState('');
@@ -34,7 +34,7 @@ const CodeAccesScreen = ({ navigation }) => {
     // if (!fontsLoaded) {
     //     return <ActivityIndicator size="large" />;
     // }
-    const handleButtonClick = (value: string) => {
+    const handleButtonClick = (value: any) => {
         if (isVisible) {
             if (nombreDeCaracteres < 3) {
                 setInputText(inputText + value);
@@ -53,6 +53,7 @@ const CodeAccesScreen = ({ navigation }) => {
             elementRef2.current.shake(1000);
         }
     };
+
     const onButtonPress = () => {
         // Durée de la vibration en millisecondes
         const DURATION = 300;
@@ -252,7 +253,7 @@ const styles = StyleSheet.create({
 
 export default connect(
     // Mappez l'état de Redux aux props du composant
-    (state) => ({
+    (state: any) => ({
         accessCode: state.auth.accessCode, // Supposant que "auth" est le nom de votre reducer d'authentification
         isCodeAcces: state.auth.isCodeAcces
     }),

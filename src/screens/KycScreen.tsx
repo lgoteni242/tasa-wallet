@@ -7,15 +7,16 @@ import ProgressCircles from '../components/ProgressCircles';
 import RadioButtonCustom from '../components/RadioButtonCustom';
 import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
-import { convertImageToBlob, generateUniqueImageName } from '../../utils/utils';
+import { convertImageToBlob, generateUniqueImageName } from '../utils/utils';
 import { useSelector } from "react-redux";
 import axios from 'axios';
 import Modal from "react-native-modal";
 
 
-const KycScreen = ({ navigation }) => {
+const KycScreen = ({ navigation }: { navigation: any }) => {
 
-    const token = useSelector((state) => state.auth.token);
+    const token = useSelector((state: any) => state.auth.token);
+
     const [isLoading, setIsLoading] = useState(false);
     const [selectedOption, setSelectedOption] = useState("CNI");
 
@@ -24,10 +25,10 @@ const KycScreen = ({ navigation }) => {
     });
 
     const [progress, setProgresse] = useState(true)
-    const [versoPiece, setVersoPiece] = useState(null);
-    const [rectoPiece, setRectoPiece] = useState(null);
-    const [selfie, setSelfie] = useState(null);
-    const [piece, setPiece] = useState(null);
+    const [versoPiece, setVersoPiece] = useState<any | null>(null);
+    const [rectoPiece, setRectoPiece] = useState<any | null>(null);
+    const [selfie, setSelfie] = useState<any | null>(null);
+    const [piece, setPiece] = useState<any | null>(null)
     const [succesModal, setSuccessModal] = useState(false);
 
     if (!fontsLoaded) {
@@ -43,38 +44,45 @@ const KycScreen = ({ navigation }) => {
             console.error(selfie)
 
             if (selectedOption == "CNI") {
-                formeData.append('type_doc', selectedOption);
 
-                formeData.append('doc_one', {
+                const dataSelfie = {
                     uri: selfie,
                     name: imageName, // Nom de l'image, vous pouvez personnaliser cela
                     type: 'image/jpeg', // Type de l'image, assurez-vous qu'il correspond au type réel de l'image
-                });
+                }
 
-                formeData.append('doc_two', {
+                const dataRectoPiece = {
                     uri: rectoPiece,
                     name: imageName, // Nom de l'image, vous pouvez personnaliser cela
                     type: 'image/jpeg', // Type de l'image, assurez-vous qu'il correspond au type réel de l'image
-                });
+                }
 
-                formeData.append('doc_three', {
+                const dataVersoPiece = {
                     uri: versoPiece,
-                    name: imageName.jpeg, // Nom de l'image, vous pouvez personnaliser cela
+                    name: imageName, // Nom de l'image, vous pouvez personnaliser cela
                     type: 'image/jpeg', // Type de l'image, assurez-vous qu'il correspond au type réel de l'image
-                });
+                }
+
+                formeData.append('type_doc', selectedOption);
+                formeData.append('doc_one', dataSelfie);
+                formeData.append('doc_two', dataRectoPiece);
+                formeData.append('doc_three', dataVersoPiece);
+
             } else {
                 formeData.append('type_doc', selectedOption);
-                formeData.append('doc_one', {
+                const dataSelfie = {
                     uri: selfie,
                     name: imageName, // Nom de l'image, vous pouvez personnaliser cela
                     type: 'image/jpeg', // Type de l'image, assurez-vous qu'il correspond au type réel de l'image
-                });
-
-                formeData.append('doc_two', {
+                }
+                const dataPiece = {
                     uri: piece,
                     name: imageName, // Nom de l'image, vous pouvez personnaliser cela
                     type: 'image/jpeg', // Type de l'image, assurez-vous qu'il correspond au type réel de l'image
-                });
+                }
+
+                formeData.append('doc_one', dataSelfie);
+                formeData.append('doc_two', dataPiece);
             }
             const response = await axios.post('https://walet.tasa.pro/api/senddoc', formeData, {
                 headers: {
@@ -91,17 +99,17 @@ const KycScreen = ({ navigation }) => {
             // Faites quelque chose avec la réponse si nécessaire
             console.log('Réponse de l\'API :', response.data);
         } catch (error) {
-            if (error.response) {
-                // Une réponse a été reçue du serveur, y compris une erreur HTTP (par exemple, 400)
-                console.error('Erreur lors de la requête à l\'API :', error.response.status);
-                console.error('Réponse du serveur :', error.response.data);
-            } else if (error.request) {
-                // Aucune réponse du serveur n'a été reçue (peut être dû à une absence de connexion)
-                console.error('Aucune réponse du serveur');
-            } else {
-                // Une erreur s'est produite lors de la configuration de la requête
-                console.error('Erreur lors de la configuration de la requête :', error.message);
-            }
+            // if (error.response) {
+            //     // Une réponse a été reçue du serveur, y compris une erreur HTTP (par exemple, 400)
+            //     console.error('Erreur lors de la requête à l\'API :', error.response.status);
+            //     console.error('Réponse du serveur :', error.response.data);
+            // } else if (error.request) {
+            //     // Aucune réponse du serveur n'a été reçue (peut être dû à une absence de connexion)
+            //     console.error('Aucune réponse du serveur');
+            // } else {
+            //     // Une erreur s'est produite lors de la configuration de la requête
+            //     console.error('Erreur lors de la configuration de la requête :', error.message);
+            // }
         }
         finally {
             setIsLoading(false); // Désactiver l'indicateur de chargement, que la requête réussisse ou échoue
@@ -300,7 +308,7 @@ const KycScreen = ({ navigation }) => {
                     progress ?
                         <>
                             <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                <Image source={require('../../assets/images/kyc.jpg')} style={styles.image} />
+                                <Image source={require('../animations/assets/images/kyc.jpg')} style={styles.image} />
                             </View>
                             <View style={{ marginBottom: 200 }}>
                                 <Text style={{ textAlign: 'center', fontFamily: 'RobotoSerif_700Bold', fontSize: 16, color: default_color.orange }}>
@@ -352,7 +360,7 @@ const KycScreen = ({ navigation }) => {
                                                     <Text style={{ fontFamily: 'RobotoSerif_400Regular', fontSize: 8, color: "gray" }}>CNI, Passeport,Permis de conduite</Text>
                                                 </View>
                                                 <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                                    <Image source={require('../../assets/images/id.jpg')} style={styles.imageId} />
+                                                    <Image source={require('../animations/assets/images/id.jpg')} style={styles.imageId} />
                                                 </View>
                                             </TouchableOpacity>
 
@@ -383,7 +391,7 @@ const KycScreen = ({ navigation }) => {
                                                     <Text style={{ fontFamily: 'RobotoSerif_400Regular', fontSize: 8, color: "gray" }}>CNI, Passeport,Permis de conduite</Text>
                                                 </View>
                                                 <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                                    <Image source={require('../../assets/images/id.jpg')} style={styles.imageId} />
+                                                    <Image source={require('../animations/assets/images/id.jpg')} style={styles.imageId} />
                                                 </View>
                                             </TouchableOpacity>
 
@@ -416,7 +424,7 @@ const KycScreen = ({ navigation }) => {
                                                 <Text style={{ fontFamily: 'RobotoSerif_400Regular', fontSize: 8, color: "gray" }}>CNI, Passeport,Permis de conduite</Text>
                                             </View>
                                             <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                                <Image source={require('../../assets/images/id.jpg')} style={styles.imageId} />
+                                                <Image source={require('../animations/assets/images/id.jpg')} style={styles.imageId} />
                                             </View>
                                         </TouchableOpacity>
                                     }
@@ -481,7 +489,7 @@ const KycScreen = ({ navigation }) => {
                                             <Text style={{ fontFamily: 'RobotoSerif_400Regular', fontSize: 9, color: "gray" }}>Veuillez noter que les captures d’écran, les factures de téléphone mobile et les assurances ne sont pas acceptées pour la vérification.</Text>
                                         </View>
                                         <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                            <Image source={require('../../assets/images/selfie.png')} style={styles.imageId} />
+                                            <Image source={require('../animations/assets/images/selfie.png')} style={styles.imageId} />
                                         </View>
                                     </TouchableOpacity>
                                 }

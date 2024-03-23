@@ -3,7 +3,7 @@ import { Image, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'reac
 import Icon from 'react-native-vector-icons/FontAwesome';
 import default_color from '../styles/color';
 
-const UserScreen = ({ navigation }) => {
+const UserScreen = ({ navigation }: { navigation: any }) => {
 
     return (
         <View style={styles.container}>

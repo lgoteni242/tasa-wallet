@@ -16,9 +16,9 @@ import { CommonActions } from '@react-navigation/native';
 
 
 
-const CodeDeblockAppScreen = ({ navigation }) => {
+const CodeDeblockAppScreen = ({ navigation }: { navigation: any }) => {
 
-    const accessCode = useSelector(state => state.auth.accessCode);
+    const accessCode = useSelector((state:any) => state.auth.accessCode);
 
     const [inputText, setInputText] = useState('');
     const [hidenText, setHidenText] = useState('')

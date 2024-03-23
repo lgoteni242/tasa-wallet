@@ -4,15 +4,16 @@ import Modal from 'react-native-modal';
 import default_color from "../styles/color";
 
 
-const CustomModalPicker = ({ options, onSelect, visible, onClose, titre }) => {
+const CustomModalPicker = ({ options, onSelect, visible, onClose, titre }: { options: any, onSelect: any, visible: any, onClose: any, titre: any }) => {
     const [selectedOption, setSelectedOption] = useState('');
-    const handleSelectOption = (option) => {
+    const handleSelectOption = (option: any) => {
         setSelectedOption(option);
         onSelect(option);
         onClose();
     };
 
-    const flag = countryCode => String.fromCodePoint(...[...countryCode.toUpperCase()].map(c => 0x1F1A5 + c.charCodeAt()));
+    // const flag = countryCode => String.fromCodePoint(...[...countryCode.toUpperCase()].map(c => 0x1F1A5 + c.charCodeAt()));
+    const flag = (countryCode: string) => String.fromCodePoint(...[...countryCode.toUpperCase()].map(c => 0x1F1A5 + c.charCodeAt(0)));
 
     return (
         <Modal
@@ -24,7 +25,7 @@ const CustomModalPicker = ({ options, onSelect, visible, onClose, titre }) => {
                     <Text style={{ textAlign: 'center', fontSize: 15, paddingBottom: 10, color: '#7f7f7f', fontFamily: 'RobotoSerif_400Regular' }}>{titre}</Text>
                 </View>
                 <View style={styles.modalContent}>
-                    {options.map((option, index) => (
+                    {options.map((option: any, index: any) => (
                         <TouchableOpacity
                             key={index}
                             style={styles.optionItem}

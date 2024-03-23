@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from 'react';
 import { View, Text, Animated, StyleSheet } from 'react-native';
 import default_color from '../styles/color';
 
-function IntroScreen({ navigation }) {
+function IntroScreen({ navigation }: { navigation: any }) {
     const animatedValue = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {

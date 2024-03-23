@@ -34,7 +34,7 @@ const genreListe = [{
 
 }];
 
-const RegistrationForm = ({ navigation }) => {
+const RegistrationForm = ({ navigation }: { navigation: any }) => {
     const [step, setStep] = useState(1);
 
     // Variables d'état pour enregistrer les données
@@ -133,7 +133,7 @@ const RegistrationForm = ({ navigation }) => {
             setModalClock(true)
             console.warn(response)
             return response
-        } catch (error) {
+        } catch (error: any) {
             setIsLoading(false)
             if (error.response && error.response.data && error.response.data.errors) {
                 const errorDetails = error.response.data.errors;

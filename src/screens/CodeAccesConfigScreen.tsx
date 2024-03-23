@@ -10,7 +10,7 @@ import default_color from '../styles/color';
 // } from "@expo-google-fonts/roboto-serif";
 
 
-const CodeAccesConfigScreen = ({ navigation }) => {
+const CodeAccesConfigScreen = ({ navigation }: { navigation: any }) => {
     // let [fontsLoaded] = useFonts({
     //     RobotoSerif_400Regular,
     //     RobotoSerif_100Thin,

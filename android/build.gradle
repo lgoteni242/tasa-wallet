@@ -21,6 +21,7 @@ buildscript {
     dependencies {
         classpath('com.android.tools.build:gradle:7.4.2')
         classpath('com.facebook.react:react-native-gradle-plugin')
+        
         // Expo camera
         // classpath("com.google.android.exoplayer:exoplayer:${expoCameraVersion}")
     }

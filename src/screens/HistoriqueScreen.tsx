@@ -8,14 +8,14 @@ import { useSelector } from "react-redux";
 import UserSkeletonLoader from '../components/Skeleton/UserSkeletonLoader';
 
 
-const HistoriqueScreen = ({ navigation }) => {
+const HistoriqueScreen = ({ navigation }: { navigation: any }) => {
 
-    const user = useSelector((state) => state.auth.user);
+    const user = useSelector((state: any) => state.auth.user);
 
-    const token = useSelector((state) => state.auth.token);
+    const token = useSelector((state: any) => state.auth.token);
     const [isLoading, setIsLoading] = useState(false)
 
-    const [dataListe, setdataListe] = useState([])
+    const [dataListe, setdataListe] = useState<any[]>([])
     const [montantListe, setMontantListe] = useState([])
     const [dateS, setDateS] = useState(new Date());
     const [showPicker, setShowPicker] = useState(false);
@@ -30,11 +30,12 @@ const HistoriqueScreen = ({ navigation }) => {
     const month = dateObject.getMonth() + 1; // Les mois sont indexés à partir de 0, donc nous ajoutons 1
     const day = dateObject.getDate();
     const [mois, setMois] = useState(month)
-    const [selectedItem, setSelectedItem] = useState(null);
+    const [selectedItem, setSelectedItem] = useState<any | null>(null);
 
 
     const date = new Date(year, month - 1, day); // mois - 1 car les mois commencent à partir de 0
     const options = { weekday: 'long' };
+
     const nomJour = date.toLocaleDateString('fr-FR', options);
 
     const addTotalAmount = montantListe.filter(item => item.action === "add")[0]?.total_amount;
@@ -58,7 +59,9 @@ const HistoriqueScreen = ({ navigation }) => {
         }
     };
 
-    const flag = (countryCode: string) => String.fromCodePoint(...[...countryCode.toUpperCase()].map(c => 0x1F1A5 + c.charCodeAt()));
+    // const flag = (countryCode: string) => String.fromCodePoint(...[...countryCode.toUpperCase()].map(c => 0x1F1A5 + c.charCodeAt()));
+    const flag = (countryCode: string) => String.fromCodePoint(...[...countryCode.toUpperCase()].map(c => 0x1F1A5 + c.charCodeAt(0)));
+
 
     const historique = async (mois: any, jour: any, annee: any, token: string) => {
         setIsLoading(true);

@@ -52,7 +52,7 @@ import LottieView from 'lottie-react-native';
 
 
 
-const DashBoardScreen = ({ navigation }) => {
+const DashBoardScreen = ({ navigation }: { navigation: any }) => {
 
     const historique = async (mois: any, jour: any, annee: any, token: string) => {
         setIsLoadingHistorique(true)
@@ -93,15 +93,18 @@ const DashBoardScreen = ({ navigation }) => {
     const [modeEnvoi, setModeEnvoi] = useState('')
 
     // =================Chargement============================
-    const user = useSelector((state) => state.auth.user);
-    const mode = useSelector((state) => state.auth.mode);
-    const pourcentage = useSelector((state) => state.auth.pourcentage);
+    const user = useSelector((state: any) => state.auth.user);
+    const mode = useSelector((state: any) => state.auth.mode);
+    const pourcentage = useSelector((state: any) => state.auth.pourcentage);
 
 
-    const token = useSelector((state) => state.auth.token);
-    const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-    const isCodeAcces = useSelector((state) => state.auth.isCodeAcces);
-    const [dataListe, setdataListe] = useState([])
+    const token = useSelector((state: any) => state.auth.token);
+    const isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
+    const isCodeAcces = useSelector((state: any) => state.auth.isCodeAcces);
+
+
+    const [dataListe, setdataListe] = useState<any[]>([])
+
     // Opt code
     const otpInputRef = useRef(null);
     const [showOpt, setShowOpt] = useState(false);
@@ -283,7 +286,9 @@ const DashBoardScreen = ({ navigation }) => {
         return Math.random() < 0.5;
     }
 
-    const flag = (countryCode: string) => String.fromCodePoint(...[...countryCode.toUpperCase()].map(c => 0x1F1A5 + c.charCodeAt()));
+    // const flag = (countryCode: string) => String.fromCodePoint(...[...countryCode.toUpperCase()].map(c => 0x1F1A5 + c.charCodeAt()));
+    const flag = (countryCode: string) => String.fromCodePoint(...[...countryCode.toUpperCase()].map(c => 0x1F1A5 + c.charCodeAt(0)));
+
 
     // Utilise useEffect pour charger les transactions initiales lors de la connexion
     useEffect(() => {
@@ -384,7 +389,7 @@ const DashBoardScreen = ({ navigation }) => {
                         });
                     // setIsLoading(false);
                     handleSend()
-                } catch (error) {
+                } catch (error: any) {
                     // console.error("Erreur de verification", error.response.data.errors.phone[0]);
                     setIsLoading(false);
                     ToastAndroid.show(error.response.data.errors.phone[0], ToastAndroid.SHORT);
@@ -604,7 +609,7 @@ const DashBoardScreen = ({ navigation }) => {
                         setIsLoading(false);
                         handleCloseModalPressCrediter();
                         setSendMoney(true);
-                    } catch (error) {
+                    } catch (error: any) {
                         setIsLoading(false);
                         // handleCloseModalPressRetirer()
                         // setNotSendMoney(true);
@@ -2323,7 +2328,7 @@ const styles = StyleSheet.create({
 // export default DashBoardScreen;
 export default connect(
     // Mappez l'état de Redux aux props du composant
-    (state) => ({
+    (state: any) => ({
         isLoggedIn: state.auth.isLoggedIn, // Supposant que "auth" est le nom de votre reducer d'authentification
     }),
     // Mappez les actions Redux aux props du composant

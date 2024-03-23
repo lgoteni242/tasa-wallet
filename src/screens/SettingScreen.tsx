@@ -22,10 +22,11 @@ const imageSize = (headerHeight / 3.5) * 2;
 
 
 
-export default function ScrollViewAnimatedHeader({ navigation }) {
-
-    const user = useSelector(state => state.auth.user);
-    const isCodeAcces = useSelector(state => state.auth.isCodeAcces);
+export default function ScrollViewAnimatedHeader({ navigation }: { navigation: any }) {
+    // const isLoggedIn = useSelector((state: IRootState) => state.user.loggedIn);
+    const user = useSelector((state: any) => state.auth.user);
+    // const user = useSelector(state => state.auth.user);
+    const isCodeAcces = useSelector((state: any) => state.auth.isCodeAcces);
 
     const scrollY = useRef(new Animated.Value(0)).current;
     const [textWidth, setTextWidth] = useState(0);

@@ -23,11 +23,14 @@ import * as NavigationBar from 'expo-navigation-bar';
 
 
 
-const HomeScreen = ({ navigation, login }) => {
+const HomeScreen = ({ navigation, login }: { navigation: any, login: any }) => {
 
     NavigationBar.setBackgroundColorAsync('white');
 
-    const flag = countryCode => String.fromCodePoint(...[...countryCode.toUpperCase()].map(c => 0x1F1A5 + c.charCodeAt()));
+    // const flag = countryCode => String.fromCodePoint(...[...countryCode.toUpperCase()].map(c => 0x1F1A5 + c.charCodeAt()));
+    // const flag = (countryCode: string) => String.fromCodePoint(...[...countryCode.toUpperCase()].map(c => 0x1F1A5 + c.charCodeAt()));
+    const flag = (countryCode: string) => String.fromCodePoint(...[...countryCode.toUpperCase()].map(c => 0x1F1A5 + c.charCodeAt(0)));
+
 
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedOption, setSelectedOption] = useState('');
@@ -35,13 +38,13 @@ const HomeScreen = ({ navigation, login }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [codePays, setCodePays] = useState('');
-    const [isConnected, setIsConnected] = useState(false);
+    const [isConnected, setIsConnected] = useState<any | null>(false);
     const [isLoading, setIsLoading] = useState(false)
     const animation = useRef(null);
 
 
-    const loginError = useSelector(state => state.auth.error);
-    const isLogged = useSelector(state => state.auth.isLoggedIn);
+    const loginError = useSelector((state: any) => state.auth.error);
+    const isLogged = useSelector((state: any) => state.auth.isLoggedIn);
 
     // const [options, setOptions] = useState([])
 
@@ -80,7 +83,7 @@ const HomeScreen = ({ navigation, login }) => {
                     if (!isLogged) {
                         // Gestion erreur
                     }
-                } catch (error) {
+                } catch (error: any) {
                     setIsLoading(false)
                     // Gérer les erreurs de connexion
                     console.error('Erreur de connexion :', error.message);
@@ -447,7 +450,7 @@ const styles = StyleSheet.create({
 
 export default connect(
     // Mappez l'état de Redux aux props du composant
-    (state) => ({
+    (state: any) => ({
         isLoggedIn: state.auth.isLoggedIn, // Supposant que "auth" est le nom de votre reducer d'authentification
         accessCode: state.auth.accessCode, // Supposant que "auth" est le nom de votre reducer d'authentification
         isCodeAcces: state.auth.isCodeAcces, // Supposant que "auth" est le nom de votre reducer d'authentification

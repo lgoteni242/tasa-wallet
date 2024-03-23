@@ -11,7 +11,7 @@ import { CommonActions } from '@react-navigation/native';
 import * as NavigationBar from 'expo-navigation-bar';
 
 
-const PresentationPage = ({ navigation }) => {
+const PresentationPage = ({ navigation }: { navigation: any }) => {
 
     NavigationBar.setBackgroundColorAsync('white');
 
