@@ -16,6 +16,7 @@ const HistoriqueScreen = ({ navigation }: { navigation: any }) => {
     const [isLoading, setIsLoading] = useState(false)
 
     const [dataListe, setdataListe] = useState<any[]>([])
+
     const [montantListe, setMontantListe] = useState([])
     const [dateS, setDateS] = useState(new Date());
     const [showPicker, setShowPicker] = useState(false);
@@ -31,6 +32,7 @@ const HistoriqueScreen = ({ navigation }: { navigation: any }) => {
     const day = dateObject.getDate();
     const [mois, setMois] = useState(month)
     const [selectedItem, setSelectedItem] = useState<any | null>(null);
+
 
 
     const date = new Date(year, month - 1, day); // mois - 1 car les mois commencent à partir de 0

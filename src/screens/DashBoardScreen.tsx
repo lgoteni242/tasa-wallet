@@ -98,14 +98,11 @@ const DashBoardScreen = ({ navigation }: { navigation: any }) => {
     const pourcentage = useSelector((state: any) => state.auth.pourcentage);
 
 
-    const token = useSelector((state: any) => state.auth.token);
-    const isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
-    const isCodeAcces = useSelector((state: any) => state.auth.isCodeAcces);
+    const token = useSelector((state) => state.auth.token);
+    const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+    const isCodeAcces = useSelector((state) => state.auth.isCodeAcces);
+    const [dataListe, setdataListe] = useState([])
 
-
-    const [dataListe, setdataListe] = useState<any[]>([])
-
-    // Opt code
     const otpInputRef = useRef(null);
     const [showOpt, setShowOpt] = useState(false);
     const [showOptRetirer, setShowOptRetirer] = useState(false);
@@ -369,37 +366,6 @@ const DashBoardScreen = ({ navigation }: { navigation: any }) => {
         checkData();
     };
 
-    const handleSendVerifiInput = () => {
-        setIsLoading(true);
-        const checkData = async () => {
-            (async () => {
-                try {
-                    await axios.post(
-                        "https://walet.tasa.pro/api/verif_send",
-                        {
-                            country_code: codePays,
-                            phone: numero,
-                            montant: montant,
-                            // code_otp: optCode,
-                        },
-                        {
-                            headers: {
-                                Authorization: `Bearer ${token}`,
-                            },
-                        });
-                    // setIsLoading(false);
-                    handleSend()
-                } catch (error: any) {
-                    // console.error("Erreur de verification", error.response.data.errors.phone[0]);
-                    setIsLoading(false);
-                    ToastAndroid.show(error.response.data.errors.phone[0], ToastAndroid.SHORT);
-
-                }
-            })();
-        };
-        checkData();
-    };
-
     const handleSendVerif = () => {
         setIsLoading(true);
         const sendMoney = async () => {
@@ -578,52 +544,6 @@ const DashBoardScreen = ({ navigation }: { navigation: any }) => {
             handleRetirerOpt()
         }
     }
-
-    const handleSendRechageOrange = () => {
-        if (optOrangeRecharge == '' && montantRechargeOrange == '') {
-            ToastAndroid.show("Veillez remplir tous les champs avant de crediter", ToastAndroid.SHORT);
-        } else {
-            setIsLoading(true);
-            const rechargeMoney = async () => {
-
-                // console.error(modeEnvoi, montantRechargeOrange, optOrangeRecharge)
-
-                (async () => {
-                    try {
-                        const data = await axios.post(
-                            "https://walet.tasa.pro/api/recharge",
-                            {
-                                modeP: modeEnvoi,
-                                montant: montantRechargeOrange,
-                                otp_code: optOrangeRecharge,
-                            },
-                            {
-                                headers: {
-                                    Authorization: `Bearer ${token}`,
-                                },
-                            }
-                        );
-                        console.error('Donnnee', data)
-
-
-                        setIsLoading(false);
-                        handleCloseModalPressCrediter();
-                        setSendMoney(true);
-                    } catch (error: any) {
-                        setIsLoading(false);
-                        // handleCloseModalPressRetirer()
-                        // setNotSendMoney(true);
-                        console.error('Argent non envoye', error.message)
-                    } finally {
-                        setIsLoading(false);
-                    }
-                })();
-            };
-            rechargeMoney();
-        }
-    }
-
-
 
 
     return (
